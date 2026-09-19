@@ -29,9 +29,9 @@ const STATS = [
 
 const OFFICIAL_ACTIVITY_IMAGES = [
   "https://www.kemendikdasmen.go.id/mendikbud/image/16168/512",
-  "https://www.kemendikdasmen.go.id/mendikbud/image/16165/512",
   "https://www.kemendikdasmen.go.id/mendikbud/image/16167/512",
   "https://www.kemendikdasmen.go.id/mendikbud/image/16166/512",
+  "https://www.kemendikdasmen.go.id/mendikbud/image/16168/512",
 ];
 
 export function LandingHero() {
@@ -97,10 +97,9 @@ export function LandingHero() {
         </motion.h1>
 
         <motion.p variants={item} className="mt-4 text-[15px] leading-relaxed text-white/60">
-          Satu sistem untuk memantau, menilai, dan mendokumentasikan publikasi
-          program Pendidikan Kecakapan Kerja dan Kecakapan Wirausaha —
-          dari lapangan langsung ke dashboard nasional Direktorat Kursus dan
-          Pelatihan.
+          Satu sistem untuk memantau, menilai, dan mendokumentasikan komunikasi
+          kegiatan kursus dan pelatihan PKK/PKW — dari ruang belajar dan praktik
+          langsung ke dashboard nasional Direktorat Kursus dan Pelatihan.
         </motion.p>
 
         <motion.div variants={item} className="mt-10 space-y-5">
