@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 // berada di dalam matcher tetap butuh login (any authenticated role).
 const ROLE_RULES: { prefix: string; roles: Array<"SUPER_ADMIN" | "PETUGAS" | "VIEWER"> }[] = [
   { prefix: "/petugas", roles: ["SUPER_ADMIN"] },
-  { prefix: "/lokasi/kelola", roles: ["SUPER_ADMIN"] },
+  { prefix: "/lokasi/baru", roles: ["SUPER_ADMIN"] },
   { prefix: "/review", roles: ["SUPER_ADMIN"] },
   { prefix: "/pengaturan", roles: ["SUPER_ADMIN"] },
   { prefix: "/monev", roles: ["SUPER_ADMIN", "PETUGAS"] },
