@@ -1,0 +1,131 @@
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
+import { MapPin, ShieldCheck, BarChart3, Camera, Sparkles } from "lucide-react";
+
+const FEATURES = [
+  {
+    icon: ShieldCheck,
+    title: "Kepatuhan & Keterpenuhan",
+    desc: "Checklist indikator PKK dan PKW terverifikasi otomatis, bukan sekadar centang.",
+  },
+  {
+    icon: Camera,
+    title: "Bukti Lapangan Langsung",
+    desc: "Foto, video, dan wawancara diunggah dari HP saat Monev berlangsung.",
+  },
+  {
+    icon: BarChart3,
+    title: "Dashboard Real-Time",
+    desc: "Skor narasi, visual, dan kinerja publikasi terhitung otomatis dari data lapangan.",
+  },
+];
+
+const STATS = [
+  { value: "10", label: "Lokasi Monev" },
+  { value: "5", label: "Provinsi" },
+  { value: "2", label: "Program · PKK & PKW" },
+];
+
+export function LandingHero() {
+  const reduce = useReducedMotion();
+
+  const container = {
+    hidden: {},
+    show: {
+      transition: { staggerChildren: reduce ? 0 : 0.09, delayChildren: reduce ? 0 : 0.05 },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: reduce ? 0 : 14 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: reduce
+        ? { duration: 0.2 }
+        : { type: "spring" as const, damping: 1, duration: 0.5 },
+    },
+  };
+
+  return (
+    <div className="relative flex h-full flex-col justify-between overflow-hidden px-8 py-10 sm:px-12 sm:py-14 lg:px-16">
+      {/* Mesh gradient background */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99,102,241,0.35), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.30), transparent 60%), linear-gradient(160deg, #0b1220 0%, #111827 55%, #0b1220 100%)",
+        }}
+      />
+
+      <motion.div initial="hidden" animate="show" variants={container} className="max-w-md">
+        <motion.div
+          variants={item}
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/70 backdrop-blur"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          Tahun Anggaran 2026
+        </motion.div>
+
+        <motion.h1
+          variants={item}
+          className="font-semibold text-white"
+          style={{
+            fontSize: "clamp(2rem, 4vw, 2.75rem)",
+            lineHeight: 1.08,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Monev Publikasi
+          <br />
+          PKK &amp; PKW
+        </motion.h1>
+
+        <motion.p variants={item} className="mt-4 text-[15px] leading-relaxed text-white/60">
+          Satu sistem untuk memantau, menilai, dan mendokumentasikan publikasi
+          program Pendidikan Kecakapan Kerja dan Kecakapan Wirausaha —
+          dari lapangan langsung ke dashboard nasional Direktorat Kursus dan
+          Pelatihan.
+        </motion.p>
+
+        <motion.div variants={item} className="mt-10 space-y-5">
+          {FEATURES.map((f) => (
+            <div key={f.title} className="flex items-start gap-3.5">
+              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 backdrop-blur">
+                <f.icon className="h-4.5 w-4.5 text-white/80" strokeWidth={1.75} />
+              </div>
+              <div>
+                <p className="text-[13.5px] font-medium text-white/90">{f.title}</p>
+                <p className="mt-0.5 text-[13px] leading-snug text-white/50">{f.desc}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={container}
+        className="mt-10 flex items-center gap-8 border-t border-white/10 pt-6"
+      >
+        {STATS.map((s) => (
+          <motion.div key={s.label} variants={item}>
+            <p
+              className="font-semibold text-white"
+              style={{ fontSize: "1.5rem", letterSpacing: "-0.01em" }}
+            >
+              {s.value}
+            </p>
+            <p className="mt-0.5 flex items-center gap-1 text-[11.5px] text-white/45">
+              {s.label === "Lokasi Monev" && <MapPin className="h-3 w-3" />}
+              {s.label}
+            </p>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
