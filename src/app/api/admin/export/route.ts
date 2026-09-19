@@ -12,6 +12,7 @@ export async function GET() {
 
   const rows = await db
     .select({
+      id: monevSessions.id,
       lokasi: locations.namaLembaga,
       provinsi: locations.provinsi,
       kabKota: locations.kabKota,
