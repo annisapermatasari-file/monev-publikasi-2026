@@ -38,7 +38,7 @@ const statusLabels: Record<string, string> = {
   DISETUJUI: "Disetujui",
 };
 
-const heatColors = ["#f1f5f9", "#dbeafe", "#93c5fd", "#3b82f6", "#1d4ed8"];
+const heatColors = ["#eef2ea", "#e4f5bf", "#bef264", "#84cc16", "#3f6212"];
 
 export function AnalyticsDashboard({ rows, provinces }: Props) {
   const [province, setProvince] = useState("SEMUA");
@@ -105,7 +105,7 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
 
   return (
     <section className="mt-10" aria-labelledby="analytics-title">
-      <div className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 border-b border-[#dce3d5] pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Phase 5</p>
           <h2 id="analytics-title" className="mt-1 text-lg font-semibold text-slate-900">
@@ -120,7 +120,7 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
             aria-label="Filter provinsi"
             value={province}
             onChange={(event) => setProvince(event.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400 focus:bg-white"
+            className="rounded-xl border border-[#d5dfcf] bg-[#fbfcf8] px-3 py-2 text-sm text-slate-700 outline-none focus:border-lime-500 focus:bg-white"
           >
             <option value="SEMUA">Semua provinsi</option>
             {provinces.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -129,7 +129,7 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
             aria-label="Filter program"
             value={program}
             onChange={(event) => setProgram(event.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400 focus:bg-white"
+            className="rounded-xl border border-[#d5dfcf] bg-[#fbfcf8] px-3 py-2 text-sm text-slate-700 outline-none focus:border-lime-500 focus:bg-white"
           >
             <option value="SEMUA">Semua program</option>
             <option value="PKK">PKK</option>
@@ -139,7 +139,7 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="rounded-2xl border border-[#dce3d5] bg-[#fbfcf8] p-5 shadow-[0_12px_30px_rgba(23,35,29,0.04)]">
           <div className="flex items-baseline justify-between gap-3">
             <h3 className="text-sm font-semibold text-slate-900">Publikasi per provinsi</h3>
             <span className="text-xs text-slate-500">{totalContent} konten tercatat</span>
@@ -152,14 +152,14 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
                   <XAxis dataKey="name" angle={-35} textAnchor="end" interval={0} height={55} tick={{ fontSize: 11 }} />
                   <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                   <Tooltip />
-                  <Bar dataKey="konten" name="Konten" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="konten" name="Konten" fill="#84cc16" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : <p className="pt-20 text-center text-sm text-slate-400">Belum ada sesi monev.</p>}
           </div>
         </div>
 
-        <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="rounded-2xl border border-[#dce3d5] bg-[#fbfcf8] p-5 shadow-[0_12px_30px_rgba(23,35,29,0.04)]">
           <h3 className="text-sm font-semibold text-slate-900">Status sesi monev</h3>
           <div className="mt-4 h-64">
             {statusChart.length > 0 ? (
@@ -179,7 +179,7 @@ export function AnalyticsDashboard({ rows, provinces }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 rounded-lg border border-slate-200 bg-white p-5">
+      <div className="mt-4 rounded-2xl border border-[#dce3d5] bg-[#fbfcf8] p-5 shadow-[0_12px_30px_rgba(23,35,29,0.04)]">
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="text-sm font-semibold text-slate-900">Heatmap intensitas publikasi</h3>
           <span className="text-xs text-slate-500">Jumlah konten atau kanal aktif</span>
