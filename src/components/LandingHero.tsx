@@ -28,10 +28,10 @@ const STATS = [
 ];
 
 const OFFICIAL_ACTIVITY_IMAGES = [
-  "https://www.kemendikdasmen.go.id/mendikbud/image/16168/512",
-  "https://vokasi.kemendikdasmen.go.id/front-end/images/uploads/pendidikan-bermutu.png",
-  "https://vokasi.kemendikdasmen.go.id/front-end/images/uploads/ramah.png",
-  "https://vokasi.kemendikdasmen.go.id/front-end/images/logo-vokasi.png",
+  "https://kursus.kemendikdasmen.go.id/assets/images/banner-2.webp",
+  "https://kursus.kemendikdasmen.go.id/assets/images/tim%20direktorat%20kursus%20dan%20pelatihan.jpeg",
+  "https://kursus.kemendikdasmen.go.id/assets/images/program/Peserta_Didik.png",
+  "https://kursus.kemendikdasmen.go.id/assets/images/kem@2x.png",
 ];
 
 export function LandingHero() {
