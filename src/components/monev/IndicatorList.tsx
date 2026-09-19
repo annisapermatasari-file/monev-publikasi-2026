@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { saveIndicatorResponse } from "@/lib/actions/monev";
+import { SCALE_LEGEND, BOOLEAN_CATEGORY_HINT } from "@/lib/monev-hints";
 import { Check } from "lucide-react";
 
 type IndicatorRow = {
@@ -14,14 +15,19 @@ type IndicatorRow = {
   } | null;
 };
 
-const SCALE_LABELS: Record<number, string> = {
-  1: "Sangat Tidak Baik",
-  2: "Tidak Baik",
-  3: "Baik",
-  4: "Sangat Baik",
-};
+const SCALE_LABELS: Record<number, string> = Object.fromEntries(
+  SCALE_LEGEND.map((s) => [s.v, s.label])
+);
 
-export function IndicatorList({ sessionId, items }: { sessionId: string; items: IndicatorRow[] }) {
+export function IndicatorList({
+  sessionId,
+  items,
+  category,
+}: {
+  sessionId: string;
+  items: IndicatorRow[];
+  category?: "KETERPENUHAN" | "KEPATUHAN" | "KINERJA" | "NARASI" | "VISUAL";
+}) {
   const [state, setState] = useState(
     Object.fromEntries(
       items.map((it) => [
@@ -56,8 +62,24 @@ export function IndicatorList({ sessionId, items }: { sessionId: string; items: 
     });
   }
 
+  const isScale = items[0]?.indicator.responseType === "SCALE_1_4";
+
   return (
     <div className="space-y-3">
+      {category && isScale && (
+        <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs text-slate-500">
+          {SCALE_LEGEND.map((s) => (
+            <span key={s.v}>
+              <strong className="text-slate-700">{s.v}</strong> = {s.label}
+            </span>
+          ))}
+        </div>
+      )}
+      {category && !isScale && (category === "KETERPENUHAN" || category === "KEPATUHAN") && (
+        <p className="mb-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs leading-relaxed text-slate-500">
+          {BOOLEAN_CATEGORY_HINT[category]}
+        </p>
+      )}
       {items.map(({ indicator }) => {
         const s = state[indicator.id];
         return (

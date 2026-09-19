@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { STEPS, TOTAL_STEPS } from "@/lib/monev-steps";
+import { STEP_INTRO } from "@/lib/monev-hints";
 import { StepFooter } from "@/components/monev/StepFooter";
 import { IndicatorList } from "@/components/monev/IndicatorList";
 import { ChannelList } from "@/components/monev/ChannelList";
@@ -36,6 +37,11 @@ export default async function StepPage({
       <h2 className="mb-1 text-lg font-semibold text-slate-900">
         {stepDef.no}. {stepDef.label}
       </h2>
+      {STEP_INTRO[stepDef.no] && (
+        <p className="mt-2 rounded-lg border border-blue-100 bg-blue-50/60 px-3.5 py-2.5 text-[13px] leading-relaxed text-blue-900">
+          {STEP_INTRO[stepDef.no]}
+        </p>
+      )}
       <div className="mt-5">
         <StepBody sessionId={sessionId} stepNo={stepNo} />
       </div>
@@ -61,7 +67,7 @@ async function StepBody({ sessionId, stepNo }: { sessionId: string; stepNo: numb
     }
     case 2: {
       const items = await getIndicatorsForStep(sessionId, "KETERPENUHAN");
-      return <IndicatorList sessionId={sessionId} items={items} />;
+      return <IndicatorList sessionId={sessionId} items={items} category="KETERPENUHAN" />;
     }
     case 3: {
       const items = await getChannelAudits(sessionId);
@@ -73,19 +79,19 @@ async function StepBody({ sessionId, stepNo }: { sessionId: string; stepNo: numb
     }
     case 5: {
       const items = await getIndicatorsForStep(sessionId, "KEPATUHAN");
-      return <IndicatorList sessionId={sessionId} items={items} />;
+      return <IndicatorList sessionId={sessionId} items={items} category="KEPATUHAN" />;
     }
     case 6: {
       const items = await getIndicatorsForStep(sessionId, "KINERJA");
-      return <IndicatorList sessionId={sessionId} items={items} />;
+      return <IndicatorList sessionId={sessionId} items={items} category="KINERJA" />;
     }
     case 7: {
       const items = await getIndicatorsForStep(sessionId, "NARASI");
-      return <IndicatorList sessionId={sessionId} items={items} />;
+      return <IndicatorList sessionId={sessionId} items={items} category="NARASI" />;
     }
     case 8: {
       const items = await getIndicatorsForStep(sessionId, "VISUAL");
-      return <IndicatorList sessionId={sessionId} items={items} />;
+      return <IndicatorList sessionId={sessionId} items={items} category="VISUAL" />;
     }
     case 9: {
       const items = await getStoryBrief(sessionId);
