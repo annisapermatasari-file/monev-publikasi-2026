@@ -49,18 +49,26 @@ export function LandingHero() {
   };
 
   return (
-    <div className="relative flex h-full flex-col justify-between overflow-hidden px-8 py-10 sm:px-12 sm:py-14 lg:px-16">
+    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-[#17231d] px-8 py-10 sm:px-12 sm:py-14 lg:px-16">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center opacity-25"
+        style={{
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80)",
+        }}
+      />
       {/* Mesh gradient background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
             background:
             "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(190,242,100,0.18), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.18), transparent 60%), linear-gradient(160deg, #17231d 0%, #26392d 55%, #101a15 100%)",
         }}
       />
 
-      <motion.div initial="hidden" animate="show" variants={container} className="max-w-md">
+      <motion.div initial="hidden" animate="show" variants={container} className="relative z-10 max-w-md">
         <motion.div
           variants={item}
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/70 backdrop-blur"
@@ -109,7 +117,7 @@ export function LandingHero() {
         initial="hidden"
         animate="show"
         variants={container}
-        className="mt-10 flex items-center gap-8 border-t border-white/10 pt-6"
+        className="relative z-10 mt-10 flex items-center gap-8 border-t border-white/10 pt-6"
       >
         {STATS.map((s) => (
           <motion.div key={s.label} variants={item}>
