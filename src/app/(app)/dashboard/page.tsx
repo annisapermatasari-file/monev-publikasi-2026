@@ -1,13 +1,34 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { locations, assignments, users } from "@/db/schema";
+import { locations, assignments, users, monevSessions, programs, channelAudits } from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import Link from "next/link";
 import { MapPin, Users as UsersIcon } from "lucide-react";
+import { AnalyticsDashboard } from "@/components/dashboard/AnalyticsDashboard";
 
 export default async function DashboardPage() {
   const session = await auth();
   const user = session!.user;
+
+  const analyticsRows = await db
+    .select({
+      sessionId: monevSessions.id,
+      provinsi: locations.provinsi,
+      program: programs.code,
+      status: monevSessions.status,
+      jumlahKonten: channelAudits.jumlahKonten,
+      digunakan: channelAudits.digunakan,
+    })
+    .from(monevSessions)
+    .innerJoin(locations, eq(monevSessions.locationId, locations.id))
+    .innerJoin(programs, eq(monevSessions.programId, programs.id))
+    .leftJoin(channelAudits, eq(monevSessions.id, channelAudits.sessionId));
+
+  const activeLocations = await db
+    .select({ provinsi: locations.provinsi })
+    .from(locations)
+    .where(eq(locations.isActive, true));
+  const provinces = [...new Set(activeLocations.map((location) => location.provinsi))].sort();
 
   const [{ total: totalLokasi }] = await db
     .select({ total: count() })
@@ -90,10 +111,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <div className="mt-10 text-sm text-slate-400">
-        Phase 3 — kelola Lokasi dan Petugas sudah aktif. Wizard Monev PKK/PKW
-        dan dashboard analitik penuh menyusul di phase berikutnya.
-      </div>
+      <AnalyticsDashboard rows={analyticsRows} provinces={provinces} />
     </div>
   );
 }
