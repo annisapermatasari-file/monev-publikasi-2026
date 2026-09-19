@@ -11,8 +11,8 @@ const FEATURES = [
   },
   {
     icon: Camera,
-    title: "Bukti Lapangan Langsung",
-    desc: "Foto, video, dan wawancara diunggah dari HP saat Monev berlangsung.",
+    title: "Bukti Lapangan via Link",
+    desc: "Petugas mencatat contoh foto, video, dan hasil wawancara — cukup tautan penyimpanan (Drive/YouTube).",
   },
   {
     icon: BarChart3,

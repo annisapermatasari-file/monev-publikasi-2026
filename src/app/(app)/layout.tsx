@@ -1,9 +1,10 @@
 import { auth, signOut } from "@/lib/auth";
 import Link from "next/link";
-import { LayoutDashboard, MapPin, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, MapPin, Users, LogOut, ClipboardList } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
+  { href: "/monev", label: "Monev Lapangan", icon: ClipboardList, roles: ["SUPER_ADMIN", "PETUGAS"] },
   { href: "/lokasi", label: "Lokasi Monev", icon: MapPin, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/petugas", label: "Petugas", icon: Users, roles: ["SUPER_ADMIN"] },
 ];
