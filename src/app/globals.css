@@ -27,6 +27,75 @@ main {
   color: #172014;
 }
 
+/* Shared work-surface language for every authenticated page. */
+main h1 {
+  letter-spacing: -0.025em;
+}
+
+main [class~="bg-white"] {
+  background-color: #fbfcf8 !important;
+}
+
+main [class~="bg-slate-50"] {
+  background-color: #f0f4eb !important;
+}
+
+main [class~="bg-slate-100"] {
+  background-color: #e8eee2 !important;
+}
+
+main [class~="border-slate-200"] {
+  border-color: #d7e0d2 !important;
+}
+
+main [class~="border-slate-100"] {
+  border-color: #e6ece1 !important;
+}
+
+main [class~="border-slate-300"] {
+  border-color: #c5d1bf !important;
+}
+
+main [class~="bg-slate-900"] {
+  background-color: #26392d !important;
+}
+
+main [class~="bg-slate-900"]:hover,
+main [class~="hover:bg-slate-800"]:hover {
+  background-color: #17231d !important;
+}
+
+main input:not([type="checkbox"]),
+main select,
+main textarea {
+  border-color: #d1dccb;
+  background-color: #f5f8f1;
+}
+
+main input:not([type="checkbox"]):focus,
+main select:focus,
+main textarea:focus {
+  border-color: #84cc16;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(190, 242, 100, 0.22);
+}
+
+main table thead {
+  background-color: #edf3e9 !important;
+}
+
+main table tbody tr:hover {
+  background-color: #f1f7ea !important;
+}
+
+main [class~="rounded-lg"] {
+  border-radius: 0.8rem;
+}
+
+main [class~="rounded-xl"] {
+  border-radius: 0.9rem;
+}
+
 /* Aksesibilitas: hormati preferensi pengguna (lihat apple-design skill) */
 @media (prefers-reduced-transparency: reduce) {
   .backdrop-blur {
