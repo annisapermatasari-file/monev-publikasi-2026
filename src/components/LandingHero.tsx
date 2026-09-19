@@ -29,9 +29,9 @@ const STATS = [
 
 const OFFICIAL_ACTIVITY_IMAGES = [
   "https://www.kemendikdasmen.go.id/mendikbud/image/16168/512",
-  "https://www.kemendikdasmen.go.id/mendikbud/image/16167/512",
-  "https://www.kemendikdasmen.go.id/mendikbud/image/16166/512",
-  "https://www.kemendikdasmen.go.id/mendikbud/image/16168/512",
+  "https://vokasi.kemendikdasmen.go.id/front-end/images/uploads/pendidikan-bermutu.png",
+  "https://vokasi.kemendikdasmen.go.id/front-end/images/uploads/ramah.png",
+  "https://vokasi.kemendikdasmen.go.id/front-end/images/logo-vokasi.png",
 ];
 
 export function LandingHero() {
