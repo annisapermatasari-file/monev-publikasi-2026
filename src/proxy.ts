@@ -7,6 +7,7 @@ const ROLE_RULES: { prefix: string; roles: Array<"SUPER_ADMIN" | "PETUGAS" | "VI
   { prefix: "/petugas", roles: ["SUPER_ADMIN"] },
   { prefix: "/lokasi/baru", roles: ["SUPER_ADMIN"] },
   { prefix: "/review", roles: ["SUPER_ADMIN"] },
+  { prefix: "/admin", roles: ["SUPER_ADMIN"] },
   { prefix: "/pengaturan", roles: ["SUPER_ADMIN"] },
   { prefix: "/monev", roles: ["SUPER_ADMIN", "PETUGAS"] },
 ];

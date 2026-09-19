@@ -42,23 +42,25 @@ function LoginForm() {
   };
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="grid min-h-screen bg-[#f4f6f0] lg:grid-cols-[1.08fr_0.92fr]">
       {/* Kolom kiri: penjelasan dashboard (disembunyikan di layar sempit, tampil ringkas di atas) */}
       <div className="hidden lg:block">
         <LandingHero />
       </div>
 
       {/* Kolom kanan: form login */}
-      <div className="flex items-center justify-center bg-white px-6 py-12 sm:px-10">
+      <div className="relative flex items-center justify-center overflow-hidden px-6 py-12 sm:px-10">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border-[30px] border-lime-300/30" />
+        <div className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full border-[22px] border-sky-200/40" />
         <motion.div
           initial={{ opacity: 0, y: reduce ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.4 }}
-          className="w-full max-w-sm"
+          className="relative w-full max-w-sm rounded-[1.5rem] border border-[#dce3d5] bg-[#fbfcf8] p-7 shadow-[0_18px_45px_rgba(23,35,29,0.08)] sm:p-9"
         >
           {/* Ringkasan mobile-only, ganti hero yang disembunyikan */}
           <div className="mb-8 lg:hidden">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-lime-700">
               Tahun Anggaran 2026
             </p>
             <h1
@@ -73,7 +75,11 @@ function LoginForm() {
             </p>
           </div>
 
-          <h2 className="text-lg font-semibold text-slate-900">Masuk</h2>
+          <div className="mb-6 flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-lime-500 shadow-[0_0_0_4px_rgba(132,204,22,0.16)]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Secure access</span>
+          </div>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Masuk ke ruang kerja</h2>
           <p className="mt-1 text-sm text-slate-500">
             Gunakan akun yang sudah didaftarkan oleh admin.
           </p>
@@ -90,7 +96,7 @@ function LoginForm() {
                 required
                 autoFocus
                 autoComplete="username"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-slate-400 focus:bg-white focus:ring-4 focus:ring-slate-100 active:scale-[0.995]"
+                className="w-full rounded-xl border border-[#d1dccb] bg-[#f5f8f1] px-3.5 py-2.5 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-lime-500 focus:bg-white focus:ring-4 focus:ring-lime-100 active:scale-[0.995]"
                 placeholder="mis. superadmin"
               />
             </div>
@@ -105,7 +111,7 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-slate-400 focus:bg-white focus:ring-4 focus:ring-slate-100"
+                className="w-full rounded-xl border border-[#d1dccb] bg-[#f5f8f1] px-3.5 py-2.5 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-lime-500 focus:bg-white focus:ring-4 focus:ring-lime-100"
                 placeholder="••••••••"
               />
             </div>
@@ -129,7 +135,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-slate-900 py-2.5 text-sm font-medium text-white transition-transform duration-100 hover:bg-slate-800 active:scale-[0.98] disabled:opacity-60"
+              className="w-full rounded-xl bg-[#26392d] py-3 text-sm font-medium text-white transition-transform duration-100 hover:bg-[#17231d] active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? "Memproses..." : "Masuk"}
             </button>

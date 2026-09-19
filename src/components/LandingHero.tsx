@@ -55,8 +55,8 @@ export function LandingHero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99,102,241,0.35), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.30), transparent 60%), linear-gradient(160deg, #0b1220 0%, #111827 55%, #0b1220 100%)",
+            background:
+            "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(190,242,100,0.18), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.18), transparent 60%), linear-gradient(160deg, #17231d 0%, #26392d 55%, #101a15 100%)",
         }}
       />
 
@@ -66,7 +66,7 @@ export function LandingHero() {
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/70 backdrop-blur"
         >
           <Sparkles className="h-3.5 w-3.5" />
-          Tahun Anggaran 2026
+          NATIONAL COMMUNICATION MONITOR
         </motion.div>
 
         <motion.h1
