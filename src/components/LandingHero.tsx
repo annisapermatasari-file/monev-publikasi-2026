@@ -55,7 +55,7 @@ export function LandingHero() {
         className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center opacity-70"
         style={{
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80)",
+            "url(https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1600&q=85)",
         }}
       />
       {/* Mesh gradient background */}
