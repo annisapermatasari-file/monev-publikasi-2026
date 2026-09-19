@@ -52,7 +52,7 @@ export function LandingHero() {
     <div className="relative flex h-full flex-col justify-between overflow-hidden bg-[#17231d] px-8 py-10 sm:px-12 sm:py-14 lg:px-16">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center opacity-25"
+        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center opacity-70"
         style={{
           backgroundImage:
             "url(https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80)",
@@ -64,7 +64,7 @@ export function LandingHero() {
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
             background:
-            "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(190,242,100,0.18), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.18), transparent 60%), linear-gradient(160deg, #17231d 0%, #26392d 55%, #101a15 100%)",
+              "radial-gradient(ellipse 80% 60% at 15% 10%, rgba(190,242,100,0.22), transparent 60%), radial-gradient(ellipse 70% 60% at 85% 90%, rgba(56,189,248,0.20), transparent 60%), linear-gradient(160deg, rgba(23,35,29,0.82) 0%, rgba(38,57,45,0.72) 55%, rgba(16,26,21,0.86) 100%)",
         }}
       />
 
