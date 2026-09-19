@@ -44,7 +44,7 @@ export function LandingHero() {
       y: 0,
       transition: reduce
         ? { duration: 0.2 }
-        : { type: "spring" as const, damping: 1, duration: 0.5 },
+        : { type: "spring" as const, bounce: 0, duration: 0.5 },
     },
   };
 

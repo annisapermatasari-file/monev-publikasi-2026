@@ -53,7 +53,7 @@ function LoginForm() {
         <motion.div
           initial={{ opacity: 0, y: reduce ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduce ? { duration: 0.15 } : { type: "spring", damping: 1, duration: 0.4 }}
+          transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.4 }}
           className="w-full max-w-sm"
         >
           {/* Ringkasan mobile-only, ganti hero yang disembunyikan */}
@@ -114,13 +114,11 @@ function LoginForm() {
               {error && (
                 <motion.div
                   key={shakeKey}
-                  initial={reduce ? { opacity: 0 } : { x: -8, opacity: 0 }}
-                  animate={
-                    reduce
-                      ? { opacity: 1 }
-                      : { x: [0, -8, 8, -5, 5, 0], opacity: 1 }
+                  initial={{ opacity: 0, y: reduce ? 0 : -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.3 }
                   }
-                  transition={{ duration: reduce ? 0.15 : 0.4 }}
                   className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-600"
                 >
                   {error}
