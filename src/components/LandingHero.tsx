@@ -28,7 +28,7 @@ const STATS = [
 ];
 
 const COLLABORATION_IMAGE =
-  "https://kursus.kemendikdasmen.go.id/storage/artikel/cover/artikel-cover-1780050265-6a19695967caa.webp";
+  "https://kursus.kemendikdasmen.go.id/storage/artikel/cover/artikel-cover-1769754814-697c50beca6e8.webp";
 
 export function LandingHero() {
   const reduce = useReducedMotion();
