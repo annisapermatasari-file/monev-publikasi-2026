@@ -20,7 +20,7 @@ async function main() {
   // ------------------------------------------------------------
   // 1. PROGRAMS
   // ------------------------------------------------------------
-  const [pkk, pkw] = await db
+  await db
     .insert(programs)
     .values([
       { code: "PKK", name: "Pendidikan Kecakapan Kerja" },
@@ -175,7 +175,7 @@ async function main() {
   // ------------------------------------------------------------
   const defaultPasswordHash = await bcrypt.hash("Monev2026!", 10);
 
-  const superAdmin = await db
+  await db
     .insert(users)
     .values({
       name: "Super Admin",
@@ -187,7 +187,7 @@ async function main() {
     })
     .returning();
 
-  const viewer = await db
+  await db
     .insert(users)
     .values({
       name: "Pimpinan Direktorat",

@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { locations, assignments, monevSessions, programs } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { StartMonevButton } from "@/components/monev/StartMonevButton";
 
 const STATUS_LABEL: Record<string, string> = {

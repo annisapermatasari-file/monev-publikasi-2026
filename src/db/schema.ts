@@ -7,7 +7,6 @@ import {
   timestamp,
   pgEnum,
   uniqueIndex,
-  real,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 
