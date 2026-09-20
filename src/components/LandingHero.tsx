@@ -27,12 +27,8 @@ const STATS = [
   { value: "2", label: "Program · PKK & PKW" },
 ];
 
-const OFFICIAL_ACTIVITY_IMAGES = [
-  "https://kursus.kemendikdasmen.go.id/assets/images/banner-2.webp",
-  "https://kursus.kemendikdasmen.go.id/assets/images/tim%20direktorat%20kursus%20dan%20pelatihan.jpeg",
-  "https://kursus.kemendikdasmen.go.id/assets/images/program/Peserta_Didik.png",
-  "https://kursus.kemendikdasmen.go.id/assets/images/kem@2x.png",
-];
+const COLLABORATION_IMAGE =
+  "https://kursus.kemendikdasmen.go.id/storage/artikel/cover/artikel-cover-1780050265-6a19695967caa.webp";
 
 export function LandingHero() {
   const reduce = useReducedMotion();
@@ -57,12 +53,11 @@ export function LandingHero() {
 
   return (
     <div className="relative flex h-full flex-col justify-between overflow-hidden bg-[#17231d] px-8 py-10 sm:px-12 sm:py-14 lg:px-16">
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 grid grid-cols-2 grid-rows-3 gap-1 opacity-55">
-        <div className="row-span-2 bg-cover bg-center" style={{ backgroundImage: `url(${OFFICIAL_ACTIVITY_IMAGES[0]})` }} />
-        <div className="row-span-1 bg-cover bg-center" style={{ backgroundImage: `url(${OFFICIAL_ACTIVITY_IMAGES[1]})` }} />
-        <div className="row-span-2 bg-cover bg-center" style={{ backgroundImage: `url(${OFFICIAL_ACTIVITY_IMAGES[2]})` }} />
-        <div className="row-span-1 bg-cover bg-center" style={{ backgroundImage: `url(${OFFICIAL_ACTIVITY_IMAGES[3]})` }} />
-      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center opacity-65"
+        style={{ backgroundImage: `url(${COLLABORATION_IMAGE})` }}
+      />
       {/* Mesh gradient background */}
       <div
         aria-hidden
