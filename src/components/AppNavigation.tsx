@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { ClipboardList, Images, LayoutDashboard, LogOut, MapPin, Menu, ShieldCheck, Users, X } from "lucide-react";
+import { ClipboardCheck, ClipboardList, Images, LayoutDashboard, LogOut, MapPin, Menu, ShieldCheck, Users, X } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/monev", label: "Monev Lapangan", icon: ClipboardList, roles: ["SUPER_ADMIN", "PETUGAS"] },
   { href: "/dokumentasi", label: "Dokumentasi", icon: Images, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/admin", label: "Control Room", icon: ShieldCheck, roles: ["SUPER_ADMIN"] },
+  { href: "/review", label: "Review Hasil", icon: ClipboardCheck, roles: ["SUPER_ADMIN"] },
   { href: "/lokasi", label: "Lokasi Monev", icon: MapPin, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/petugas", label: "Petugas", icon: Users, roles: ["SUPER_ADMIN"] },
 ];
