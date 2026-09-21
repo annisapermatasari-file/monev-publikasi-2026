@@ -6,6 +6,7 @@ import { storagePut } from "./storage";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { generateInsight } from "./insights";
 
 export const appRouter = router({
   system: systemRouter,
@@ -35,6 +36,9 @@ export const appRouter = router({
       await db.update(reports).set({ status: input.status, updatedAt: new Date() }).where((await import("drizzle-orm")).eq(reports.id, input.id));
       return { success: true } as const;
     }),
+  }),
+  insights: router({
+    generate: protectedProcedure.input(z.object({ question: z.string().min(3).max(600) })).mutation(({ input }) => generateInsight(input.question)),
   }),
   documentation: router({
     list: protectedProcedure.query(() => listDocumentation()),

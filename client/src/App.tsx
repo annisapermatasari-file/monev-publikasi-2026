@@ -1,8 +1,9 @@
-import { FormEvent, ReactNode, useMemo, useRef, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { MapView } from "@/components/Map";
 import { trpc } from "@/lib/trpc";
+import { FaqPage, MethodologyPage, PublicHome } from "@/pages/PublicPages";
 import {
   Activity,
   ArrowDownRight,
@@ -10,6 +11,7 @@ import {
   BarChart3,
   Bell,
   Check,
+  CheckCircle2,
   ChevronRight,
   ClipboardCheck,
   ClipboardList,
@@ -58,13 +60,16 @@ function App() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/" component={LoginPage} />
+      <Route path="/" component={PublicHome} />
       <Route path="/login" component={LoginPage} />
+      <Route path="/metodologi" component={MethodologyPage} />
+      <Route path="/faq" component={FaqPage} />
       <Route path="/dashboard" component={() => <AppShell><DashboardPage /></AppShell>} />
       <Route path="/monev" component={() => <AppShell><MonevPage /></AppShell>} />
       <Route path="/dokumentasi" component={() => <AppShell><DocumentationPage /></AppShell>} />
       <Route path="/review" component={() => <AppShell><ReviewPage /></AppShell>} />
       <Route path="/lokasi" component={() => <AppShell><LocationsPage /></AppShell>} />
+      <Route path="/insight" component={() => <AppShell><InsightPage /></AppShell>} />
       <Route path="/petugas" component={() => <AppShell><StaffPage /></AppShell>} />
       <Route component={LoginPage} />
     </Switch>
@@ -76,6 +81,12 @@ function LoginPage() {
   const [password, setPassword] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  useEffect(() => {
+    document.title = "Masuk | Monev Publikasi 2026";
+    let robots = document.head.querySelector("meta[name='robots']") as HTMLMetaElement | null;
+    if (!robots) { robots = document.createElement("meta"); robots.name = "robots"; document.head.appendChild(robots); }
+    robots.content = "noindex,nofollow";
+  }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -143,6 +154,11 @@ function AppShell({ children }: { children: ReactNode }) {
   const displayName = user?.name || user?.email || "Pengguna Monev";
   const displayRole = user?.role === "admin" ? "Super Admin" : "Petugas";
   const initials = displayName.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "MO";
+  useEffect(() => {
+    let robots = document.head.querySelector("meta[name='robots']") as HTMLMetaElement | null;
+    if (!robots) { robots = document.createElement("meta"); robots.name = "robots"; document.head.appendChild(robots); }
+    robots.content = "noindex,nofollow";
+  }, []);
 
   async function signOut() {
     await logout();
@@ -187,7 +203,7 @@ function DashboardPage() {
   const publicationsValue = data ? String(data.publications) : "—";
   const completenessValue = data ? `${data.completeness}%` : "—";
   return <>
-    <PageIntro eyebrow="National communication monitor" title={<>Sinyal publikasi <em>nasional.</em></>} description="Pantau denyut kegiatan komunikasi PKK dan PKW dari lokasi monev sampai kanal publikasi." action={<button className="outline-button"><BarChart3 size={16} /> Lihat analitik</button>} />
+    <PageIntro eyebrow="National communication monitor" title={<>Sinyal publikasi <em>nasional.</em></>} description="Pantau denyut kegiatan komunikasi PKK dan PKW dari lokasi monev sampai kanal publikasi." action={<Link href="/insight" className="outline-button"><BarChart3 size={16} /> Lihat analitik</Link>} />
     <div className="workspace-strip"><div><p>Ruang kerja</p><strong>Sari Anindita <span>SUPER ADMIN</span></strong></div><div className="strip-right"><span className="pulse-dot" /> Data diperbarui 2 menit lalu <ChevronRight size={16} /></div></div>
     <section className="stat-grid">
       <StatCard label="Total lokasi" value={locationsValue} note="Titik pemantauan aktif" tone="lime" icon={<MapPin size={17} />} trend="live" />
@@ -201,6 +217,13 @@ function DashboardPage() {
     </section>
     <section className="dashboard-grid lower-grid"><div className="panel activity-panel"><PanelHeading eyebrow="Jejak aktivitas" title="Aktivitas terbaru" action="Lihat semua" /><div className="activity-list">{activity.map((item) => <div className="activity-row" key={item.name}><div className={`avatar avatar-${item.tone}`}>{item.initials}</div><div className="activity-copy"><p><strong>{item.name}</strong> {item.action}</p><small>{item.area} <span>·</span> {item.time}</small></div><ChevronRight size={16} className="activity-arrow" /></div>)}</div></div><div className="panel quick-panel"><PanelHeading eyebrow="Aksi cepat" title="Mulai dari sini" /><div className="quick-list"><Link href="/monev" className="quick-card"><span className="quick-icon lime-bg"><ClipboardList size={19} /></span><span><strong>Mulai monev baru</strong><small>Catat hasil pemantauan lapangan</small></span><ArrowUpRight size={16} /></Link><Link href="/dokumentasi" className="quick-card"><span className="quick-icon pink-bg"><Images size={19} /></span><span><strong>Unggah dokumentasi</strong><small>Tambahkan bukti publikasi terbaru</small></span><ArrowUpRight size={16} /></Link><Link href="/lokasi" className="quick-card"><span className="quick-icon blue-bg"><MapPin size={19} /></span><span><strong>Kelola lokasi</strong><small>Atur titik pemantauan aktif</small></span><ArrowUpRight size={16} /></Link></div></div></section>
   </>;
+}
+
+function InsightPage() {
+  const [question, setQuestion] = useState("Apa pola utama dari laporan monev terbaru?");
+  const insight = trpc.insights.generate.useMutation();
+  const result = insight.data as { answer?: string; scope?: { period?: string; filters?: string[] }; facts?: Array<{ statement: string; evidence_ids: string[] }>; interpretation?: string[]; recommended_actions?: Array<{ action: string; reason: string; owner_role: string }>; data_quality_flags?: string[]; confidence?: string; missing_information?: string[] } | undefined;
+  return <><PageIntro eyebrow="Insight berbasis data" title={<>Baca sinyal <em>lapangan.</em></>} description="Ajukan pertanyaan dalam bahasa Indonesia. Jawaban hanya menggunakan laporan yang tersedia di ruang kerja Anda." action={<span className="ai-contract-badge"><Sparkles size={15} /> JSON terstruktur · GPT-5 mini</span>} /><section className="insight-workspace"><form className="panel insight-form" onSubmit={(event) => { event.preventDefault(); insight.mutate({ question }); }}><label htmlFor="insight-question">Pertanyaan analitik</label><textarea id="insight-question" value={question} onChange={(event) => setQuestion(event.target.value)} rows={4} maxLength={600} /><div className="insight-form-footer"><small>Contoh: bandingkan kelengkapan laporan per provinsi.</small><button className="primary-button" type="submit" disabled={insight.isPending || question.trim().length < 3}><Sparkles size={16} /> {insight.isPending ? "Menganalisis…" : "Buat insight"}</button></div></form>{insight.error && <div className="panel insight-error">Insight belum dapat dibuat: {insight.error.message}</div>}{result && <div className="insight-results"><div className="panel insight-answer"><div className="insight-result-head"><span className="eyebrow">Jawaban</span><span className={`confidence confidence-${result.confidence}`}>{result.confidence ?? "unknown"} confidence</span></div><h2>{result.answer}</h2><small>Scope: {result.scope?.period ?? "Tidak ditentukan"}</small></div><div className="insight-columns"><div className="panel insight-list"><PanelHeading eyebrow="Fakta teramati" title="Bukti laporan" />{(result.facts ?? []).map((fact) => <div className="insight-item" key={fact.statement}><CheckCircle2 size={16} /><div><p>{fact.statement}</p><small>{fact.evidence_ids.join(", ") || "Tidak ada ID bukti"}</small></div></div>)}</div><div className="panel insight-list"><PanelHeading eyebrow="Tindak lanjut" title="Rekomendasi" />{(result.recommended_actions ?? []).map((action) => <div className="insight-item" key={action.action}><ArrowUpRight size={16} /><div><p>{action.action}</p><small>{action.owner_role} · {action.reason}</small></div></div>)}</div></div>{(result.data_quality_flags?.length || result.missing_information?.length) ? <div className="panel insight-flags"><strong>Catatan kualitas data</strong><p>{[...(result.data_quality_flags ?? []), ...(result.missing_information ?? [])].join(" ")}</p></div> : null}</div>}</section></>;
 }
 
 function MonevPage() {

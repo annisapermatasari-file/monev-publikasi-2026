@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /monev
+Disallow: /dokumentasi
+Disallow: /review
+Disallow: /lokasi
+Disallow: /petugas
+Disallow: /insight
+Sitemap: https://3000-ia8erkr4ytn53wncgqktx-cddd872b.sg2.manus.computer/sitemap.xml
