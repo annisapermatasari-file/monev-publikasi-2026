@@ -34,7 +34,7 @@ import { Link, Route, Switch, useLocation } from "wouter";
 import "./index.css";
 
 type Role = "SUPER_ADMIN" | "PETUGAS" | "VIEWER";
-const navItems = [
+const navItems: Array<{ href: string; label: string; icon: typeof LayoutDashboard; roles: Role[] }> = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/monev", label: "Monev Lapangan", icon: ClipboardList, roles: ["SUPER_ADMIN", "PETUGAS"] },
   { href: "/dokumentasi", label: "Dokumentasi", icon: Images, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
@@ -78,10 +78,15 @@ function App() {
 }
 
 function LoginPage() {
-  const [email, setEmail] = useState("admin@monev.go.id");
-  const [password, setPassword] = useState("password");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [, navigate] = useLocation();
+  const localLogin = trpc.auth.localLogin.useMutation({
+    onSuccess: () => navigate("/dashboard"),
+    onError: (loginError) => setError(loginError.message || "Username atau password salah."),
+  });
   useEffect(() => {
     document.title = "Masuk | Monev Publikasi 2026";
     let robots = document.head.querySelector("meta[name='robots']") as HTMLMetaElement | null;
@@ -91,12 +96,13 @@ function LoginPage() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!email || !password) {
-      setError("Masukkan email dan kata sandi untuk melanjutkan.");
+    if (!username || !password) {
+      setError("Masukkan username dan kata sandi untuk melanjutkan.");
       return;
     }
-    trackEvent("login_started", { method: "manus_oauth" });
-    startLogin();
+    setError("");
+    trackEvent("login_started", { method: "local_username" });
+    localLogin.mutate({ username, password });
   }
 
   return (
@@ -132,14 +138,14 @@ function LoginPage() {
             <p>Masuk untuk melanjutkan pemantauan dan evaluasi publikasi.</p>
           </div>
           <form className="auth-form" onSubmit={handleSubmit}>
-            <label htmlFor="email">Email kerja</label>
-            <div className="input-wrap"><FileText size={17} /><input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nama@instansi.go.id" autoComplete="email" /></div>
+            <label htmlFor="username">Username</label>
+            <div className="input-wrap"><FileText size={17} /><input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Masukkan username" autoComplete="username" /></div>
             <div className="label-row"><label htmlFor="password">Kata sandi</label><button type="button" className="text-button" onClick={() => setError("Silakan hubungi admin untuk reset kata sandi.")}>Lupa kata sandi?</button></div>
             <div className="input-wrap"><ShieldCheck size={17} /><input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" /><button type="button" className="password-toggle" onClick={() => setShowPassword((value) => !value)}>{showPassword ? "Sembunyikan" : "Lihat"}</button></div>
             {error && <p className="form-error">{error}</p>}
-            <button className="primary-button auth-submit" type="submit">Masuk ke dashboard <ArrowUpRight size={17} /></button>
+            <button className="primary-button auth-submit" type="submit" disabled={localLogin.isPending}>Masuk ke dashboard <ArrowUpRight size={17} /></button>
           </form>
-          <div className="demo-note"><Sparkles size={15} /><span><strong>Login aman.</strong> Anda akan diarahkan ke akun resmi untuk melanjutkan ke dashboard.</span></div>
+          <div className="demo-note"><Sparkles size={15} /><span><strong>Login aman.</strong> Gunakan username akun internal atau <button type="button" className="text-button" onClick={() => { trackEvent("login_started", { method: "manus_oauth" }); startLogin(); }}>masuk dengan OAuth</button> untuk akun lama.</span></div>
           <p className="auth-footnote">© 2026 Direktorat Kursus dan Pelatihan · PKK &amp; PKW</p>
         </div>
       </section>
@@ -154,7 +160,8 @@ function AppShell({ children }: { children: ReactNode }) {
   const { user, loading, logout } = useAuth({ redirectOnUnauthenticated: true });
   const active = (href: string) => href === "/dashboard" ? location === href : location === href || location.startsWith(`${href}/`);
   const displayName = user?.name || user?.email || "Pengguna Monev";
-  const displayRole = user?.role === "admin" ? "Super Admin" : "Petugas";
+  const role: Role = user?.role === "SUPER_ADMIN" || user?.role === "admin" ? "SUPER_ADMIN" : user?.role === "PETUGAS" ? "PETUGAS" : "VIEWER";
+  const displayRole = role === "SUPER_ADMIN" ? "Super Admin" : role === "PETUGAS" ? "Petugas" : "Viewer";
   const initials = displayName.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "MO";
   useEffect(() => {
     let robots = document.head.querySelector("meta[name='robots']") as HTMLMetaElement | null;
@@ -182,7 +189,7 @@ function AppShell({ children }: { children: ReactNode }) {
         <div className="sidebar-status"><i /> Live desk <span>●</span></div>
         <nav className="sidebar-nav" aria-label="Navigasi utama">
           <p className="nav-label">Ruang kerja</p>
-          {navItems.map((item) => {
+          {navItems.filter((item) => item.roles.includes(role)).map((item) => {
             const Icon = item.icon;
             return <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className={`nav-item ${active(item.href) ? "active" : ""}`}><Icon size={17} strokeWidth={1.8} /><span>{item.label}</span>{active(item.href) && <b />} </Link>;
           })}
