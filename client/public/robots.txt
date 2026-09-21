@@ -8,4 +8,4 @@ Disallow: /review
 Disallow: /lokasi
 Disallow: /petugas
 Disallow: /insight
-Sitemap: https://3000-ia8erkr4ytn53wncgqktx-cddd872b.sg2.manus.computer/sitemap.xml
+Sitemap: https://monev-publikasi.manus.space/sitemap.xml

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ArrowUpRight, CheckCircle2, FileText, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 
-const SITE_URL = "https://3000-ia8erkr4ytn53wncgqktx-cddd872b.sg2.manus.computer";
+const SITE_URL = "https://monev-publikasi.manus.space";
 
 function usePageMeta(title: string, description: string, path: string, type = "website") {
   useEffect(() => {
