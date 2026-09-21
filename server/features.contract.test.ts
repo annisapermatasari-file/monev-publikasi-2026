@@ -7,7 +7,13 @@ describe("monev feature contracts", () => {
     expect(appRouter.locations.list).toBeDefined();
     expect(appRouter.locations.create).toBeDefined();
     expect(appRouter.reports.list).toBeDefined();
+    expect(appRouter.reports.assign).toBeDefined();
     expect(appRouter.reports.updateStatus).toBeDefined();
+    expect(appRouter.accounts.listPetugas).toBeDefined();
+    expect(appRouter.accounts.createPetugas).toBeDefined();
+    expect(appRouter.accounts.setActive).toBeDefined();
+    expect(appRouter.accounts.resetPassword).toBeDefined();
+    expect(appRouter.tasks.mine).toBeDefined();
     expect(appRouter.insights.generate).toBeDefined();
     expect(appRouter.documentation.list).toBeDefined();
     expect(appRouter.documentation.upload).toBeDefined();

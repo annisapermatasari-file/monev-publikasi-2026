@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { documentation, locations, reports, users } from "../drizzle/schema";
-import { getDashboardStats, getUserByUsername, listAssignedTasks, listDocumentation, listLocations, listPetugasAccounts, listReports, requireDb, setUserActive, touchUser } from "./db";
+import { getDashboardStats, getPetugasAccount, getUserByUsername, listAssignedTasks, listDocumentation, listLocations, listPetugasAccounts, listReports, requireDb, setUserActive, touchUser } from "./db";
 import { storagePut } from "./storage";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -45,6 +45,13 @@ export const appRouter = router({
   }),
   reports: router({
     list: protectedProcedure.query(() => listReports()),
+    assign: adminProcedure.input(z.object({ reportId: z.number(), petugasId: z.number() })).mutation(async ({ input }) => {
+      const petugas = await getPetugasAccount(input.petugasId);
+      if (!petugas || !petugas.isActive) throw new Error("Akun Petugas tidak aktif atau tidak ditemukan.");
+      const db = await requireDb();
+      await db.update(reports).set({ assignedUserId: petugas.id, officerName: petugas.name ?? petugas.username ?? "Petugas", updatedAt: new Date() }).where((await import("drizzle-orm")).eq(reports.id, input.reportId));
+      return { success: true } as const;
+    }),
     updateStatus: protectedProcedure.input(z.object({ id: z.number(), status: z.enum(["completed", "review", "in_progress"]) })).mutation(async ({ input }) => {
       const db = await requireDb();
       await db.update(reports).set({ status: input.status, updatedAt: new Date() }).where((await import("drizzle-orm")).eq(reports.id, input.id));
@@ -61,6 +68,13 @@ export const appRouter = router({
       return { success: true } as const;
     }),
     setActive: adminProcedure.input(z.object({ id: z.number(), isActive: z.boolean() })).mutation(async ({ input }) => { await setUserActive(input.id, input.isActive); return { success: true } as const; }),
+    resetPassword: adminProcedure.input(z.object({ id: z.number(), password: z.string().min(12).max(200) })).mutation(async ({ input }) => {
+      const petugas = await getPetugasAccount(input.id);
+      if (!petugas) throw new Error("Akun Petugas tidak ditemukan.");
+      const db = await requireDb();
+      await db.update(users).set({ passwordHash: await hashPassword(input.password), isActive: true }).where((await import("drizzle-orm")).eq(users.id, input.id));
+      return { success: true } as const;
+    }),
   }),
   tasks: router({
     mine: protectedProcedure.query(({ ctx }) => listAssignedTasks(ctx.user)),

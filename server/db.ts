@@ -59,7 +59,7 @@ export async function listPetugasAccounts() {
 export async function listAssignedTasks(user: User) {
   const db = await requireDb();
   const names = [user.name, user.username].filter((value): value is string => Boolean(value));
-  const assignmentFilter = names.length === 1 ? eq(reports.officerName, names[0]) : or(...names.map((name) => eq(reports.officerName, name)));
+  const assignmentFilter = or(eq(reports.assignedUserId, user.id), ...names.map((name) => eq(reports.officerName, name)));
   return db.select({ report: reports, location: locations }).from(reports)
     .leftJoin(locations, eq(reports.locationId, locations.id))
     .where(assignmentFilter)
@@ -69,6 +69,12 @@ export async function listAssignedTasks(user: User) {
 export async function setUserActive(id: number, isActive: boolean) {
   const db = await requireDb();
   await db.update(users).set({ isActive }).where(and(eq(users.id, id), eq(users.role, "PETUGAS")));
+}
+
+export async function getPetugasAccount(id: number) {
+  const db = await requireDb();
+  const result = await db.select().from(users).where(and(eq(users.id, id), eq(users.role, "PETUGAS"))).limit(1);
+  return result[0];
 }
 
 export async function touchUser(user: User) {

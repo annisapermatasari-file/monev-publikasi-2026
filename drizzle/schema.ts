@@ -30,6 +30,7 @@ export const locations = mysqlTable("locations", {
 export const reports = mysqlTable("reports", {
   id: int("id").autoincrement().primaryKey(),
   locationId: int("locationId").notNull(),
+  assignedUserId: int("assignedUserId"),
   officerName: varchar("officerName", { length: 160 }).notNull(),
   status: mysqlEnum("status", ["completed", "review", "in_progress"]).default("in_progress").notNull(),
   completeness: int("completeness").default(0).notNull(),
@@ -37,7 +38,7 @@ export const reports = mysqlTable("reports", {
   submittedAt: timestamp("submittedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-}, (table) => ({ locationIdx: index("reports_location_idx").on(table.locationId), statusIdx: index("reports_status_idx").on(table.status) }));
+}, (table) => ({ locationIdx: index("reports_location_idx").on(table.locationId), assignedUserIdx: index("reports_assigned_user_idx").on(table.assignedUserId), statusIdx: index("reports_status_idx").on(table.status) }));
 
 export const documentation = mysqlTable("documentation", {
   id: int("id").autoincrement().primaryKey(),
