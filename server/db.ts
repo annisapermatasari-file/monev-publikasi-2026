@@ -1,4 +1,4 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, User, documentation, locations, reports, users } from "../drizzle/schema";
 import { ENV } from "./_core/env";
@@ -48,6 +48,27 @@ export async function getUserByUsername(username: string) {
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
   return result[0];
+}
+
+export async function listPetugasAccounts() {
+  const db = await requireDb();
+  return db.select({ id: users.id, username: users.username, name: users.name, role: users.role, isActive: users.isActive, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn })
+    .from(users).where(eq(users.role, "PETUGAS")).orderBy(desc(users.createdAt));
+}
+
+export async function listAssignedTasks(user: User) {
+  const db = await requireDb();
+  const names = [user.name, user.username].filter((value): value is string => Boolean(value));
+  const assignmentFilter = names.length === 1 ? eq(reports.officerName, names[0]) : or(...names.map((name) => eq(reports.officerName, name)));
+  return db.select({ report: reports, location: locations }).from(reports)
+    .leftJoin(locations, eq(reports.locationId, locations.id))
+    .where(assignmentFilter)
+    .orderBy(desc(reports.updatedAt));
+}
+
+export async function setUserActive(id: number, isActive: boolean) {
+  const db = await requireDb();
+  await db.update(users).set({ isActive }).where(and(eq(users.id, id), eq(users.role, "PETUGAS")));
 }
 
 export async function touchUser(user: User) {

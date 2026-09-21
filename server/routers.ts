@@ -1,15 +1,16 @@
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
-import { documentation, locations, reports } from "../drizzle/schema";
-import { getDashboardStats, getUserByUsername, listDocumentation, listLocations, listReports, requireDb, touchUser } from "./db";
+import { documentation, locations, reports, users } from "../drizzle/schema";
+import { getDashboardStats, getUserByUsername, listAssignedTasks, listDocumentation, listLocations, listPetugasAccounts, listReports, requireDb, setUserActive, touchUser } from "./db";
 import { storagePut } from "./storage";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { generateInsight } from "./insights";
 import { verifyPassword } from "./password";
 import { sdk } from "./_core/sdk";
 import { ONE_YEAR_MS } from "@shared/const";
+import { hashPassword } from "./password";
 
 export const appRouter = router({
   system: systemRouter,
@@ -17,7 +18,7 @@ export const appRouter = router({
     me: publicProcedure.query(({ ctx }) => ctx.user),
     localLogin: publicProcedure.input(z.object({ username: z.string().trim().min(3).max(80), password: z.string().min(12).max(200) })).mutation(async ({ ctx, input }) => {
       const user = await getUserByUsername(input.username.toLowerCase());
-      if (!user?.passwordHash || !(await verifyPassword(input.password, user.passwordHash))) {
+      if (!user?.isActive || !user.passwordHash || !(await verifyPassword(input.password, user.passwordHash))) {
         throw new Error("Username atau password salah.");
       }
       const token = await sdk.createSessionToken(user.openId, { name: user.name || user.username || input.username, expiresInMs: ONE_YEAR_MS });
@@ -49,6 +50,20 @@ export const appRouter = router({
       await db.update(reports).set({ status: input.status, updatedAt: new Date() }).where((await import("drizzle-orm")).eq(reports.id, input.id));
       return { success: true } as const;
     }),
+  }),
+  accounts: router({
+    listPetugas: adminProcedure.query(() => listPetugasAccounts()),
+    createPetugas: adminProcedure.input(z.object({ username: z.string().trim().toLowerCase().min(3).max(80).regex(/^[a-z0-9._-]+$/), name: z.string().trim().min(2).max(160), password: z.string().min(12).max(200) })).mutation(async ({ input }) => {
+      const existing = await getUserByUsername(input.username);
+      if (existing) throw new Error("Username sudah digunakan.");
+      const db = await requireDb();
+      await db.insert(users).values({ openId: `local:${input.username}`, username: input.username, passwordHash: await hashPassword(input.password), name: input.name, loginMethod: "local", role: "PETUGAS", isActive: true });
+      return { success: true } as const;
+    }),
+    setActive: adminProcedure.input(z.object({ id: z.number(), isActive: z.boolean() })).mutation(async ({ input }) => { await setUserActive(input.id, input.isActive); return { success: true } as const; }),
+  }),
+  tasks: router({
+    mine: protectedProcedure.query(({ ctx }) => listAssignedTasks(ctx.user)),
   }),
   insights: router({
     generate: protectedProcedure.input(z.object({ question: z.string().min(3).max(600) })).mutation(({ input }) => generateInsight(input.question)),

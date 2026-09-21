@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   Sparkles,
   Users,
+  UserCog,
   X,
 } from "lucide-react";
 import { Link, Route, Switch, useLocation } from "wouter";
@@ -41,6 +42,8 @@ const navItems: Array<{ href: string; label: string; icon: typeof LayoutDashboar
   { href: "/review", label: "Review Hasil", icon: ClipboardCheck, roles: ["SUPER_ADMIN"] },
   { href: "/lokasi", label: "Lokasi Monev", icon: MapPin, roles: ["SUPER_ADMIN", "PETUGAS", "VIEWER"] },
   { href: "/petugas", label: "Petugas", icon: Users, roles: ["SUPER_ADMIN"] },
+  { href: "/akun", label: "Manajemen akun", icon: UserCog, roles: ["SUPER_ADMIN"] },
+  { href: "/tugas", label: "Tugas lapangan", icon: ClipboardList, roles: ["PETUGAS"] },
 ];
 
 const activity = [
@@ -72,6 +75,8 @@ function App() {
       <Route path="/lokasi" component={() => <AppShell><LocationsPage /></AppShell>} />
       <Route path="/insight" component={() => <AppShell><InsightPage /></AppShell>} />
       <Route path="/petugas" component={() => <AppShell><StaffPage /></AppShell>} />
+      <Route path="/akun" component={() => <AppShell><AccountManagementPage /></AppShell>} />
+      <Route path="/tugas" component={() => <AppShell><PetugasTaskPage /></AppShell>} />
       <Route component={LoginPage} />
     </Switch>
   );
@@ -206,7 +211,9 @@ function AppShell({ children }: { children: ReactNode }) {
 }
 
 function DashboardPage() {
-  const { data } = trpc.dashboard.overview.useQuery();
+  const { user } = useAuth();
+  const { data } = trpc.dashboard.overview.useQuery(undefined, { enabled: user?.role !== "PETUGAS" });
+  if (user?.role === "PETUGAS") return <PetugasTaskPage compact />;
   const locationsValue = data ? String(data.locations) : "—";
   const completedValue = data ? String(data.completed) : "—";
   const publicationsValue = data ? String(data.publications) : "—";
@@ -303,6 +310,29 @@ function LocationsPage() {
 
 function StaffPage() {
   return <><PageIntro eyebrow="Tim lapangan" title={<>Orang di balik <em>data.</em></>} description="Kelola petugas, peran, dan cakupan wilayah yang menjadi tanggung jawab mereka." action={<button className="primary-button"><Users size={16} /> Tambah petugas</button>} /><div className="staff-grid">{[{ name: "Ari Rahman", role: "Petugas lapangan", area: "DI Yogyakarta", initials: "AR", tone: "lime" }, { name: "Nisa Sari", role: "Petugas lapangan", area: "Jawa Barat", initials: "NS", tone: "pink" }, { name: "Dimas Lestari", role: "Petugas lapangan", area: "Sulawesi Selatan", initials: "DL", tone: "blue" }, { name: "Siti Aminah", role: "Reviewer", area: "Jawa Tengah", initials: "SA", tone: "amber" }].map((person) => <div className="panel staff-card" key={person.name}><div className={`avatar avatar-${person.tone} large`}>{person.initials}</div><div><strong>{person.name}</strong><small>{person.role}</small></div><span className="staff-online"><i /> Aktif</span><div className="staff-divider" /><p><MapPin size={14} /> {person.area}</p><button className="outline-button small">Lihat profil <ArrowUpRight size={14} /></button></div>)}</div></>;
+}
+
+function AccountManagementPage() {
+  const { data: accounts, refetch } = trpc.accounts.listPetugas.useQuery();
+  const createAccount = trpc.accounts.createPetugas.useMutation({ onSuccess: () => { setForm({ username: "", name: "", password: "" }); setShowForm(false); refetch(); } });
+  const setActive = trpc.accounts.setActive.useMutation({ onSuccess: () => refetch() });
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ username: "", name: "", password: "" });
+  return <><PageIntro eyebrow="Kontrol akses" title={<>Kelola akun <em>petugas.</em></>} description="Buat akun lapangan, atur akses masuk, dan nonaktifkan akun yang tidak lagi bertugas." action={<button className="primary-button" onClick={() => setShowForm((value) => !value)}><UserCog size={16} /> {showForm ? "Tutup form" : "Buat akun petugas"}</button>} />
+    {showForm && <form className="panel account-form" onSubmit={(event) => { event.preventDefault(); createAccount.mutate(form); }}><div><label>Username<input required minLength={3} value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} placeholder="petugas.sari" /></label><label>Nama lengkap<input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder="Sari Anindita" /></label></div><div><label>Password awal<input required minLength={12} type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Minimal 12 karakter" /></label><p className="form-hint">Password disimpan sebagai hash dan dapat diganti melalui proses reset admin.</p></div><button className="primary-button" type="submit" disabled={createAccount.isPending}>{createAccount.isPending ? "Membuat…" : "Simpan akun"}</button>{createAccount.error && <p className="form-error">{createAccount.error.message}</p>}</form>}
+    <div className="panel table-panel account-table"><div className="table-heading"><div><p className="eyebrow">{accounts?.length ?? "—"} akun terdaftar</p><h3>Akun petugas lapangan</h3></div><span className="storage-note"><ShieldCheck size={13} /> Akses terkontrol</span></div><div className="data-table"><div className="table-row table-header"><span>Petugas</span><span>Username</span><span>Dibuat</span><span>Status</span><span /></div>{!accounts?.length ? <div className="empty-table">Belum ada akun petugas. Buat akun pertama dari tombol di atas.</div> : accounts.map((account) => <div className="table-row" key={account.id}><div className="person-cell"><div className="avatar avatar-lime">{(account.name ?? account.username ?? "P").split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()}</div><span><strong>{account.name ?? "Tanpa nama"}</strong><small>Petugas lapangan</small></span></div><span className="muted-cell">{account.username}</span><span className="muted-cell">{new Date(account.createdAt).toLocaleDateString("id-ID")}</span><span><StatusPill tone={account.isActive ? "success" : "process"}>{account.isActive ? "Aktif" : "Nonaktif"}</StatusPill></span><button className="outline-button small" disabled={setActive.isPending} onClick={() => setActive.mutate({ id: account.id, isActive: !account.isActive })}>{account.isActive ? "Nonaktifkan" : "Aktifkan"}</button></div>)}</div></div></>;
+}
+
+function PetugasTaskPage({ compact = false }: { compact?: boolean }) {
+  const { data: tasks, refetch } = trpc.tasks.mine.useQuery();
+  const updateStatus = trpc.reports.updateStatus.useMutation({ onSuccess: () => refetch() });
+  const rows = tasks ?? [];
+  const completed = rows.filter(({ report }) => report.status === "completed").length;
+  const review = rows.filter(({ report }) => report.status === "review").length;
+  const inProgress = rows.filter(({ report }) => report.status === "in_progress").length;
+  return <><PageIntro eyebrow="Ruang kerja petugas" title={<>Tugas <em>lapangan.</em></>} description="Lihat penugasan Anda, perbarui status monev, dan pastikan setiap laporan dikirim tepat waktu." action={<span className="ai-contract-badge"><Radio size={14} /> Sinkronisasi live</span>} />
+    <section className="stat-grid task-stats"><StatCard label="Total tugas" value={String(rows.length)} note="Penugasan Anda" tone="lime" icon={<ClipboardList size={17} />} trend="live" /><StatCard label="Dalam proses" value={String(inProgress)} note="Perlu ditindaklanjuti" tone="blue" icon={<Activity size={17} />} trend="aktif" /><StatCard label="Menunggu review" value={String(review)} note="Siap diperiksa admin" tone="amber" icon={<ShieldCheck size={17} />} trend="review" /><StatCard label="Selesai" value={String(completed)} note="Laporan terkirim" tone="pink" icon={<Check size={17} />} trend="selesai" /></section>
+    <div className="panel table-panel task-table"><div className="table-heading"><div><p className="eyebrow">{compact ? "Ringkasan tugas" : "Daftar penugasan Anda"}</p><h3>{compact ? "Tugas yang perlu perhatian" : "Tugas lapangan"}</h3></div>{compact && <Link href="/tugas" className="outline-button small">Buka semua <ArrowUpRight size={14} /></Link>}</div><div className="data-table"><div className="table-row table-header"><span>Lokasi</span><span>Terakhir diperbarui</span><span>Kelengkapan</span><span>Status</span><span /></div>{rows.length === 0 ? <div className="empty-table">Belum ada tugas yang ditugaskan ke akun ini.</div> : (compact ? rows.slice(0, 5) : rows).map(({ report, location }) => <div className="table-row" key={report.id}><div><strong>{location?.name ?? "Lokasi belum diberi nama"}</strong><small>{location?.province ?? "Wilayah belum ditentukan"}</small></div><span className="muted-cell">{new Date(report.updatedAt).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}</span><span className="task-progress"><span><i style={{ width: `${report.completeness}%` }} /></span>{report.completeness}%</span><StatusPill tone={report.status === "completed" ? "success" : report.status === "review" ? "review" : "process"}>{report.status === "completed" ? "Selesai" : report.status === "review" ? "Review" : "Dalam proses"}</StatusPill><button className="row-more" aria-label="Perbarui status" onClick={() => updateStatus.mutate({ id: report.id, status: report.status === "in_progress" ? "review" : "completed" })}><ArrowUpRight size={16} /></button></div>)}</div></div></>;
 }
 
 function PageIntro({ eyebrow, title, description, action }: { eyebrow: string; title: ReactNode; description: string; action?: ReactNode }) {
