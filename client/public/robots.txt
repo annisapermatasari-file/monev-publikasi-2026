@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /
+Allow: /metodologi
+Allow: /faq
 Disallow: /dashboard
 Disallow: /monev
 Disallow: /dokumentasi

@@ -3,7 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { MapView } from "@/components/Map";
 import { trpc } from "@/lib/trpc";
-import { FaqPage, MethodologyPage, PublicHome } from "@/pages/PublicPages";
+import { FaqPage, MethodologyPage } from "@/pages/PublicPages";
 import { trackEvent } from "./analytics";
 import {
   Activity,
@@ -61,7 +61,7 @@ function App() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/" component={PublicHome} />
+      <Route path="/" component={LoginPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/metodologi" component={MethodologyPage} />
       <Route path="/faq" component={FaqPage} />
