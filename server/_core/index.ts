@@ -31,6 +31,20 @@ export function createApiApp(): Express {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+  // Older cached clients may still request JSONL streaming. The Vercel
+  // Express adapter cannot safely combine that response mode with the
+  // session-cookie mutation used by localLogin, so downgrade it to the
+  // standard JSON response format. Current clients already use httpBatchLink.
+  app.use("/api/trpc", (req, _res, next) => {
+    if (req.headers["trpc-accept"] === "application/jsonl") {
+      delete req.headers["trpc-accept"];
+      if (typeof req.headers.accept === "string") {
+        const accepts = req.headers.accept.split(",").map(value => value.trim()).filter(value => value !== "application/jsonl");
+        req.headers.accept = accepts.join(", ") || "application/json";
+      }
+    }
+    next();
+  });
   app.use(
     "/api/trpc",
     createExpressMiddleware({
