@@ -37,7 +37,7 @@ export function createApiApp(): Express {
   // standard JSON response format. Current clients already use httpBatchLink.
   app.use("/api/trpc", (req, _res, next) => {
     if (req.headers["trpc-accept"] === "application/jsonl") {
-      delete req.headers["trpc-accept"];
+      req.headers["trpc-accept"] = "application/json";
       if (typeof req.headers.accept === "string") {
         const accepts = req.headers.accept.split(",").map(value => value.trim()).filter(value => value !== "application/jsonl");
         req.headers.accept = accepts.join(", ") || "application/json";
