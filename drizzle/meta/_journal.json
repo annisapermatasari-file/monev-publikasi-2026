@@ -1,12 +1,12 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1789534809314,
-      "tag": "0000_damp_mongu",
+      "version": "5",
+      "when": 1789979638612,
+      "tag": "0000_sparkling_wendell_rand",
       "breakpoints": true
     }
   ]

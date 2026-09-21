@@ -1,0 +1,11 @@
+{
+  "name": "Monev Publikasi 2026",
+  "short_name": "Monev Publikasi",
+  "description": "Pemantauan publikasi PKK dan PKW.",
+  "lang": "id",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f3",
+  "theme_color": "#17231d",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

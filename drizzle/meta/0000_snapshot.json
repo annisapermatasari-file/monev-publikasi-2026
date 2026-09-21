@@ -1,1843 +1,399 @@
 {
-  "id": "a9a3290a-5cdd-4791-b6c5-2e0c5e55e38c",
+  "version": "5",
+  "dialect": "mysql",
+  "id": "b79c6730-274b-4111-8d19-ba89e73b10e7",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "7",
-  "dialect": "postgresql",
   "tables": {
-    "public.assignments": {
-      "name": "assignments",
-      "schema": "",
+    "documentation": {
+      "name": "documentation",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location_id": {
-          "name": "location_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "periode": {
-          "name": "periode",
-          "type": "varchar(100)",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2026'"
+          "autoincrement": true
         },
-        "created_at": {
-          "name": "created_at",
+        "locationId": {
+          "name": "locationId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "mimeType": {
+          "name": "mimeType",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "storageKey": {
+          "name": "storageKey",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "storageUrl": {
+          "name": "storageUrl",
+          "type": "varchar(700)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "uploadedBy": {
+          "name": "uploadedBy",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('verified','review')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'review'"
+        },
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {
-        "assignments_user_location_periode_uniq": {
-          "name": "assignments_user_location_periode_uniq",
+        "documentation_created_idx": {
+          "name": "documentation_created_idx",
           "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "location_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "periode",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
+            "createdAt"
           ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
+          "isUnique": false
         }
       },
-      "foreignKeys": {
-        "assignments_user_id_users_id_fk": {
-          "name": "assignments_user_id_users_id_fk",
-          "tableFrom": "assignments",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "assignments_location_id_locations_id_fk": {
-          "name": "assignments_location_id_locations_id_fk",
-          "tableFrom": "assignments",
-          "tableTo": "locations",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.audit_logs": {
-      "name": "audit_logs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "action": {
-          "name": "action",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "entity_type": {
-          "name": "entity_type",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "entity_id": {
-          "name": "entity_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "metadata": {
-          "name": "metadata",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "audit_logs_user_id_users_id_fk": {
-          "name": "audit_logs_user_id_users_id_fk",
-          "tableFrom": "audit_logs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.channel_audits": {
-      "name": "channel_audits",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "digunakan": {
-          "name": "digunakan",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "jumlah_konten": {
-          "name": "jumlah_konten",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "url_contoh": {
-          "name": "url_contoh",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "periode": {
-          "name": "periode",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "format_dominan": {
-          "name": "format_dominan",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "channel_audits_session_channel_uniq": {
-          "name": "channel_audits_session_channel_uniq",
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "documentation_id": {
+          "name": "documentation_id",
           "columns": [
-            {
-              "expression": "session_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "channel_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "channel_audits_session_id_monev_sessions_id_fk": {
-          "name": "channel_audits_session_id_monev_sessions_id_fk",
-          "tableFrom": "channel_audits",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
             "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "channel_audits_channel_id_publication_channels_id_fk": {
-          "name": "channel_audits_channel_id_publication_channels_id_fk",
-          "tableFrom": "channel_audits",
-          "tableTo": "publication_channels",
-          "columnsFrom": [
-            "channel_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
+          ]
         }
       },
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraint": {}
     },
-    "public.evidence_types": {
-      "name": "evidence_types",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "program_scope": {
-          "name": "program_scope",
-          "type": "program_code",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "label": {
-          "name": "label",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.indicator_responses": {
-      "name": "indicator_responses",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "indicator_id": {
-          "name": "indicator_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bool_value": {
-          "name": "bool_value",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "scale_value": {
-          "name": "scale_value",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "evidence_url": {
-          "name": "evidence_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "evidence_date": {
-          "name": "evidence_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "channel": {
-          "name": "channel",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_verified": {
-          "name": "is_verified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "indicator_responses_session_indicator_uniq": {
-          "name": "indicator_responses_session_indicator_uniq",
-          "columns": [
-            {
-              "expression": "session_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "indicator_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "indicator_responses_session_id_monev_sessions_id_fk": {
-          "name": "indicator_responses_session_id_monev_sessions_id_fk",
-          "tableFrom": "indicator_responses",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "indicator_responses_indicator_id_indicators_id_fk": {
-          "name": "indicator_responses_indicator_id_indicators_id_fk",
-          "tableFrom": "indicator_responses",
-          "tableTo": "indicators",
-          "columnsFrom": [
-            "indicator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.indicators": {
-      "name": "indicators",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "category": {
-          "name": "category",
-          "type": "indicator_category",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "program_scope": {
-          "name": "program_scope",
-          "type": "program_code",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "code": {
-          "name": "code",
-          "type": "varchar(10)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "label": {
-          "name": "label",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "response_type": {
-          "name": "response_type",
-          "type": "response_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.interview_answers": {
-      "name": "interview_answers",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "interview_id": {
-          "name": "interview_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pertanyaan": {
-          "name": "pertanyaan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "jawaban": {
-          "name": "jawaban",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "boleh_dikutip": {
-          "name": "boleh_dikutip",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "interview_answers_interview_id_interviews_id_fk": {
-          "name": "interview_answers_interview_id_interviews_id_fk",
-          "tableFrom": "interview_answers",
-          "tableTo": "interviews",
-          "columnsFrom": [
-            "interview_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.interview_question_templates": {
-      "name": "interview_question_templates",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "role_scope": {
-          "name": "role_scope",
-          "type": "interview_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pertanyaan": {
-          "name": "pertanyaan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.interviews": {
-      "name": "interviews",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "narasumber": {
-          "name": "narasumber",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "peran": {
-          "name": "peran",
-          "type": "interview_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "interviews_session_id_monev_sessions_id_fk": {
-          "name": "interviews_session_id_monev_sessions_id_fk",
-          "tableFrom": "interviews",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.locations": {
+    "locations": {
       "name": "locations",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "provinsi": {
-          "name": "provinsi",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "kab_kota": {
-          "name": "kab_kota",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "nama_lembaga": {
-          "name": "nama_lembaga",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "skill_id": {
-          "name": "skill_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "penanggung_jawab": {
-          "name": "penanggung_jawab",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "no_telp": {
-          "name": "no_telp",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "alamat": {
-          "name": "alamat",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tanggal_monev_mulai": {
-          "name": "tanggal_monev_mulai",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tanggal_monev_selesai": {
-          "name": "tanggal_monev_selesai",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ig_handle": {
-          "name": "ig_handle",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "fb_handle": {
-          "name": "fb_handle",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "yt_handle": {
-          "name": "yt_handle",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tiktok_handle": {
-          "name": "tiktok_handle",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "website_url": {
-          "name": "website_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "x_handle": {
-          "name": "x_handle",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "komunitas_handle": {
-          "name": "komunitas_handle",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "default": true
+          "autoincrement": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "name": {
+          "name": "name",
+          "type": "varchar(180)",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "province": {
+          "name": "province",
+          "type": "varchar(120)",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false
         },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "locations_skill_id_skills_id_fk": {
-          "name": "locations_skill_id_skills_id_fk",
-          "tableFrom": "locations",
-          "tableTo": "skills",
-          "columnsFrom": [
-            "skill_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.media_assets": {
-      "name": "media_assets",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "media_category",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "file_url": {
-          "name": "file_url",
+        "address": {
+          "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "autoincrement": false
         },
-        "file_type": {
-          "name": "file_type",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "caption": {
-          "name": "caption",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "uploaded_by_id": {
-          "name": "uploaded_by_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "latitude": {
+          "name": "latitude",
+          "type": "double",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "media_assets_session_id_monev_sessions_id_fk": {
-          "name": "media_assets_session_id_monev_sessions_id_fk",
-          "tableFrom": "media_assets",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "autoincrement": false
         },
-        "media_assets_uploaded_by_id_users_id_fk": {
-          "name": "media_assets_uploaded_by_id_users_id_fk",
-          "tableFrom": "media_assets",
-          "tableTo": "users",
-          "columnsFrom": [
-            "uploaded_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.monev_sessions": {
-      "name": "monev_sessions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "location_id": {
-          "name": "location_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "program_id": {
-          "name": "program_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "periode": {
-          "name": "periode",
-          "type": "varchar(100)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2026'"
+          "autoincrement": false
         },
         "status": {
           "name": "status",
-          "type": "session_status",
-          "typeSchema": "public",
+          "type": "enum('active','inactive')",
           "primaryKey": false,
           "notNull": true,
-          "default": "'BELUM_DIMULAI'"
+          "autoincrement": false,
+          "default": "'active'"
         },
-        "current_step": {
-          "name": "current_step",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "last_saved_at": {
-          "name": "last_saved_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "submitted_at": {
-          "name": "submitted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "submitted_by_id": {
-          "name": "submitted_by_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "default": "(now())"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
         }
       },
       "indexes": {
-        "monev_sessions_location_program_periode_uniq": {
-          "name": "monev_sessions_location_program_periode_uniq",
+        "locations_province_idx": {
+          "name": "locations_province_idx",
           "columns": [
-            {
-              "expression": "location_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "program_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "periode",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
+            "province"
           ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
+          "isUnique": false
         }
       },
-      "foreignKeys": {
-        "monev_sessions_location_id_locations_id_fk": {
-          "name": "monev_sessions_location_id_locations_id_fk",
-          "tableFrom": "monev_sessions",
-          "tableTo": "locations",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "monev_sessions_program_id_programs_id_fk": {
-          "name": "monev_sessions_program_id_programs_id_fk",
-          "tableFrom": "monev_sessions",
-          "tableTo": "programs",
-          "columnsFrom": [
-            "program_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "monev_sessions_submitted_by_id_users_id_fk": {
-          "name": "monev_sessions_submitted_by_id_users_id_fk",
-          "tableFrom": "monev_sessions",
-          "tableTo": "users",
-          "columnsFrom": [
-            "submitted_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.programs": {
-      "name": "programs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "code": {
-          "name": "code",
-          "type": "program_code",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "programs_code_unique": {
-          "name": "programs_code_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "locations_id": {
+          "name": "locations_id",
           "columns": [
-            "code"
+            "id"
           ]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "uniqueConstraints": {},
+      "checkConstraint": {}
     },
-    "public.publication_channels": {
-      "name": "publication_channels",
-      "schema": "",
+    "reports": {
+      "name": "reports",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "channel_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": true
+        },
+        "locationId": {
+          "name": "locationId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "officerName": {
+          "name": "officerName",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('completed','review','in_progress')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'in_progress'"
+        },
+        "completeness": {
+          "name": "completeness",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
           "default": 0
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "publication_channels_name_unique": {
-          "name": "publication_channels_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.publication_evidence": {
-      "name": "publication_evidence",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
         },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "evidence_type_id": {
-          "name": "evidence_type_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ada": {
-          "name": "ada",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "file_url": {
-          "name": "file_url",
+        "notes": {
+          "name": "notes",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
-        "data_capaian": {
-          "name": "data_capaian",
-          "type": "text",
+        "submittedAt": {
+          "name": "submittedAt",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
-        "kutipan_testimoni": {
-          "name": "kutipan_testimoni",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "kualitas_kelengkapan": {
-          "name": "kualitas_kelengkapan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "publication_evidence_session_type_uniq": {
-          "name": "publication_evidence_session_type_uniq",
-          "columns": [
-            {
-              "expression": "session_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "evidence_type_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "publication_evidence_session_id_monev_sessions_id_fk": {
-          "name": "publication_evidence_session_id_monev_sessions_id_fk",
-          "tableFrom": "publication_evidence",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "publication_evidence_evidence_type_id_evidence_types_id_fk": {
-          "name": "publication_evidence_evidence_type_id_evidence_types_id_fk",
-          "tableFrom": "publication_evidence",
-          "tableTo": "evidence_types",
-          "columnsFrom": [
-            "evidence_type_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.recommendations": {
-      "name": "recommendations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "kode": {
-          "name": "kode",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "teks": {
-          "name": "teks",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "generated_at": {
-          "name": "generated_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "recommendations_session_id_monev_sessions_id_fk": {
-          "name": "recommendations_session_id_monev_sessions_id_fk",
-          "tableFrom": "recommendations",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.reviews": {
-      "name": "reviews",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "autoincrement": false,
+          "default": "(now())"
         },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reviewer_id": {
-          "name": "reviewer_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "review_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "revisi_ke": {
-          "name": "revisi_ke",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "created_at": {
-          "name": "created_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reviews_session_id_monev_sessions_id_fk": {
-          "name": "reviews_session_id_monev_sessions_id_fk",
-          "tableFrom": "reviews",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "reviews_reviewer_id_users_id_fk": {
-          "name": "reviews_reviewer_id_users_id_fk",
-          "tableFrom": "reviews",
-          "tableTo": "users",
-          "columnsFrom": [
-            "reviewer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.skills": {
-      "name": "skills",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "skills_name_unique": {
-          "name": "skills_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.story_brief_elements": {
-      "name": "story_brief_elements",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "urutan": {
-          "name": "urutan",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "elemen": {
-          "name": "elemen",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "arahan": {
-          "name": "arahan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.story_brief_responses": {
-      "name": "story_brief_responses",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "session_id": {
-          "name": "session_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "element_id": {
-          "name": "element_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "temuan": {
-          "name": "temuan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "bukti_link": {
-          "name": "bukti_link",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "catatan": {
-          "name": "catatan",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
         }
       },
       "indexes": {
-        "story_brief_responses_session_element_uniq": {
-          "name": "story_brief_responses_session_element_uniq",
+        "reports_location_idx": {
+          "name": "reports_location_idx",
           "columns": [
-            {
-              "expression": "session_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "element_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
+            "locationId"
           ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "story_brief_responses_session_id_monev_sessions_id_fk": {
-          "name": "story_brief_responses_session_id_monev_sessions_id_fk",
-          "tableFrom": "story_brief_responses",
-          "tableTo": "monev_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "isUnique": false
         },
-        "story_brief_responses_element_id_story_brief_elements_id_fk": {
-          "name": "story_brief_responses_element_id_story_brief_elements_id_fk",
-          "tableFrom": "story_brief_responses",
-          "tableTo": "story_brief_elements",
-          "columnsFrom": [
-            "element_id"
+        "reports_status_idx": {
+          "name": "reports_status_idx",
+          "columns": [
+            "status"
           ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
-      "compositePrimaryKeys": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "reports_id": {
+          "name": "reports_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraint": {}
     },
-    "public.users": {
+    "users": {
       "name": "users",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
-          "primaryKey": true,
+          "type": "int",
+          "primaryKey": false,
           "notNull": true,
-          "default": "gen_random_uuid()"
+          "autoincrement": true
+        },
+        "openId": {
+          "name": "openId",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(255)",
+          "type": "varchar(320)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
-        "username": {
-          "name": "username",
-          "type": "varchar(100)",
+        "loginMethod": {
+          "name": "loginMethod",
+          "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true
-        },
-        "password_hash": {
-          "name": "password_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "autoincrement": false
         },
         "role": {
           "name": "role",
-          "type": "role",
-          "typeSchema": "public",
+          "type": "enum('user','admin')",
           "primaryKey": false,
           "notNull": true,
-          "default": "'PETUGAS'"
+          "autoincrement": false,
+          "default": "'user'"
         },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_unit_account": {
-          "name": "is_unit_account",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "default": "(now())"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "lastSignedIn": {
+          "name": "lastSignedIn",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "users_id": {
+          "name": "users_id",
           "columns": [
-            "email"
-          ]
-        },
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
+            "id"
           ]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "uniqueConstraints": {
+        "users_openId_unique": {
+          "name": "users_openId_unique",
+          "columns": [
+            "openId"
+          ]
+        }
+      },
+      "checkConstraint": {}
     }
   },
-  "enums": {
-    "public.channel_type": {
-      "name": "channel_type",
-      "schema": "public",
-      "values": [
-        "INTERNAL",
-        "EKSTERNAL"
-      ]
-    },
-    "public.indicator_category": {
-      "name": "indicator_category",
-      "schema": "public",
-      "values": [
-        "KETERPENUHAN",
-        "KEPATUHAN",
-        "KINERJA",
-        "NARASI",
-        "VISUAL"
-      ]
-    },
-    "public.interview_role": {
-      "name": "interview_role",
-      "schema": "public",
-      "values": [
-        "PESERTA",
-        "ALUMNI",
-        "MITRA",
-        "INSTRUKTUR",
-        "PENGELOLA",
-        "LAINNYA"
-      ]
-    },
-    "public.media_category": {
-      "name": "media_category",
-      "schema": "public",
-      "values": [
-        "ESTABLISHING_SHOT",
-        "PROSES_BELAJAR",
-        "CLOSE_UP_KETERAMPILAN",
-        "INTERAKSI_PESERTA_INSTRUKTUR",
-        "PRODUK_HASIL",
-        "MITRA",
-        "TESTIMONI",
-        "AKTIVITAS_KERJA_USAHA",
-        "BUKTI_PENDUKUNG"
-      ]
-    },
-    "public.program_code": {
-      "name": "program_code",
-      "schema": "public",
-      "values": [
-        "PKK",
-        "PKW"
-      ]
-    },
-    "public.response_type": {
-      "name": "response_type",
-      "schema": "public",
-      "values": [
-        "BOOLEAN",
-        "SCALE_1_4"
-      ]
-    },
-    "public.review_status": {
-      "name": "review_status",
-      "schema": "public",
-      "values": [
-        "DISETUJUI",
-        "PERLU_PERBAIKAN"
-      ]
-    },
-    "public.role": {
-      "name": "role",
-      "schema": "public",
-      "values": [
-        "SUPER_ADMIN",
-        "PETUGAS",
-        "VIEWER"
-      ]
-    },
-    "public.session_status": {
-      "name": "session_status",
-      "schema": "public",
-      "values": [
-        "BELUM_DIMULAI",
-        "DRAFT",
-        "SEDANG_DIKERJAKAN",
-        "SUBMIT",
-        "MENUNGGU_REVIEW",
-        "PERLU_PERBAIKAN",
-        "DISETUJUI"
-      ]
-    }
-  },
-  "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
   "views": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
   }
 }

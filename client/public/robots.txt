@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /monev
+Disallow: /dokumentasi
+Disallow: /review
+Disallow: /lokasi
+Disallow: /petugas
+Disallow: /insight
+Sitemap: https://monev-publikasi.manus.space/sitemap.xml
