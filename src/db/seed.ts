@@ -42,6 +42,7 @@ async function main() {
     "Teknik Komputer",
     "Tata Kecantikan Rambut",
     "Las/Pengelasan",
+    "Administrasi Perkantoran/Sekretaris",
   ];
   const skillRows = await db
     .insert(skills)
@@ -101,13 +102,13 @@ async function main() {
     },
     {
       provinsi: "Jawa Timur",
-      kabKota: "Kab. Jember",
-      namaLembaga: "LKP KOBER INDONESIA",
+      kabKota: "Kota Kediri",
+      namaLembaga: "LKP BUTIRAN ILMU",
       program: "PKK" as const,
-      skill: "Barista",
-      penanggungJawab: "ALFONTIUS IFAN IMANUEL",
-      noTelp: "08124950286",
-      alamat: "Perumahan Griya Gebang Permai, Blok J-13",
+      skill: "Administrasi Perkantoran/Sekretaris",
+      penanggungJawab: null,
+      noTelp: "081231842118",
+      alamat: "Agus Salim no.94 Bandarkidul Mojoroto Kota Kediri",
     },
     {
       provinsi: "Jawa Barat",
@@ -217,8 +218,8 @@ async function main() {
   type OfficerDef = { name: string; username: string; isUnit?: boolean };
   const officerList: OfficerDef[] = [
     { name: "Yaya Sutarya", username: "yaya.sutarya" },
-    { name: "Eddi Saputro", username: "eddi.saputro" },
     { name: "Faiz Ayatullah", username: "faiz.ayatullah" },
+    { name: "Sasmita W.", username: "sasmita.w" },
     { name: "Lisvi", username: "lisvi" },
     { name: "Supriono", username: "supriono" },
     { name: "Setditjen", username: "setditjen", isUnit: true },
@@ -257,16 +258,16 @@ async function main() {
   // 5. ASSIGNMENTS (petugas -> lokasi, dari Rekap Petugas)
   // ------------------------------------------------------------
   const assignmentMap: { lembaga: string; petugas: string[] }[] = [
-    { lembaga: "LKP ASTI", petugas: ["Yaya Sutarya", "Eddi Saputro", "Faiz Ayatullah", "Lisvi"] },
+    { lembaga: "LKP ASTI", petugas: ["Yaya Sutarya", "Faiz Ayatullah", "Sasmita W.", "Lisvi"] },
     { lembaga: "LKP Total Outsource Development (TOD)", petugas: ["Supriono", "Setditjen"] },
-    { lembaga: "LKP BINA ESSA", petugas: ["Setditjen", "Iwan Aries S.", "Dyah"] },
+    { lembaga: "LKP BINA ESSA", petugas: ["Setditjen", "Dyah"] },
     { lembaga: "LKP PRIMA", petugas: ["Soni Ramadhan", "BKHM"] },
-    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["BKHM", "Darmono"] },
-    { lembaga: "LKP KOBER INDONESIA", petugas: ["BKHM", "Ferdi"] },
+    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["BKHM", "Badrutaman"] },
+    { lembaga: "LKP BUTIRAN ILMU", petugas: ["BKHM", "Ferdi"] },
     { lembaga: "LKP Viderista", petugas: ["Chrismi Widjajanti", "Yeni Pratiwi", "Nasikin"] },
     { lembaga: "LKP ELIDAS", petugas: ["Atik Riyanti", "Anisa Permatasari", "Nurlely"] },
-    { lembaga: "LKP SKI COMPUTER", petugas: ["BKHM", "Fadly"] },
-    { lembaga: "LKP FLORENZA", petugas: ["Setditjen", "Badrutaman"] },
+    { lembaga: "LKP SKI COMPUTER", petugas: ["Iwan Aries S.", "Fadly"] },
+    { lembaga: "LKP FLORENZA", petugas: ["Setditjen", "Darmono"] },
   ];
 
   await db.insert(assignments).values(
