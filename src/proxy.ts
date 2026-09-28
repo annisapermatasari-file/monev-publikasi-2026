@@ -51,9 +51,11 @@ export const config = {
     /*
      * Match semua path kecuali:
      * - api/auth (NextAuth handler)
+     * - api/debug-env (DEBUG SEMENTARA - biar bisa diakses tanpa login untuk
+     *   diagnosa MissingSecret; hapus pengecualian ini bareng route-nya nanti)
      * - _next/static, _next/image
      * - favicon, file statis
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|api/debug-env|_next/static|_next/image|favicon.ico).*)",
   ],
 };
