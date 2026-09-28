@@ -1,6 +1,6 @@
 -- ============================================================
 -- MONEV PUBLIKASI 2026 - Update data lokasi & petugas
--- Sumber: Rekap_Petugas_Monev_Publikasi_PKK_dan_PKW_2.xlsx
+-- Sumber: Nota Dinas Nomor 2009/D3/DV.02.00/2026, 28 September 2026
 -- Jadwal Monev berubah: 24-26 September 2026 -> 1-6 Oktober 2026
 -- Aman dijalankan berulang kali (idempotent). Tidak menghapus data,
 -- tidak menyentuh akun riri/superadmin/viewer.
@@ -28,7 +28,7 @@ INSERT INTO "skills" (name) VALUES
   ('Tata Busana'),
   ('Otomotif Teknik Sepeda Motor'),
   ('Desain Grafis'),
-  ('Barista')
+  ('Administrasi Perkantoran/Sekretaris')
 ON CONFLICT (name) DO NOTHING;
 
 -- 3. Nonaktifkan 5 lokasi lama yang sudah diganti (tetap tersimpan sebagai riwayat)
@@ -74,13 +74,18 @@ SELECT 'Jawa Tengah', 'Kab. Cilacap', 'LKP MEDIA KOMPUTER',
 WHERE NOT EXISTS (SELECT 1 FROM locations WHERE nama_lembaga = 'LKP MEDIA KOMPUTER');
 
 INSERT INTO "locations" (provinsi, kab_kota, nama_lembaga, skill_id, program_id, penanggung_jawab, no_telp, alamat, tanggal_monev_mulai, tanggal_monev_selesai)
-SELECT 'Jawa Timur', 'Kab. Jember', 'LKP KOBER INDONESIA',
-       (SELECT id FROM skills WHERE name = 'Barista'),
+SELECT 'Jawa Timur', 'Kota Kediri', 'LKP BUTIRAN ILMU',
+       (SELECT id FROM skills WHERE name = 'Administrasi Perkantoran/Sekretaris'),
        (SELECT id FROM programs WHERE code = 'PKK'),
-       'ALFONTIUS IFAN IMANUEL', '08124950286',
-       'Perumahan Griya Gebang Permai, Blok J-13',
+       NULL, '081231842118',
+       'Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri',
        '2026-10-01', '2026-10-06'
-WHERE NOT EXISTS (SELECT 1 FROM locations WHERE nama_lembaga = 'LKP KOBER INDONESIA');
+WHERE NOT EXISTS (SELECT 1 FROM locations WHERE nama_lembaga = 'LKP BUTIRAN ILMU');
+
+-- Jika script rekap sebelumnya pernah dijalankan, nonaktifkan target yang tidak
+-- tercantum pada Nota Dinas dan pertahankan sebagai riwayat.
+UPDATE "locations" SET is_active = false, updated_at = now()
+WHERE nama_lembaga = 'LKP KOBER INDONESIA' AND is_active = true;
 
 -- 5. Perbarui 5 lokasi yang tidak berubah lembaganya (program + jadwal baru)
 UPDATE "locations" SET
@@ -151,7 +156,7 @@ INSERT INTO assignments (user_id, location_id, periode)
 SELECT u.id, l.id, '2026'
 FROM (VALUES ('bkhm'), ('ferdi')) AS v(username)
 JOIN users u ON u.username = v.username
-CROSS JOIN (SELECT id FROM locations WHERE nama_lembaga = 'LKP KOBER INDONESIA') l
+CROSS JOIN (SELECT id FROM locations WHERE nama_lembaga = 'LKP BUTIRAN ILMU') l
 ON CONFLICT DO NOTHING;
 
 COMMIT;

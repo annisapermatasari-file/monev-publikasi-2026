@@ -42,6 +42,7 @@ async function main() {
     "Teknik Komputer",
     "Tata Kecantikan Rambut",
     "Las/Pengelasan",
+    "Administrasi Perkantoran/Sekretaris",
   ];
   const skillRows = await db
     .insert(skills)
@@ -101,13 +102,13 @@ async function main() {
     },
     {
       provinsi: "Jawa Timur",
-      kabKota: "Kab. Jember",
-      namaLembaga: "LKP KOBER INDONESIA",
+      kabKota: "Kota Kediri",
+      namaLembaga: "LKP BUTIRAN ILMU",
       program: "PKK" as const,
-      skill: "Barista",
-      penanggungJawab: "ALFONTIUS IFAN IMANUEL",
-      noTelp: "08124950286",
-      alamat: "Perumahan Griya Gebang Permai, Blok J-13",
+      skill: "Administrasi Perkantoran/Sekretaris",
+      penanggungJawab: "",
+      noTelp: "081231842118",
+      alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri",
     },
     {
       provinsi: "Jawa Barat",
@@ -262,7 +263,7 @@ async function main() {
     { lembaga: "LKP BINA ESSA", petugas: ["Setditjen", "Iwan Aries S.", "Dyah"] },
     { lembaga: "LKP PRIMA", petugas: ["Soni Ramadhan", "BKHM"] },
     { lembaga: "LKP MEDIA KOMPUTER", petugas: ["BKHM", "Darmono"] },
-    { lembaga: "LKP KOBER INDONESIA", petugas: ["BKHM", "Ferdi"] },
+    { lembaga: "LKP BUTIRAN ILMU", petugas: ["BKHM", "Ferdi"] },
     { lembaga: "LKP Viderista", petugas: ["Chrismi Widjajanti", "Yeni Pratiwi", "Nasikin"] },
     { lembaga: "LKP ELIDAS", petugas: ["Atik Riyanti", "Anisa Permatasari", "Nurlely"] },
     { lembaga: "LKP SKI COMPUTER", petugas: ["BKHM", "Fadly"] },

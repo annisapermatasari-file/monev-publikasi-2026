@@ -22,16 +22,16 @@ async function main() {
 
   // Skills
   const skillNames = [
-    "Perbaikan Telepon Seluler",
-    "Tata Rias Pengantin",
-    "Tata Kecantikan Kulit",
+    "Tata Operasi Darat /Ground Handling Bandara",
+    "Tata Busana",
+    "Otomotif Teknik Sepeda Motor",
+    "Desain Grafis",
+    "Administrasi Perkantoran/Sekretaris",
     "Tata Boga (Jasa Usaha Makanan)",
     "Pastry & Bakery",
-    "Mekanik Sepeda Motor",
     "Teknik Komputer",
     "Tata Kecantikan Rambut",
     "Las/Pengelasan",
-    "Mengelas",
   ];
   lines.push(`INSERT INTO skills (name) VALUES`);
   lines.push(skillNames.map((s) => `  (${esc(s)})`).join(",\n") + ";");
@@ -47,22 +47,22 @@ async function main() {
     noTelp: string;
     alamat: string;
   }[] = [
-    { provinsi: "D.I. Yogyakarta", kabKota: "Kab. Sleman", namaLembaga: 'LKP "AFTA VISION"', skill: "Perbaikan Telepon Seluler", penanggungJawab: "SUKESMIYATI, A.Md.", noTelp: "085732215088", alamat: "Jl. Selokan Mataram No.5C Kaliurang KM 4.5 CT III" },
-    { provinsi: "D.K.I. Jakarta", kabKota: "Kota Jakarta Utara", namaLembaga: "LKP Firmansyah", skill: "Tata Rias Pengantin", penanggungJawab: "NURLELIAWATI", noTelp: "081315970119", alamat: "Jl. Mahoni Gg.3 Blok B No.4" },
-    { provinsi: "Jawa Barat", kabKota: "Kab. Indramayu", namaLembaga: "LKP RAMONA", skill: "Tata Kecantikan Kulit", penanggungJawab: "ELIJANA", noTelp: "08122201252", alamat: "Jln. Raya Bulak No.476" },
+    { provinsi: "D.I. Yogyakarta", kabKota: "Kab. Sleman", namaLembaga: "LKP Total Outsource Development (TOD)", skill: "Tata Operasi Darat /Ground Handling Bandara", penanggungJawab: "ANNA HANDAYANI, S.E.", noTelp: "082136297499", alamat: "Jl. Solo Km. 10,5 No. 36 Sorogenen Rt 03 Rw 01 Kalasan, Sleman, DI Yogyakarta" },
+    { provinsi: "Jawa Barat", kabKota: "Kab. Bandung", namaLembaga: "LKP BINA ESSA", skill: "Tata Busana", penanggungJawab: "Nana Supriatna", noTelp: "081220215718", alamat: "Jl. Raya Laswi Komplek Griya Pesona No. 1C" },
+    { provinsi: "Jawa Barat", kabKota: "Kab. Cianjur", namaLembaga: "LKP PRIMA", skill: "Otomotif Teknik Sepeda Motor", penanggungJawab: "Cep Yudi Hamdani", noTelp: "085723048026", alamat: "Jln.Perintis Kemerdekaan No.07 Pataruman RT.03 RW.11" },
+    { provinsi: "Jawa Tengah", kabKota: "Kab. Cilacap", namaLembaga: "LKP MEDIA KOMPUTER", skill: "Desain Grafis", penanggungJawab: "AGUS WIDAYAT", noTelp: "081225056446", alamat: "Jl. Kelapa Sawit No. 02, Kec. Sidareja, Kab. Cilacap, Jawa Tengah" },
+    { provinsi: "Jawa Timur", kabKota: "Kota Kediri", namaLembaga: "LKP BUTIRAN ILMU", skill: "Administrasi Perkantoran/Sekretaris", penanggungJawab: "", noTelp: "081231842118", alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri" },
     { provinsi: "Jawa Barat", kabKota: "Kab. Bogor", namaLembaga: "LKP Viderista", skill: "Tata Boga (Jasa Usaha Makanan)", penanggungJawab: "Drs MAMAN MULYATNA", noTelp: "081384744637", alamat: "Jl. Raya Puncak Gadog No.51, RT.04/RW.02, Citeko, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750" },
     { provinsi: "Jawa Barat", kabKota: "Kota Cimahi", namaLembaga: "LKP ELIDAS", skill: "Pastry & Bakery", penanggungJawab: "ELIDA HAFNI S.E", noTelp: "081395053413", alamat: "Kompleks Taman Bukit Cibogo Blok A9 No 15, Rt.02/Rw.17, Leuwigajah, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40532" },
-    { provinsi: "Jawa Tengah", kabKota: "Kab. Cilacap", namaLembaga: "LKP BINA BANGSA BERSAMA", skill: "Mekanik Sepeda Motor", penanggungJawab: "Mukholid Anshori, S.Pd", noTelp: "082227717751", alamat: "JL. MENUR NO. 10, RT.02 / RW.04" },
     { provinsi: "Jawa Tengah", kabKota: "Kab. Tegal", namaLembaga: "LKP SKI COMPUTER", skill: "Teknik Komputer", penanggungJawab: "RINA RISKIANA", noTelp: "085786666159", alamat: "Jl. Semanggi Raya No 96" },
     { provinsi: "Jawa Tengah", kabKota: "Kab. Demak", namaLembaga: "LKP FLORENZA", skill: "Tata Kecantikan Rambut", penanggungJawab: "IRYANTI", noTelp: "085727184748", alamat: "Jl. Ki Godek Desa Bulusari Kecamatan Sayung Kabupaten Demak" },
     { provinsi: "Jawa Tengah", kabKota: "Kab. Karanganyar", namaLembaga: "LKP ASTI", skill: "Las/Pengelasan", penanggungJawab: "Lastri, S.Sos.I.MM.", noTelp: "081228206713", alamat: "Jl. Kepuh No 10 Rt 01/03, Kel. Lalung, Kec. Karanganyar, Kab. Karanganyar, Prov. Jawa Tengah" },
-    { provinsi: "Jawa Timur", kabKota: "Kab. Blitar", namaLembaga: "LKP BERDIKARI", skill: "Mengelas", penanggungJawab: "Rizki Saputra Wibisono, S.Tr.Kom", noTelp: "085815061715", alamat: "Dusun Bukur" },
   ];
   lines.push(`-- Locations`);
   for (const l of locationData) {
     lines.push(
       `INSERT INTO locations (provinsi, kab_kota, nama_lembaga, skill_id, penanggung_jawab, no_telp, alamat, tanggal_monev_mulai, tanggal_monev_selesai) VALUES (` +
-        `${esc(l.provinsi)}, ${esc(l.kabKota)}, ${esc(l.namaLembaga)}, (SELECT id FROM skills WHERE name = ${esc(l.skill)}), ${esc(l.penanggungJawab)}, ${esc(l.noTelp)}, ${esc(l.alamat)}, '2026-09-24', '2026-09-26');`
+        `${esc(l.provinsi)}, ${esc(l.kabKota)}, ${esc(l.namaLembaga)}, (SELECT id FROM skills WHERE name = ${esc(l.skill)}), ${esc(l.penanggungJawab)}, ${esc(l.noTelp)}, ${esc(l.alamat)}, '2026-10-01', '2026-10-06');`
     );
   }
   lines.push("");
@@ -90,6 +90,7 @@ async function main() {
     { name: "Lisvi", username: "lisvi" },
     { name: "Supriono", username: "supriono" },
     { name: "Setditjen", username: "setditjen", isUnit: true },
+    { name: "Iwan Aries S.", username: "iwan.aries" },
     { name: "BKHM", username: "bkhm", isUnit: true },
     { name: "Nurleily", username: "nurleily" },
     { name: "Fadly", username: "fadly" },
@@ -115,15 +116,15 @@ async function main() {
   // Assignments (via subqueries on username + nama_lembaga)
   const assignmentMap: { lembaga: string; petugas: string[] }[] = [
     { lembaga: "LKP ASTI", petugas: ["yaya.sutarya", "eddi.saputro", "faiz.ayatullah", "lisvi"] },
-    { lembaga: 'LKP "AFTA VISION"', petugas: ["supriono", "setditjen"] },
-    { lembaga: "LKP Firmansyah", petugas: ["bkhm", "nurleily", "fadly"] },
-    { lembaga: "LKP RAMONA", petugas: ["setditjen", "soni.ramadhan"] },
+    { lembaga: "LKP Total Outsource Development (TOD)", petugas: ["supriono", "setditjen"] },
+    { lembaga: "LKP BINA ESSA", petugas: ["setditjen", "iwan.aries", "dyah"] },
+    { lembaga: "LKP PRIMA", petugas: ["soni.ramadhan", "bkhm"] },
+    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["bkhm", "darmono"] },
+    { lembaga: "LKP BUTIRAN ILMU", petugas: ["bkhm", "ferdi"] },
     { lembaga: "LKP Viderista", petugas: ["chrismi.widjajanti", "yeni.pratiwi", "nasikin"] },
     { lembaga: "LKP ELIDAS", petugas: ["atik.riyanti", "anisa.permatasari"] },
-    { lembaga: "LKP BINA BANGSA BERSAMA", petugas: ["bkhm", "darmono"] },
-    { lembaga: "LKP SKI COMPUTER", petugas: ["bkhm", "dyah"] },
+    { lembaga: "LKP SKI COMPUTER", petugas: ["bkhm", "fadly"] },
     { lembaga: "LKP FLORENZA", petugas: ["setditjen", "badrutaman"] },
-    { lembaga: "LKP BERDIKARI", petugas: ["bkhm", "ferdi"] },
   ];
   lines.push(`-- Assignments`);
   for (const a of assignmentMap) {
