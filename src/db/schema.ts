@@ -96,6 +96,9 @@ export const locations = pgTable("locations", {
   kabKota: text("kab_kota").notNull(),
   namaLembaga: text("nama_lembaga").notNull(),
   skillId: varchar("skill_id", { length: 36 }).references(() => skills.id),
+  // program yang ditugaskan ke lembaga ini (PKK atau PKW) - satu lembaga = satu program,
+  // dari Rekap Petugas Monev. Dipakai untuk membatasi wizard Monev hanya ke program yang relevan.
+  programId: varchar("program_id", { length: 36 }).references(() => programs.id),
   penanggungJawab: text("penanggung_jawab"),
   noTelp: varchar("no_telp", { length: 30 }),
   alamat: text("alamat"),

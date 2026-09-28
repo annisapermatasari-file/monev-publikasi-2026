@@ -4,6 +4,8 @@ import { locations, assignments, monevSessions, programs } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { StartMonevButton } from "@/components/monev/StartMonevButton";
 
+type ProgramCode = "PKK" | "PKW";
+
 const STATUS_LABEL: Record<string, string> = {
   BELUM_DIMULAI: "Belum Dimulai",
   DRAFT: "Draft",
@@ -23,13 +25,25 @@ export default async function MonevLapanganPage() {
   let myLocations;
   if (user.role === "PETUGAS") {
     myLocations = await db
-      .select({ id: locations.id, namaLembaga: locations.namaLembaga, kabKota: locations.kabKota, provinsi: locations.provinsi })
+      .select({
+        id: locations.id,
+        namaLembaga: locations.namaLembaga,
+        kabKota: locations.kabKota,
+        provinsi: locations.provinsi,
+        programId: locations.programId,
+      })
       .from(assignments)
       .innerJoin(locations, eq(assignments.locationId, locations.id))
       .where(eq(assignments.userId, user.id));
   } else {
     myLocations = await db
-      .select({ id: locations.id, namaLembaga: locations.namaLembaga, kabKota: locations.kabKota, provinsi: locations.provinsi })
+      .select({
+        id: locations.id,
+        namaLembaga: locations.namaLembaga,
+        kabKota: locations.kabKota,
+        provinsi: locations.provinsi,
+        programId: locations.programId,
+      })
       .from(locations)
       .where(eq(locations.isActive, true));
   }
@@ -49,38 +63,47 @@ export default async function MonevLapanganPage() {
       </p>
 
       <div className="mt-6 space-y-4">
-        {myLocations.map((loc) => (
-          <div key={loc.id} className="rounded-lg border border-slate-200 bg-white p-5">
-            <p className="font-medium text-slate-900">{loc.namaLembaga}</p>
-            <p className="text-xs text-slate-400">
-              {loc.kabKota}, {loc.provinsi}
-            </p>
+        {myLocations.map((loc) => {
+          // Setiap lembaga hanya ditugaskan SATU program (PKK atau PKW) sesuai
+          // Rekap Petugas. Kalau programId belum diisi (data lama), tampilkan
+          // kedua opsi sebagai fallback supaya tidak ada lokasi yang terkunci.
+          const relevantPrograms = loc.programId
+            ? allPrograms.filter((p) => p.id === loc.programId)
+            : allPrograms;
 
-            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {allPrograms.map((p) => {
-                const existing = sessionMap.get(`${loc.id}:${p.id}`);
-                return (
-                  <div key={p.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-700">{p.code}</span>
-                      {existing && (
-                        <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500">
-                          {STATUS_LABEL[existing.status]}
-                        </span>
-                      )}
+          return (
+            <div key={loc.id} className="rounded-lg border border-slate-200 bg-white p-5">
+              <p className="font-medium text-slate-900">{loc.namaLembaga}</p>
+              <p className="text-xs text-slate-400">
+                {loc.kabKota}, {loc.provinsi}
+              </p>
+
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {relevantPrograms.map((p) => {
+                  const existing = sessionMap.get(`${loc.id}:${p.id}`);
+                  return (
+                    <div key={p.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="text-xs font-semibold text-slate-700">{p.code}</span>
+                        {existing && (
+                          <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-slate-500">
+                            {STATUS_LABEL[existing.status]}
+                          </span>
+                        )}
+                      </div>
+                      <StartMonevButton
+                        locationId={loc.id}
+                        programCode={p.code as ProgramCode}
+                        existingSessionId={existing?.id}
+                        currentStep={existing?.currentStep}
+                      />
                     </div>
-                    <StartMonevButton
-                      locationId={loc.id}
-                      programCode={p.code as "PKK" | "PKW"}
-                      existingSessionId={existing?.id}
-                      currentStep={existing?.currentStep}
-                    />
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {myLocations.length === 0 && (
           <p className="text-sm text-slate-400">Belum ada lokasi ditugaskan ke Anda.</p>

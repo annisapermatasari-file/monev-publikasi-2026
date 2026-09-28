@@ -20,7 +20,7 @@ async function main() {
   // ------------------------------------------------------------
   // 1. PROGRAMS
   // ------------------------------------------------------------
-  await db
+  const programRows = await db
     .insert(programs)
     .values([
       { code: "PKK", name: "Pendidikan Kecakapan Kerja" },
@@ -32,16 +32,16 @@ async function main() {
   // 2. SKILLS (jenis keterampilan, dari KAK Lampiran + Rekap Petugas)
   // ------------------------------------------------------------
   const skillNames = [
-    "Perbaikan Telepon Seluler",
-    "Tata Rias Pengantin",
-    "Tata Kecantikan Kulit",
+    "Tata Operasi Darat /Ground Handling Bandara",
+    "Tata Busana",
+    "Otomotif Teknik Sepeda Motor",
+    "Desain Grafis",
+    "Barista",
     "Tata Boga (Jasa Usaha Makanan)",
     "Pastry & Bakery",
-    "Mekanik Sepeda Motor",
     "Teknik Komputer",
     "Tata Kecantikan Rambut",
     "Las/Pengelasan",
-    "Mengelas",
   ];
   const skillRows = await db
     .insert(skills)
@@ -50,43 +50,70 @@ async function main() {
   const skillId = (name: string) => skillRows.find((s) => s.name === name)!.id;
 
   // ------------------------------------------------------------
-  // 3. LOCATIONS (10 lokasi, dari KAK Lampiran + Rekap Petugas untuk PJ/telp/alamat)
+  // 3. LOCATIONS (10 lokasi, dari Rekap Petugas Monev Publikasi PKK dan PKW
+  //    versi terbaru - jadwal Monev 1-6 Oktober 2026)
   // ------------------------------------------------------------
-  const tglMulai = new Date("2026-09-24");
-  const tglSelesai = new Date("2026-09-26");
+  const tglMulai = new Date("2026-10-01");
+  const tglSelesai = new Date("2026-10-06");
+
+  const programRowByCode = (code: "PKK" | "PKW") => programRows.find((p) => p.code === code)!.id;
 
   const locationData = [
     {
       provinsi: "D.I. Yogyakarta",
       kabKota: "Kab. Sleman",
-      namaLembaga: 'LKP "AFTA VISION"',
-      skill: "Perbaikan Telepon Seluler",
-      penanggungJawab: "SUKESMIYATI, A.Md.",
-      noTelp: "085732215088",
-      alamat: "Jl. Selokan Mataram No.5C Kaliurang KM 4.5 CT III",
-    },
-    {
-      provinsi: "D.K.I. Jakarta",
-      kabKota: "Kota Jakarta Utara",
-      namaLembaga: "LKP Firmansyah",
-      skill: "Tata Rias Pengantin",
-      penanggungJawab: "NURLELIAWATI",
-      noTelp: "081315970119",
-      alamat: "Jl. Mahoni Gg.3 Blok B No.4",
+      namaLembaga: "LKP Total Outsource Development (TOD)",
+      program: "PKK" as const,
+      skill: "Tata Operasi Darat /Ground Handling Bandara",
+      penanggungJawab: "ANNA HANDAYANI, S.E.",
+      noTelp: "082136297499",
+      alamat: "Jl. Solo Km. 10,5 No. 36 Sorogenen Rt 03 Rw 01 Kalasan, Sleman, DI Yogyakarta",
     },
     {
       provinsi: "Jawa Barat",
-      kabKota: "Kab. Indramayu",
-      namaLembaga: "LKP RAMONA",
-      skill: "Tata Kecantikan Kulit",
-      penanggungJawab: "ELIJANA",
-      noTelp: "08122201252",
-      alamat: "Jln. Raya Bulak No.476",
+      kabKota: "Kab. Bandung",
+      namaLembaga: "LKP BINA ESSA",
+      program: "PKK" as const,
+      skill: "Tata Busana",
+      penanggungJawab: "Nana Supriatna",
+      noTelp: "081220215718",
+      alamat: "Jl. Raya Laswi Komplek Griya Pesona No. 1C",
+    },
+    {
+      provinsi: "Jawa Barat",
+      kabKota: "Kab. Cianjur",
+      namaLembaga: "LKP PRIMA",
+      program: "PKK" as const,
+      skill: "Otomotif Teknik Sepeda Motor",
+      penanggungJawab: "Cep Yudi Hamdani",
+      noTelp: "085723048026",
+      alamat: "Jln.Perintis Kemerdekaan No.07 Pataruman RT.03 RW.11",
+    },
+    {
+      provinsi: "Jawa Tengah",
+      kabKota: "Kab. Cilacap",
+      namaLembaga: "LKP MEDIA KOMPUTER",
+      program: "PKK" as const,
+      skill: "Desain Grafis",
+      penanggungJawab: "AGUS WIDAYAT",
+      noTelp: "081225056446",
+      alamat: "Jl. Kelapa Sawit No. 02, Kec. Sidareja, Kab. Cilacap, Jawa Tengah",
+    },
+    {
+      provinsi: "Jawa Timur",
+      kabKota: "Kab. Jember",
+      namaLembaga: "LKP KOBER INDONESIA",
+      program: "PKK" as const,
+      skill: "Barista",
+      penanggungJawab: "ALFONTIUS IFAN IMANUEL",
+      noTelp: "08124950286",
+      alamat: "Perumahan Griya Gebang Permai, Blok J-13",
     },
     {
       provinsi: "Jawa Barat",
       kabKota: "Kab. Bogor",
       namaLembaga: "LKP Viderista",
+      program: "PKW" as const,
       skill: "Tata Boga (Jasa Usaha Makanan)",
       penanggungJawab: "Drs MAMAN MULYATNA",
       noTelp: "081384744637",
@@ -96,6 +123,7 @@ async function main() {
       provinsi: "Jawa Barat",
       kabKota: "Kota Cimahi",
       namaLembaga: "LKP ELIDAS",
+      program: "PKW" as const,
       skill: "Pastry & Bakery",
       penanggungJawab: "ELIDA HAFNI S.E",
       noTelp: "081395053413",
@@ -104,17 +132,9 @@ async function main() {
     },
     {
       provinsi: "Jawa Tengah",
-      kabKota: "Kab. Cilacap",
-      namaLembaga: "LKP BINA BANGSA BERSAMA",
-      skill: "Mekanik Sepeda Motor",
-      penanggungJawab: "Mukholid Anshori, S.Pd",
-      noTelp: "082227717751",
-      alamat: "JL. MENUR NO. 10, RT.02 / RW.04",
-    },
-    {
-      provinsi: "Jawa Tengah",
       kabKota: "Kab. Tegal",
       namaLembaga: "LKP SKI COMPUTER",
+      program: "PKW" as const,
       skill: "Teknik Komputer",
       penanggungJawab: "RINA RISKIANA",
       noTelp: "085786666159",
@@ -124,6 +144,7 @@ async function main() {
       provinsi: "Jawa Tengah",
       kabKota: "Kab. Demak",
       namaLembaga: "LKP FLORENZA",
+      program: "PKW" as const,
       skill: "Tata Kecantikan Rambut",
       penanggungJawab: "IRYANTI",
       noTelp: "085727184748",
@@ -133,19 +154,11 @@ async function main() {
       provinsi: "Jawa Tengah",
       kabKota: "Kab. Karanganyar",
       namaLembaga: "LKP ASTI",
+      program: "PKW" as const,
       skill: "Las/Pengelasan",
       penanggungJawab: "Lastri, S.Sos.I.MM.",
       noTelp: "081228206713",
       alamat: "Jl. Kepuh No 10 Rt 01/03, Kel. Lalung, Kec. Karanganyar, Kab. Karanganyar, Prov. Jawa Tengah",
-    },
-    {
-      provinsi: "Jawa Timur",
-      kabKota: "Kab. Blitar",
-      namaLembaga: "LKP BERDIKARI",
-      skill: "Mengelas",
-      penanggungJawab: "Rizki Saputra Wibisono, S.Tr.Kom",
-      noTelp: "085815061715",
-      alamat: "Dusun Bukur",
     },
   ];
 
@@ -157,6 +170,7 @@ async function main() {
         kabKota: l.kabKota,
         namaLembaga: l.namaLembaga,
         skillId: skillId(l.skill),
+        programId: programRowByCode(l.program),
         penanggungJawab: l.penanggungJawab,
         noTelp: l.noTelp,
         alamat: l.alamat,
@@ -199,7 +213,7 @@ async function main() {
     })
     .returning();
 
-  // daftar petugas unik dari kolom "Petugas Monev Publikasi"
+  // daftar petugas unik dari kolom "Petugas Monev Publikasi" (sheet "surtug")
   type OfficerDef = { name: string; username: string; isUnit?: boolean };
   const officerList: OfficerDef[] = [
     { name: "Yaya Sutarya", username: "yaya.sutarya" },
@@ -208,19 +222,20 @@ async function main() {
     { name: "Lisvi", username: "lisvi" },
     { name: "Supriono", username: "supriono" },
     { name: "Setditjen", username: "setditjen", isUnit: true },
-    { name: "BKHM", username: "bkhm", isUnit: true },
-    { name: "Nurleily", username: "nurleily" },
-    { name: "Fadly", username: "fadly" },
+    { name: "Iwan Aries S.", username: "iwan.aries" },
+    { name: "Dyah", username: "dyah" },
     { name: "Soni Ramadhan", username: "soni.ramadhan" },
+    { name: "BKHM", username: "bkhm", isUnit: true },
+    { name: "Darmono", username: "darmono" },
+    { name: "Ferdi", username: "ferdi" },
     { name: "Chrismi Widjajanti", username: "chrismi.widjajanti" },
     { name: "Yeni Pratiwi", username: "yeni.pratiwi" },
     { name: "Nasikin", username: "nasikin" },
     { name: "Atik Riyanti", username: "atik.riyanti" },
     { name: "Anisa Permatasari", username: "anisa.permatasari" },
-    { name: "Darmono", username: "darmono" },
-    { name: "Dyah", username: "dyah" },
+    { name: "Nurlely", username: "nurlely" },
+    { name: "Fadly", username: "fadly" },
     { name: "Badrutaman", username: "badrutaman" },
-    { name: "Ferdi", username: "ferdi" },
   ];
 
   const officerRows = await db
@@ -243,15 +258,15 @@ async function main() {
   // ------------------------------------------------------------
   const assignmentMap: { lembaga: string; petugas: string[] }[] = [
     { lembaga: "LKP ASTI", petugas: ["Yaya Sutarya", "Eddi Saputro", "Faiz Ayatullah", "Lisvi"] },
-    { lembaga: 'LKP "AFTA VISION"', petugas: ["Supriono", "Setditjen"] },
-    { lembaga: "LKP Firmansyah", petugas: ["BKHM", "Nurleily", "Fadly"] },
-    { lembaga: "LKP RAMONA", petugas: ["Setditjen", "Soni Ramadhan"] },
+    { lembaga: "LKP Total Outsource Development (TOD)", petugas: ["Supriono", "Setditjen"] },
+    { lembaga: "LKP BINA ESSA", petugas: ["Setditjen", "Iwan Aries S.", "Dyah"] },
+    { lembaga: "LKP PRIMA", petugas: ["Soni Ramadhan", "BKHM"] },
+    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["BKHM", "Darmono"] },
+    { lembaga: "LKP KOBER INDONESIA", petugas: ["BKHM", "Ferdi"] },
     { lembaga: "LKP Viderista", petugas: ["Chrismi Widjajanti", "Yeni Pratiwi", "Nasikin"] },
-    { lembaga: "LKP ELIDAS", petugas: ["Atik Riyanti", "Anisa Permatasari"] },
-    { lembaga: "LKP BINA BANGSA BERSAMA", petugas: ["BKHM", "Darmono"] },
-    { lembaga: "LKP SKI COMPUTER", petugas: ["BKHM", "Dyah"] },
+    { lembaga: "LKP ELIDAS", petugas: ["Atik Riyanti", "Anisa Permatasari", "Nurlely"] },
+    { lembaga: "LKP SKI COMPUTER", petugas: ["BKHM", "Fadly"] },
     { lembaga: "LKP FLORENZA", petugas: ["Setditjen", "Badrutaman"] },
-    { lembaga: "LKP BERDIKARI", petugas: ["BKHM", "Ferdi"] },
   ];
 
   await db.insert(assignments).values(
