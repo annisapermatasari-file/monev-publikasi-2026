@@ -1,0 +1,2 @@
+ALTER TABLE "locations" ADD COLUMN "program_id" varchar(36);--> statement-breakpoint
+ALTER TABLE "locations" ADD CONSTRAINT "locations_program_id_programs_id_fk" FOREIGN KEY ("program_id") REFERENCES "public"."programs"("id") ON DELETE no action ON UPDATE no action;

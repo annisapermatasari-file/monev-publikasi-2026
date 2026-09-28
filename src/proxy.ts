@@ -1,5 +1,13 @@
-import { auth } from "@/lib/auth";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
+import { authConfig } from "@/lib/auth.config";
+
+// PENTING: middleware jalan di Edge Runtime, jadi pakai instance NextAuth
+// yang dibangun dari authConfig SAJA (tanpa provider Credentials/DB), bukan
+// dari "@/lib/auth" - mengimpor db (drizzle-orm/postgres) di sini akan
+// membuat middleware gagal di semua halaman karena driver Postgres berbasis
+// Node tidak jalan di Edge Runtime.
+const { auth } = NextAuth(authConfig);
 
 // Route -> role yang diizinkan. Route yang tidak terdaftar di sini tapi
 // berada di dalam matcher tetap butuh login (any authenticated role).

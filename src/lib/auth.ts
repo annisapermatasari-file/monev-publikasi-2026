@@ -4,17 +4,14 @@ import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { authConfig } from "./auth.config";
 
+// Konfigurasi PENUH (dengan provider Credentials yang butuh DB + bcrypt).
+// File ini hanya boleh diimpor dari kode yang jalan di Node.js runtime
+// (API route handler, Server Actions, Server Components) - JANGAN diimpor
+// dari proxy.ts/middleware, karena akan gagal di Edge Runtime.
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  trustHost: true,
-  // NextAuth v5 defaults to reading AUTH_SECRET only. Terima juga
-  // NEXTAUTH_SECRET (nama variabel yang sudah lama dipakai di Vercel)
-  // supaya tidak error "MissingSecret" walau nama env var berbeda.
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/login",
-  },
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -47,22 +44,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.id = user.id;
-        token.role = (user as { role: string }).role;
-        token.username = (user as { username: string }).username;
-      }
-      return token;
-    },
-    session: async ({ session, token }) => {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as "SUPER_ADMIN" | "PETUGAS" | "VIEWER";
-        session.user.username = token.username as string;
-      }
-      return session;
-    },
-  },
 });
