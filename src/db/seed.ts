@@ -281,6 +281,50 @@ async function main() {
   );
 
   // ------------------------------------------------------------
+  // 5b. AKUN PER LOKASI (1 login dipakai bersama oleh tim petugas yang
+  //     berangkat ke LKP tsb - lebih praktis di lapangan daripada tiap
+  //     orang harus ingat username masing-masing). Ditambahkan di samping
+  //     akun individu, bukan menggantikan.
+  // ------------------------------------------------------------
+  type LocationAccountDef = { lembaga: string; username: string; password: string };
+  const locationAccountList: LocationAccountDef[] = [
+    { lembaga: "LKP Total Outsource Development (TOD)", username: "lkp-tod", password: "TOD2026!" },
+    { lembaga: "LKP BINA ESSA", username: "lkp-binaessa", password: "BinaEssa2026!" },
+    { lembaga: "LKP PRIMA", username: "lkp-prima", password: "Prima2026!" },
+    { lembaga: "LKP MEDIA KOMPUTER", username: "lkp-mediakomputer", password: "MediaKomputer2026!" },
+    { lembaga: "LKP BUTIRAN ILMU", username: "lkp-butiranilmu", password: "ButiranIlmu2026!" },
+    { lembaga: "LKP Viderista", username: "lkp-viderista", password: "Viderista2026!" },
+    { lembaga: "LKP ELIDAS", username: "lkp-elidas", password: "Elidas2026!" },
+    { lembaga: "LKP SKI COMPUTER", username: "lkp-skicomputer", password: "SkiComputer2026!" },
+    { lembaga: "LKP FLORENZA", username: "lkp-florenza", password: "Florenza2026!" },
+    { lembaga: "LKP ASTI", username: "lkp-asti", password: "Asti2026!" },
+  ];
+
+  const locationAccountRows = await db
+    .insert(users)
+    .values(
+      await Promise.all(
+        locationAccountList.map(async (l) => ({
+          name: `Tim Petugas - ${l.lembaga}`,
+          username: l.username,
+          passwordHash: await bcrypt.hash(l.password, 10),
+          role: "PETUGAS" as const,
+          isUnitAccount: true, // dipakai bersama oleh beberapa petugas
+          isActive: true,
+        }))
+      )
+    )
+    .returning();
+
+  await db.insert(assignments).values(
+    locationAccountList.map((l, i) => ({
+      userId: locationAccountRows[i].id,
+      locationId: locationIdByLembaga(l.lembaga),
+      periode: "2026",
+    }))
+  );
+
+  // ------------------------------------------------------------
   // 6. INDICATORS - KETERPENUHAN (beda per program, dari instrumen xlsx)
   // ------------------------------------------------------------
   const keterpenuhanPKK = [
@@ -513,8 +557,13 @@ async function main() {
   console.log("=".repeat(50));
   console.log("Login SUPER_ADMIN -> username: superadmin | password: Admin2026!");
   console.log("Login VIEWER      -> username: viewer     | password: Viewer2026!");
-  console.log("Login PETUGAS     -> username: <nama.petugas> | password: Monev2026!");
+  console.log("Login PETUGAS (individu) -> username: <nama.petugas> | password: Monev2026!");
   console.log("Contoh:", officerRows.map((o) => o.username).join(", "));
+  console.log("-".repeat(50));
+  console.log("Login PETUGAS (per lokasi, dipakai bersama tim) - lihat tabel akun per LKP");
+  console.log(
+    locationAccountList.map((l) => `${l.lembaga}: ${l.username} / ${l.password}`).join("\n")
+  );
   console.log("=".repeat(50));
 }
 
