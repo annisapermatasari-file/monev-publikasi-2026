@@ -28,7 +28,10 @@ WHERE NOT EXISTS (
 
 -- ------------------------------------------------------------
 -- 2. Nonaktifkan LKP KOBER INDONESIA (bukan hapus, biar histori Monev
---    yang mungkin sudah dibuat tidak hilang), lalu insert LKP BUTIRAN ILMU
+--    yang mungkin sudah dibuat tidak hilang), lalu upsert LKP BUTIRAN ILMU
+--    (INSERT kalau belum ada sama sekali, UPDATE kalau sudah pernah
+--    dibuat oleh migrasi sebelumnya - aman dijalankan berapa kali pun,
+--    apapun urutan run terhadap migrasi lokasi lain).
 -- ------------------------------------------------------------
 UPDATE locations
 SET is_active = false
@@ -48,13 +51,25 @@ SELECT
   (SELECT id FROM programs WHERE code = 'PKK'),
   NULL,
   '081231842118',
-  'Agus Salim no.94 Bandarkidul Mojoroto Kota Kediri',
+  'Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri',
   '2026-10-01',
   '2026-10-06',
   true
 WHERE NOT EXISTS (
   SELECT 1 FROM locations WHERE nama_lembaga = 'LKP BUTIRAN ILMU'
 );
+
+UPDATE locations SET
+  provinsi = 'Jawa Timur',
+  kab_kota = 'Kota Kediri',
+  skill_id = (SELECT id FROM skills WHERE name = 'Administrasi Perkantoran/Sekretaris'),
+  program_id = (SELECT id FROM programs WHERE code = 'PKK'),
+  no_telp = '081231842118',
+  alamat = 'Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri',
+  tanggal_monev_mulai = '2026-10-01',
+  tanggal_monev_selesai = '2026-10-06',
+  is_active = true
+WHERE nama_lembaga = 'LKP BUTIRAN ILMU';
 
 -- ------------------------------------------------------------
 -- 3. Petugas baru: Sasmita W.
@@ -64,7 +79,7 @@ SELECT
   gen_random_uuid(),
   'Sasmita W.',
   'sasmita.w',
-  (SELECT password_hash FROM users WHERE username = 'ferdi' LIMIT 1), -- password default sama seperti petugas lain
+  (SELECT password_hash FROM users WHERE role = 'PETUGAS' AND is_unit_account = false ORDER BY created_at LIMIT 1), -- password default sama seperti petugas lain (Monev2026!)
   'PETUGAS',
   false,
   true

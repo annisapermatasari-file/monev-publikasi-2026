@@ -108,7 +108,7 @@ async function main() {
       skill: "Administrasi Perkantoran/Sekretaris",
       penanggungJawab: null,
       noTelp: "081231842118",
-      alamat: "Agus Salim no.94 Bandarkidul Mojoroto Kota Kediri",
+      alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri",
     },
     {
       provinsi: "Jawa Barat",
