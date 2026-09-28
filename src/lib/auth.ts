@@ -7,6 +7,10 @@ import { eq } from "drizzle-orm";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
+  // NextAuth v5 defaults to reading AUTH_SECRET only. Terima juga
+  // NEXTAUTH_SECRET (nama variabel yang sudah lama dipakai di Vercel)
+  // supaya tidak error "MissingSecret" walau nama env var berbeda.
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
