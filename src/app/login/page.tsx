@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { Eye, EyeOff } from "lucide-react";
 import { LandingHero } from "@/components/LandingHero";
 
 function LoginForm() {
@@ -17,6 +18,7 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,15 +107,26 @@ function LoginForm() {
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
                 Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                className="w-full rounded-xl border border-[#d1dccb] bg-[#f5f8f1] px-3.5 py-2.5 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-lime-500 focus:bg-white focus:ring-4 focus:ring-lime-100"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="w-full rounded-xl border border-[#d1dccb] bg-[#f5f8f1] px-3.5 py-2.5 pr-11 text-sm text-slate-900 transition-[border-color,box-shadow] duration-150 outline-none focus:border-lime-500 focus:bg-white focus:ring-4 focus:ring-lime-100"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-slate-400 transition-colors hover:text-slate-700"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             <AnimatePresence mode="wait">
