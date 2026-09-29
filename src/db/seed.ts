@@ -464,7 +464,7 @@ async function main() {
   // ------------------------------------------------------------
   const evidencePKK = [
     "Foto/video pembelajaran & praktik",
-    "Video YouTube 7–15 menit",
+    "Video landscape 3–5 menit",
     "Bukti peningkatan kompetensi/kesiapan kerja",
     "Bukti kemitraan industri",
     "Bukti magang industri",
@@ -476,7 +476,7 @@ async function main() {
   ];
   const evidencePKW = [
     "Foto/video pembelajaran & produksi",
-    "Video YouTube 7–15 menit",
+    "Video landscape 3–5 menit",
     "Bukti pendampingan usaha",
     "Bukti rintisan usaha",
     "Testimoni peserta",

@@ -171,8 +171,8 @@ async function main() {
   lines.push("");
 
   // Evidence types
-  const evidencePKK = ["Foto/video pembelajaran & praktik", "Video YouTube 7–15 menit", "Bukti peningkatan kompetensi/kesiapan kerja", "Bukti kemitraan industri", "Bukti magang industri", "Testimoni peserta/lulusan", "Uji kompetensi/sertifikasi", "Penempatan kerja", "Testimoni mitra/HR/pembimbing", "Artikel/siaran pers"];
-  const evidencePKW = ["Foto/video pembelajaran & produksi", "Video YouTube 7–15 menit", "Bukti pendampingan usaha", "Bukti rintisan usaha", "Testimoni peserta", "Testimoni mitra usaha", "Aktivitas bisnis/usaha lulusan", "Bukti penjualan/katalog/marketplace", "Artikel/siaran pers"];
+  const evidencePKK = ["Foto/video pembelajaran & praktik", "Video landscape 3–5 menit", "Bukti peningkatan kompetensi/kesiapan kerja", "Bukti kemitraan industri", "Bukti magang industri", "Testimoni peserta/lulusan", "Uji kompetensi/sertifikasi", "Penempatan kerja", "Testimoni mitra/HR/pembimbing", "Artikel/siaran pers"];
+  const evidencePKW = ["Foto/video pembelajaran & produksi", "Video landscape 3–5 menit", "Bukti pendampingan usaha", "Bukti rintisan usaha", "Testimoni peserta", "Testimoni mitra usaha", "Aktivitas bisnis/usaha lulusan", "Bukti penjualan/katalog/marketplace", "Artikel/siaran pers"];
   lines.push(`-- Evidence Types`);
   evidencePKK.forEach((l, i) => lines.push(`INSERT INTO evidence_types (program_scope, label, urutan) VALUES ('PKK', ${esc(l)}, ${i + 1});`));
   evidencePKW.forEach((l, i) => lines.push(`INSERT INTO evidence_types (program_scope, label, urutan) VALUES ('PKW', ${esc(l)}, ${i + 1});`));
