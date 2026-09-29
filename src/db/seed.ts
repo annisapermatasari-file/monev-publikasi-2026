@@ -358,43 +358,43 @@ async function main() {
   // ------------------------------------------------------------
   // 8. INDICATORS - KINERJA (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
-  const kinerja = [
-    "Jumlah konten",
-    "Ragam format",
-    "Konsistensi unggahan",
-    "Keseimbangan visual dengan artikel/rilis",
-    "Pemanfaatan media eksternal",
-    "Distribusi lintas kanal",
+  const kinerja: [string, string][] = [
+    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor tinggi = banyak unggahan; skor rendah = hanya 1-2 unggahan."],
+    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor tinggi = pakai lebih dari 2 format berbeda; skor rendah = hanya 1 format saja."],
+    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan. Skor tinggi = ada unggahan hampir tiap hari kegiatan; skor rendah = menumpuk di 1 hari atau baru diunggah lama setelah kegiatan selesai."],
+    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual (foto/video) diimbangi tulisan (caption panjang, artikel, siaran pers), bukan cuma visual tanpa konteks tertulis."],
+    ["Pemanfaatan media eksternal", "Apakah publikasi juga menjangkau media di luar akun resmi lembaga (media massa, akun komunitas/influencer, dll), bukan hanya di akun sendiri."],
+    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial (Instagram, Facebook, TikTok, YouTube, dst), bukan hanya satu platform."],
   ];
 
   // ------------------------------------------------------------
   // 9. INDICATORS - NARASI (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
-  const narasi = [
-    "Kejelasan proses dan hasil",
-    "Ringkas dan fokus",
-    "Alur cerita runtut",
-    "Data capaian mendukung",
-    "Kutipan peserta/mitra",
-    "Orientasi dampak",
-    "Human story",
-    "Tantangan menuju keberhasilan",
-    "Kolaborasi/partisipasi",
-    "Kompetensi relevan dan pemberdayaan",
+  const narasi: [string, string][] = [
+    ["Kejelasan proses dan hasil", "Pembaca/penonton bisa memahami dengan jelas apa yang dikerjakan peserta dan apa hasilnya, tanpa perlu penjelasan tambahan."],
+    ["Ringkas dan fokus", "Narasi langsung ke inti cerita, tidak bertele-tele atau melebar ke hal yang tidak relevan."],
+    ["Alur cerita runtut", "Cerita mengalir logis: kondisi awal → proses → hasil, bukan meloncat-loncat."],
+    ["Data capaian mendukung", "Ada angka/data konkret yang mendukung klaim (jumlah peserta lulus, nilai penjualan, dst), bukan hanya klaim tanpa bukti."],
+    ["Kutipan peserta/mitra", "Ada kutipan langsung dari peserta atau mitra, bukan hanya narasi dari sudut pandang lembaga."],
+    ["Orientasi dampak", "Cerita menonjolkan dampak bagi peserta (perubahan hidup, pekerjaan, usaha), bukan sekadar dokumentasi kegiatan berlangsung."],
+    ["Human story", "Ada elemen personal/emosional yang membuat cerita relate-able, bukan sekadar laporan formal."],
+    ["Tantangan menuju keberhasilan", "Cerita menunjukkan kesulitan/tantangan yang dihadapi sebelum berhasil, bukan hanya menampilkan hasil akhir yang mulus."],
+    ["Kolaborasi/partisipasi", "Cerita menunjukkan keterlibatan berbagai pihak (mitra, instruktur, pemda, dst), bukan hanya LKP sendirian."],
+    ["Kompetensi relevan dan pemberdayaan", "Cerita menghubungkan keterampilan yang dipelajari dengan pemberdayaan nyata (kerja/usaha), bukan sekadar pelatihan tanpa tindak lanjut."],
   ];
 
   // ------------------------------------------------------------
   // 10. INDICATORS - VISUAL (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
-  const visual = [
-    "Pencahayaan",
-    "Komposisi",
-    "Stabilitas gambar/video",
-    "Relevansi visual",
-    "Kualitas audio/testimoni",
-    "Identitas peserta/lokasi/lembaga",
-    "Kelengkapan konteks",
-    "Kesiapan tayang",
+  const visual: [string, string][] = [
+    ["Pencahayaan", "Gambar/video cukup terang dan tidak backlit (subjek tidak gelap karena cahaya dari belakang)."],
+    ["Komposisi", "Tata letak visual: subjek jadi fokus, tidak terpotong aneh, tidak terlalu ramai/berantakan."],
+    ["Stabilitas gambar/video", "Video tidak goyang/blur berlebihan saat direkam."],
+    ["Relevansi visual", "Visual yang dipakai benar-benar menggambarkan kegiatan/topik yang diceritakan, bukan visual generik yang tidak nyambung."],
+    ["Kualitas audio/testimoni", "Kejernihan suara saat wawancara/testimoni — tidak berisik, terdengar jelas."],
+    ["Identitas peserta/lokasi/lembaga", "Dari visual bisa dikenali siapa pesertanya, di LKP mana, dan lembaga apa (misal ada plang nama, seragam, dsb)."],
+    ["Kelengkapan konteks", "Visual memberi konteks yang cukup (bukan cuma close-up tanpa keterangan situasi/tempat)."],
+    ["Kesiapan tayang", "Materi visual sudah siap dipakai langsung untuk publikasi (resolusi cukup, tidak buram, tidak perlu banyak edit ulang)."],
   ];
 
   const indicatorRows: (typeof indicators.$inferInsert)[] = [
@@ -419,24 +419,27 @@ async function main() {
       responseType: "BOOLEAN" as const,
       urutan: i + 1,
     })),
-    ...kinerja.map((label, i) => ({
+    ...kinerja.map(([label, deskripsi], i) => ({
       category: "KINERJA" as const,
       programScope: null,
       label,
+      deskripsi,
       responseType: "SCALE_1_4" as const,
       urutan: i + 1,
     })),
-    ...narasi.map((label, i) => ({
+    ...narasi.map(([label, deskripsi], i) => ({
       category: "NARASI" as const,
       programScope: null,
       label,
+      deskripsi,
       responseType: "SCALE_1_4" as const,
       urutan: i + 1,
     })),
-    ...visual.map((label, i) => ({
+    ...visual.map(([label, deskripsi], i) => ({
       category: "VISUAL" as const,
       programScope: null,
       label,
+      deskripsi,
       responseType: "SCALE_1_4" as const,
       urutan: i + 1,
     })),
@@ -464,7 +467,7 @@ async function main() {
   // ------------------------------------------------------------
   const evidencePKK = [
     "Foto/video pembelajaran & praktik",
-    "Video landscape 3–5 menit",
+    "Video landscape 3–5 menit (YouTube)",
     "Bukti peningkatan kompetensi/kesiapan kerja",
     "Bukti kemitraan industri",
     "Bukti magang industri",
@@ -476,7 +479,7 @@ async function main() {
   ];
   const evidencePKW = [
     "Foto/video pembelajaran & produksi",
-    "Video landscape 3–5 menit",
+    "Video landscape 3–5 menit (YouTube)",
     "Bukti pendampingan usaha",
     "Bukti rintisan usaha",
     "Testimoni peserta",

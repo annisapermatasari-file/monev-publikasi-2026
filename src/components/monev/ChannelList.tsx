@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { saveChannelAudit } from "@/lib/actions/monev";
+import { CHANNEL_FIELD_HINT } from "@/lib/monev-hints";
 import { Check } from "lucide-react";
 
 type ChannelRow = {
@@ -116,6 +117,9 @@ export function ChannelList({ sessionId, items }: { sessionId: string; items: Ch
 
   return (
     <div className="space-y-6">
+      <p className="rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs leading-relaxed text-slate-500">
+        {CHANNEL_FIELD_HINT}
+      </p>
       {renderGroup(internal, "Kanal Internal")}
       {renderGroup(external, "Kanal Eksternal")}
     </div>

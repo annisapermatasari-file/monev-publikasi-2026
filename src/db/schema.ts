@@ -189,6 +189,10 @@ export const indicators = pgTable("indicators", {
   programScope: programCodeEnum("program_scope"), // null = berlaku untuk kedua program
   code: varchar("code", { length: 10 }), // A1, B2, dst - opsional, untuk traceability ke KAK
   label: text("label").notNull(),
+  // Bantuan/kejelasan untuk operator: kriteria konkret saat menilai
+  // indikator ini (terutama untuk indikator skala 1-4 soal konten &
+  // media sosial), supaya penilaian antar petugas lebih konsisten.
+  deskripsi: text("deskripsi"),
   responseType: responseTypeEnum("response_type").notNull(),
   urutan: integer("urutan").notNull().default(0),
   isActive: boolean("is_active").notNull().default(true),

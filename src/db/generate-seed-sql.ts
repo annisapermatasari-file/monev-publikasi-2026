@@ -141,21 +141,48 @@ async function main() {
   const keterpenuhanPKK = ["Pembelajaran dan praktik keterampilan", "Peningkatan kompetensi/kesiapan kerja", "Kemitraan industri", "Magang industri", "Uji kompetensi", "Penempatan kerja"];
   const keterpenuhanPKW = ["Pembelajaran dan proses produksi", "Pendampingan usaha", "Pembentukan/rintisan usaha", "Pemasaran digital"];
   const kepatuhan = ["Publikasi pada kanal/media sosial lembaga", "Tagging akun resmi Direktorat", "Tagging akun resmi Ditjen", "Identitas program tercantum", "Lokasi dapat dikenali", "Tahapan kegiatan dapat dikenali", "Media massa nasional/lokal dimanfaatkan bila tersedia"];
-  const kinerja = ["Jumlah konten", "Ragam format", "Konsistensi unggahan", "Keseimbangan visual dengan artikel/rilis", "Pemanfaatan media eksternal", "Distribusi lintas kanal"];
-  const narasi = ["Kejelasan proses dan hasil", "Ringkas dan fokus", "Alur cerita runtut", "Data capaian mendukung", "Kutipan peserta/mitra", "Orientasi dampak", "Human story", "Tantangan menuju keberhasilan", "Kolaborasi/partisipasi", "Kompetensi relevan dan pemberdayaan"];
-  const visual = ["Pencahayaan", "Komposisi", "Stabilitas gambar/video", "Relevansi visual", "Kualitas audio/testimoni", "Identitas peserta/lokasi/lembaga", "Kelengkapan konteks", "Kesiapan tayang"];
+  const kinerja: [string, string][] = [
+    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor tinggi = banyak unggahan; skor rendah = hanya 1-2 unggahan."],
+    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor tinggi = pakai lebih dari 2 format berbeda; skor rendah = hanya 1 format saja."],
+    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan. Skor tinggi = ada unggahan hampir tiap hari kegiatan; skor rendah = menumpuk di 1 hari atau baru diunggah lama setelah kegiatan selesai."],
+    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual (foto/video) diimbangi tulisan (caption panjang, artikel, siaran pers), bukan cuma visual tanpa konteks tertulis."],
+    ["Pemanfaatan media eksternal", "Apakah publikasi juga menjangkau media di luar akun resmi lembaga (media massa, akun komunitas/influencer, dll), bukan hanya di akun sendiri."],
+    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial (Instagram, Facebook, TikTok, YouTube, dst), bukan hanya satu platform."],
+  ];
+  const narasi: [string, string][] = [
+    ["Kejelasan proses dan hasil", "Pembaca/penonton bisa memahami dengan jelas apa yang dikerjakan peserta dan apa hasilnya, tanpa perlu penjelasan tambahan."],
+    ["Ringkas dan fokus", "Narasi langsung ke inti cerita, tidak bertele-tele atau melebar ke hal yang tidak relevan."],
+    ["Alur cerita runtut", "Cerita mengalir logis: kondisi awal → proses → hasil, bukan meloncat-loncat."],
+    ["Data capaian mendukung", "Ada angka/data konkret yang mendukung klaim (jumlah peserta lulus, nilai penjualan, dst), bukan hanya klaim tanpa bukti."],
+    ["Kutipan peserta/mitra", "Ada kutipan langsung dari peserta atau mitra, bukan hanya narasi dari sudut pandang lembaga."],
+    ["Orientasi dampak", "Cerita menonjolkan dampak bagi peserta (perubahan hidup, pekerjaan, usaha), bukan sekadar dokumentasi kegiatan berlangsung."],
+    ["Human story", "Ada elemen personal/emosional yang membuat cerita relate-able, bukan sekadar laporan formal."],
+    ["Tantangan menuju keberhasilan", "Cerita menunjukkan kesulitan/tantangan yang dihadapi sebelum berhasil, bukan hanya menampilkan hasil akhir yang mulus."],
+    ["Kolaborasi/partisipasi", "Cerita menunjukkan keterlibatan berbagai pihak (mitra, instruktur, pemda, dst), bukan hanya LKP sendirian."],
+    ["Kompetensi relevan dan pemberdayaan", "Cerita menghubungkan keterampilan yang dipelajari dengan pemberdayaan nyata (kerja/usaha), bukan sekadar pelatihan tanpa tindak lanjut."],
+  ];
+  const visual: [string, string][] = [
+    ["Pencahayaan", "Gambar/video cukup terang dan tidak backlit (subjek tidak gelap karena cahaya dari belakang)."],
+    ["Komposisi", "Tata letak visual: subjek jadi fokus, tidak terpotong aneh, tidak terlalu ramai/berantakan."],
+    ["Stabilitas gambar/video", "Video tidak goyang/blur berlebihan saat direkam."],
+    ["Relevansi visual", "Visual yang dipakai benar-benar menggambarkan kegiatan/topik yang diceritakan, bukan visual generik yang tidak nyambung."],
+    ["Kualitas audio/testimoni", "Kejernihan suara saat wawancara/testimoni — tidak berisik, terdengar jelas."],
+    ["Identitas peserta/lokasi/lembaga", "Dari visual bisa dikenali siapa pesertanya, di LKP mana, dan lembaga apa (misal ada plang nama, seragam, dsb)."],
+    ["Kelengkapan konteks", "Visual memberi konteks yang cukup (bukan cuma close-up tanpa keterangan situasi/tempat)."],
+    ["Kesiapan tayang", "Materi visual sudah siap dipakai langsung untuk publikasi (resolusi cukup, tidak buram, tidak perlu banyak edit ulang)."],
+  ];
 
   lines.push(`-- Indicators`);
-  const insIndicator = (category: string, scope: string | null, label: string, respType: string, urutan: number) =>
+  const insIndicator = (category: string, scope: string | null, label: string, respType: string, urutan: number, deskripsi: string | null = null) =>
     lines.push(
-      `INSERT INTO indicators (category, program_scope, label, response_type, urutan) VALUES ('${category}', ${scope ? `'${scope}'` : "NULL"}, ${esc(label)}, '${respType}', ${urutan});`
+      `INSERT INTO indicators (category, program_scope, label, deskripsi, response_type, urutan) VALUES ('${category}', ${scope ? `'${scope}'` : "NULL"}, ${esc(label)}, ${esc(deskripsi)}, '${respType}', ${urutan});`
     );
   keterpenuhanPKK.forEach((l, i) => insIndicator("KETERPENUHAN", "PKK", l, "BOOLEAN", i + 1));
   keterpenuhanPKW.forEach((l, i) => insIndicator("KETERPENUHAN", "PKW", l, "BOOLEAN", i + 1));
   kepatuhan.forEach((l, i) => insIndicator("KEPATUHAN", null, l, "BOOLEAN", i + 1));
-  kinerja.forEach((l, i) => insIndicator("KINERJA", null, l, "SCALE_1_4", i + 1));
-  narasi.forEach((l, i) => insIndicator("NARASI", null, l, "SCALE_1_4", i + 1));
-  visual.forEach((l, i) => insIndicator("VISUAL", null, l, "SCALE_1_4", i + 1));
+  kinerja.forEach(([l, d], i) => insIndicator("KINERJA", null, l, "SCALE_1_4", i + 1, d));
+  narasi.forEach(([l, d], i) => insIndicator("NARASI", null, l, "SCALE_1_4", i + 1, d));
+  visual.forEach(([l, d], i) => insIndicator("VISUAL", null, l, "SCALE_1_4", i + 1, d));
   lines.push("");
 
   // Publication channels
@@ -171,8 +198,8 @@ async function main() {
   lines.push("");
 
   // Evidence types
-  const evidencePKK = ["Foto/video pembelajaran & praktik", "Video landscape 3–5 menit", "Bukti peningkatan kompetensi/kesiapan kerja", "Bukti kemitraan industri", "Bukti magang industri", "Testimoni peserta/lulusan", "Uji kompetensi/sertifikasi", "Penempatan kerja", "Testimoni mitra/HR/pembimbing", "Artikel/siaran pers"];
-  const evidencePKW = ["Foto/video pembelajaran & produksi", "Video landscape 3–5 menit", "Bukti pendampingan usaha", "Bukti rintisan usaha", "Testimoni peserta", "Testimoni mitra usaha", "Aktivitas bisnis/usaha lulusan", "Bukti penjualan/katalog/marketplace", "Artikel/siaran pers"];
+  const evidencePKK = ["Foto/video pembelajaran & praktik", "Video landscape 3–5 menit (YouTube)", "Bukti peningkatan kompetensi/kesiapan kerja", "Bukti kemitraan industri", "Bukti magang industri", "Testimoni peserta/lulusan", "Uji kompetensi/sertifikasi", "Penempatan kerja", "Testimoni mitra/HR/pembimbing", "Artikel/siaran pers"];
+  const evidencePKW = ["Foto/video pembelajaran & produksi", "Video landscape 3–5 menit (YouTube)", "Bukti pendampingan usaha", "Bukti rintisan usaha", "Testimoni peserta", "Testimoni mitra usaha", "Aktivitas bisnis/usaha lulusan", "Bukti penjualan/katalog/marketplace", "Artikel/siaran pers"];
   lines.push(`-- Evidence Types`);
   evidencePKK.forEach((l, i) => lines.push(`INSERT INTO evidence_types (program_scope, label, urutan) VALUES ('PKK', ${esc(l)}, ${i + 1});`));
   evidencePKW.forEach((l, i) => lines.push(`INSERT INTO evidence_types (program_scope, label, urutan) VALUES ('PKW', ${esc(l)}, ${i + 1});`));

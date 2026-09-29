@@ -6,7 +6,7 @@ import { SCALE_LEGEND, BOOLEAN_CATEGORY_HINT } from "@/lib/monev-hints";
 import { Check } from "lucide-react";
 
 type IndicatorRow = {
-  indicator: { id: string; label: string; responseType: "BOOLEAN" | "SCALE_1_4" };
+  indicator: { id: string; label: string; deskripsi: string | null; responseType: "BOOLEAN" | "SCALE_1_4" };
   response: {
     boolValue: boolean | null;
     scaleValue: number | null;
@@ -85,7 +85,12 @@ export function IndicatorList({
         return (
           <div key={indicator.id} className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-medium text-slate-900">{indicator.label}</p>
+              <div>
+                <p className="text-sm font-medium text-slate-900">{indicator.label}</p>
+                {indicator.deskripsi && (
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-400">{indicator.deskripsi}</p>
+                )}
+              </div>
               {savedId === indicator.id && (
                 <span className="flex shrink-0 items-center gap-1 text-xs text-emerald-600">
                   <Check className="h-3 w-3" /> Tersimpan

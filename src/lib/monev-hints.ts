@@ -27,3 +27,6 @@ export const BOOLEAN_CATEGORY_HINT: Record<"KETERPENUHAN" | "KEPATUHAN", string>
   KEPATUHAN:
     '"Ya" = ketentuan ini sudah dipenuhi di publikasi yang ada. Kalau publikasinya sendiri belum ada, jawab "Tidak" — tidak bisa dinilai patuh kalau belum dipublikasikan.',
 };
+
+export const CHANNEL_FIELD_HINT =
+  'Centang kanal media sosial yang MEMANG dipakai LKP untuk mempublikasikan program ini (bukan sekadar akun yang ada, tapi yang benar-benar ada unggahannya). "Jumlah konten" = total unggahan terkait program ini di kanal tsb selama periode Monev. "URL contoh" = tautan salah satu unggahan (yang paling representatif) supaya mudah diverifikasi reviewer. "Periode" = rentang tanggal unggahan, misal "1-6 Okt 2026".';

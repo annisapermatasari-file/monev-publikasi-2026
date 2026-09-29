@@ -1,0 +1,1 @@
+ALTER TABLE "indicators" ADD COLUMN "deskripsi" text;
