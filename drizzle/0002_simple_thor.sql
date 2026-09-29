@@ -1,0 +1,1 @@
+ALTER TABLE "monev_sessions" ADD COLUMN "brief_narrative" text;

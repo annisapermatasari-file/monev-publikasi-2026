@@ -12,7 +12,6 @@ import {
   evidenceTypes,
   publicationEvidence,
   storyBriefElements,
-  storyBriefResponses,
   interviews,
   interviewAnswers,
   interviewQuestionTemplates,
@@ -256,33 +255,20 @@ export async function saveEvidence(
 // STEP: Brief Liputan
 // ------------------------------------------------------------
 export async function getStoryBrief(sessionId: string) {
-  await requireSessionAccess(sessionId);
+  const { monevSession } = await requireSessionAccess(sessionId);
 
   const elements = await db.select().from(storyBriefElements).orderBy(storyBriefElements.urutan);
-  const responses = await db.select().from(storyBriefResponses).where(eq(storyBriefResponses.sessionId, sessionId));
-  const responseMap = new Map(responses.map((r) => [r.elementId, r]));
 
-  return elements.map((e) => ({ element: e, response: responseMap.get(e.id) ?? null }));
+  return { elements, narrative: monevSession.briefNarrative ?? "" };
 }
 
-export async function saveStoryBriefResponse(
-  sessionId: string,
-  elementId: string,
-  data: { temuan?: string; buktiLink?: string; catatan?: string }
-) {
+export async function saveStoryBriefNarrative(sessionId: string, narrative: string) {
   await requireSessionAccess(sessionId);
 
-  const [existing] = await db
-    .select()
-    .from(storyBriefResponses)
-    .where(and(eq(storyBriefResponses.sessionId, sessionId), eq(storyBriefResponses.elementId, elementId)))
-    .limit(1);
-
-  if (existing) {
-    await db.update(storyBriefResponses).set(data).where(eq(storyBriefResponses.id, existing.id));
-  } else {
-    await db.insert(storyBriefResponses).values({ sessionId, elementId, ...data });
-  }
+  await db
+    .update(monevSessions)
+    .set({ briefNarrative: narrative })
+    .where(eq(monevSessions.id, sessionId));
 
   await touchSession(sessionId);
 }
@@ -536,8 +522,7 @@ export async function checkCompleteness(sessionId: string) {
   const evidence = await getEvidenceForSession(sessionId);
   if (evidence.every((e) => e.evidence === null)) missing.push("Bukti Publikasi");
 
-  const brief = await getStoryBrief(sessionId);
-  if (brief.every((b) => b.response === null)) missing.push("Brief Liputan");
+  if (!monevSession.briefNarrative?.trim()) missing.push("Brief Liputan");
 
   const ivs = await getInterviews(sessionId);
   if (ivs.length === 0) missing.push("Wawancara");

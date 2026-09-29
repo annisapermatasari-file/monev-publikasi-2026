@@ -159,6 +159,11 @@ export const monevSessions = pgTable(
     periode: varchar("periode", { length: 100 }).notNull().default("2026"),
     status: sessionStatusEnum("status").notNull().default("BELUM_DIMULAI"),
     currentStep: integer("current_step").notNull().default(1),
+    // Brief Liputan: tulisan brief tunggal (bukan per-elemen) tentang
+    // bagaimana wawancara berlangsung, mengikuti alur kondisi awal ->
+    // tantangan -> proses -> hasil -> dampak. 10 elemen di storyBriefElements
+    // ditampilkan sebagai panduan/checklist tertulis, bukan input terpisah.
+    briefNarrative: text("brief_narrative"),
     lastSavedAt: timestamp("last_saved_at"),
     submittedAt: timestamp("submitted_at"),
     submittedById: varchar("submitted_by_id", { length: 36 }).references(() => users.id),
