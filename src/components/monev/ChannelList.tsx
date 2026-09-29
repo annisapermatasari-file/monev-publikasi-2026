@@ -37,8 +37,7 @@ export function ChannelList({ sessionId, items }: { sessionId: string; items: Ch
     setState((s) => ({ ...s, [id]: { ...s[id], ...patch } }));
   }
 
-  function persist(id: string) {
-    const d = state[id];
+  function save(id: string, d: (typeof state)[string]) {
     startTransition(async () => {
       await saveChannelAudit(sessionId, id, {
         digunakan: d.digunakan,
@@ -49,6 +48,16 @@ export function ChannelList({ sessionId, items }: { sessionId: string; items: Ch
       setSavedId(id);
       setTimeout(() => setSavedId((c) => (c === id ? null : c)), 1200);
     });
+  }
+
+  function updateAndSave(id: string, patch: Partial<(typeof state)[string]>) {
+    const next = { ...state[id], ...patch };
+    setState((s) => ({ ...s, [id]: next }));
+    save(id, next);
+  }
+
+  function persist(id: string) {
+    save(id, state[id]);
   }
 
   const internal = items.filter((i) => i.channel.type === "INTERNAL");
@@ -67,10 +76,7 @@ export function ChannelList({ sessionId, items }: { sessionId: string; items: Ch
                   <input
                     type="checkbox"
                     checked={s.digunakan}
-                    onChange={(e) => {
-                      update(channel.id, { digunakan: e.target.checked });
-                      persist(channel.id);
-                    }}
+                    onChange={(e) => updateAndSave(channel.id, { digunakan: e.target.checked })}
                     className="rounded border-slate-300"
                   />
                   {channel.name}

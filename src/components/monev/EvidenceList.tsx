@@ -35,8 +35,7 @@ export function EvidenceList({ sessionId, items }: { sessionId: string; items: E
     setState((s) => ({ ...s, [id]: { ...s[id], ...patch } }));
   }
 
-  function persist(id: string) {
-    const d = state[id];
+  function save(id: string, d: (typeof state)[string]) {
     startTransition(async () => {
       await saveEvidence(sessionId, id, {
         ada: d.ada,
@@ -47,6 +46,16 @@ export function EvidenceList({ sessionId, items }: { sessionId: string; items: E
       setSavedId(id);
       setTimeout(() => setSavedId((c) => (c === id ? null : c)), 1200);
     });
+  }
+
+  function updateAndSave(id: string, patch: Partial<(typeof state)[string]>) {
+    const next = { ...state[id], ...patch };
+    setState((s) => ({ ...s, [id]: next }));
+    save(id, next);
+  }
+
+  function persist(id: string) {
+    save(id, state[id]);
   }
 
   return (
@@ -63,10 +72,7 @@ export function EvidenceList({ sessionId, items }: { sessionId: string; items: E
                 <input
                   type="checkbox"
                   checked={s.ada}
-                  onChange={(e) => {
-                    update(type.id, { ada: e.target.checked });
-                    persist(type.id);
-                  }}
+                  onChange={(e) => updateAndSave(type.id, { ada: e.target.checked })}
                   className="rounded border-slate-300"
                 />
                 {type.label}

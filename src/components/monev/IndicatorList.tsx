@@ -48,8 +48,7 @@ export function IndicatorList({
     setState((s) => ({ ...s, [id]: { ...s[id], ...patch } }));
   }
 
-  function persist(id: string) {
-    const data = state[id];
+  function save(id: string, data: (typeof state)[string]) {
     startTransition(async () => {
       await saveIndicatorResponse(sessionId, id, {
         boolValue: data.boolValue ?? undefined,
@@ -60,6 +59,16 @@ export function IndicatorList({
       setSavedId(id);
       setTimeout(() => setSavedId((cur) => (cur === id ? null : cur)), 1200);
     });
+  }
+
+  function updateAndSave(id: string, patch: Partial<(typeof state)[string]>) {
+    const next = { ...state[id], ...patch };
+    setState((s) => ({ ...s, [id]: next }));
+    save(id, next);
+  }
+
+  function persist(id: string) {
+    save(id, state[id]);
   }
 
   const isScale = items[0]?.indicator.responseType === "SCALE_1_4";
@@ -106,10 +115,7 @@ export function IndicatorList({
                 ].map((opt) => (
                   <button
                     key={String(opt.v)}
-                    onClick={() => {
-                      update(indicator.id, { boolValue: opt.v });
-                      persist(indicator.id);
-                    }}
+                    onClick={() => updateAndSave(indicator.id, { boolValue: opt.v })}
                     className={`rounded-lg border px-4 py-1.5 text-sm font-medium transition-colors active:scale-[0.97] ${
                       s.boolValue === opt.v
                         ? opt.v
@@ -127,10 +133,7 @@ export function IndicatorList({
                 {[1, 2, 3, 4].map((v) => (
                   <button
                     key={v}
-                    onClick={() => {
-                      update(indicator.id, { scaleValue: v });
-                      persist(indicator.id);
-                    }}
+                    onClick={() => updateAndSave(indicator.id, { scaleValue: v })}
                     title={SCALE_LABELS[v]}
                     className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-semibold transition-colors active:scale-[0.95] ${
                       s.scaleValue === v
