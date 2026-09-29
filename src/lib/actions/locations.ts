@@ -2,8 +2,8 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { locations, skills, assignments, users, auditLogs } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { locations, skills, auditLogs } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -15,6 +15,7 @@ const locationSchema = z.object({
   penanggungJawab: z.string().optional(),
   noTelp: z.string().optional(),
   alamat: z.string().optional(),
+  namaPetugasMonev: z.string().optional(),
   igHandle: z.string().optional(),
   fbHandle: z.string().optional(),
   ytHandle: z.string().optional(),
@@ -59,6 +60,7 @@ export async function createLocation(formData: FormData) {
       penanggungJawab: data.penanggungJawab || null,
       noTelp: data.noTelp || null,
       alamat: data.alamat || null,
+      namaPetugasMonev: data.namaPetugasMonev || null,
       igHandle: data.igHandle || null,
       fbHandle: data.fbHandle || null,
       ytHandle: data.ytHandle || null,
@@ -99,6 +101,7 @@ export async function updateLocation(id: string, formData: FormData) {
       penanggungJawab: data.penanggungJawab || null,
       noTelp: data.noTelp || null,
       alamat: data.alamat || null,
+      namaPetugasMonev: data.namaPetugasMonev || null,
       igHandle: data.igHandle || null,
       fbHandle: data.fbHandle || null,
       ytHandle: data.ytHandle || null,
@@ -138,58 +141,3 @@ export async function softDeleteLocation(id: string) {
   revalidatePath("/lokasi");
 }
 
-export async function assignOfficerToLocation(locationId: string, userId: string) {
-  const session = await requireSuperAdmin();
-
-  const [existing] = await db
-    .select()
-    .from(assignments)
-    .where(and(eq(assignments.locationId, locationId), eq(assignments.userId, userId), eq(assignments.periode, "2026")))
-    .limit(1);
-  if (existing) return { error: "Petugas ini sudah ditugaskan ke lokasi ini." };
-
-  await db.insert(assignments).values({ locationId, userId, periode: "2026" });
-
-  await db.insert(auditLogs).values({
-    userId: session.user.id,
-    action: "ASSIGN",
-    entityType: "assignment",
-    entityId: locationId,
-    metadata: JSON.stringify({ userId }),
-  });
-
-  revalidatePath(`/lokasi/${locationId}`);
-  return { success: true };
-}
-
-export async function unassignOfficerFromLocation(assignmentId: string, locationId: string) {
-  const session = await requireSuperAdmin();
-
-  await db.delete(assignments).where(eq(assignments.id, assignmentId));
-
-  await db.insert(auditLogs).values({
-    userId: session.user.id,
-    action: "UNASSIGN",
-    entityType: "assignment",
-    entityId: assignmentId,
-  });
-
-  revalidatePath(`/lokasi/${locationId}`);
-}
-
-export async function getAvailableOfficers(locationId: string) {
-  await requireSuperAdmin();
-
-  const assigned = await db
-    .select({ userId: assignments.userId })
-    .from(assignments)
-    .where(and(eq(assignments.locationId, locationId), eq(assignments.periode, "2026")));
-  const assignedIds = new Set(assigned.map((a) => a.userId));
-
-  const allOfficers = await db
-    .select()
-    .from(users)
-    .where(eq(users.role, "PETUGAS"));
-
-  return allOfficers.filter((o) => !assignedIds.has(o.id));
-}

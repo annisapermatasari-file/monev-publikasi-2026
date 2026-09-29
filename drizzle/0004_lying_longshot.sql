@@ -1,0 +1,1 @@
+ALTER TABLE "locations" ADD COLUMN "nama_petugas_monev" text;

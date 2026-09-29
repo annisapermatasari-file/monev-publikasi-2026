@@ -102,6 +102,9 @@ export const locations = pgTable("locations", {
   penanggungJawab: text("penanggung_jawab"),
   noTelp: varchar("no_telp", { length: 30 }),
   alamat: text("alamat"),
+  // Nama-nama petugas Monev Publikasi persis sesuai Surat Pemberitahuan (bukan akun
+  // login - login ke aplikasi hanya lewat 1 akun bersama per lokasi/ID Lokasi Monev).
+  namaPetugasMonev: text("nama_petugas_monev"),
   tanggalMonevMulai: timestamp("tanggal_monev_mulai"),
   tanggalMonevSelesai: timestamp("tanggal_monev_selesai"),
   // baseline akun kanal internal LKP (dari sheet 01_Identitas)

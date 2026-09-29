@@ -43,6 +43,12 @@ export default async function LokasiBaruPage() {
           <Field label="No. Telp" name="noTelp" />
         </div>
         <Field label="Alamat" name="alamat" textarea />
+        <Field
+          label="Petugas Monev Publikasi (sesuai Surat Pemberitahuan)"
+          name="namaPetugasMonev"
+          textarea
+          placeholder="mis. Atik Riyanti, Annisa P., Nurlely"
+        />
 
         <button
           type="submit"

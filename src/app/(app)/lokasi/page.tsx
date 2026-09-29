@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { locations, skills, assignments } from "@/db/schema";
-import { eq, and, count } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, MapPin } from "lucide-react";
 
@@ -16,19 +16,12 @@ export default async function LokasiPage() {
       kabKota: locations.kabKota,
       namaLembaga: locations.namaLembaga,
       skillName: skills.name,
+      namaPetugasMonev: locations.namaPetugasMonev,
     })
     .from(locations)
     .leftJoin(skills, eq(locations.skillId, skills.id))
     .where(eq(locations.isActive, true))
     .orderBy(locations.provinsi, locations.namaLembaga);
-
-  // hitung jumlah petugas per lokasi (query terpisah, sederhana untuk skala 10 lokasi)
-  const petugasCounts = await db
-    .select({ locationId: assignments.locationId, total: count() })
-    .from(assignments)
-    .where(eq(assignments.periode, "2026"))
-    .groupBy(assignments.locationId);
-  const countMap = new Map(petugasCounts.map((p) => [p.locationId, p.total]));
 
   // kalau PETUGAS, filter hanya lokasi yang ditugaskan
   let visibleRows = rows;
@@ -75,7 +68,7 @@ export default async function LokasiPage() {
                 <th className="px-4 py-3">Lembaga</th>
                 <th className="px-4 py-3">Provinsi / Kab-Kota</th>
                 <th className="px-4 py-3">Keterampilan</th>
-                <th className="px-4 py-3 text-center">Petugas</th>
+                <th className="px-4 py-3">Petugas Monev Publikasi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -93,9 +86,7 @@ export default async function LokasiPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-slate-600">{r.skillName}</td>
-                  <td className="px-4 py-3 text-center text-slate-600">
-                    {countMap.get(r.id) ?? 0}
-                  </td>
+                  <td className="px-4 py-3 text-slate-600">{r.namaPetugasMonev || "—"}</td>
                 </tr>
               ))}
             </tbody>

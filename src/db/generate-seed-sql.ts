@@ -38,6 +38,8 @@ async function main() {
   lines.push("");
 
   // Locations (skill_id via subquery on unique skill name)
+  // Nama petugas Monev Publikasi persis sesuai Surat Pemberitahuan Nomor
+  // 2007/B/D3/DV.02.00/2026 tanggal 28 September 2026 (bukan akun login).
   const locationData: {
     provinsi: string;
     kabKota: string;
@@ -46,23 +48,24 @@ async function main() {
     penanggungJawab: string;
     noTelp: string;
     alamat: string;
+    namaPetugasMonev: string;
   }[] = [
-    { provinsi: "D.I. Yogyakarta", kabKota: "Kab. Sleman", namaLembaga: "LKP Total Outsource Development (TOD)", skill: "Tata Operasi Darat /Ground Handling Bandara", penanggungJawab: "ANNA HANDAYANI, S.E.", noTelp: "082136297499", alamat: "Jl. Solo Km. 10,5 No. 36 Sorogenen Rt 03 Rw 01 Kalasan, Sleman, DI Yogyakarta" },
-    { provinsi: "Jawa Barat", kabKota: "Kab. Bandung", namaLembaga: "LKP BINA ESSA", skill: "Tata Busana", penanggungJawab: "Nana Supriatna", noTelp: "081220215718", alamat: "Jl. Raya Laswi Komplek Griya Pesona No. 1C" },
-    { provinsi: "Jawa Barat", kabKota: "Kab. Cianjur", namaLembaga: "LKP PRIMA", skill: "Otomotif Teknik Sepeda Motor", penanggungJawab: "Cep Yudi Hamdani", noTelp: "085723048026", alamat: "Jln.Perintis Kemerdekaan No.07 Pataruman RT.03 RW.11" },
-    { provinsi: "Jawa Tengah", kabKota: "Kab. Cilacap", namaLembaga: "LKP MEDIA KOMPUTER", skill: "Desain Grafis", penanggungJawab: "AGUS WIDAYAT", noTelp: "081225056446", alamat: "Jl. Kelapa Sawit No. 02, Kec. Sidareja, Kab. Cilacap, Jawa Tengah" },
-    { provinsi: "Jawa Timur", kabKota: "Kota Kediri", namaLembaga: "LKP BUTIRAN ILMU", skill: "Administrasi Perkantoran/Sekretaris", penanggungJawab: "", noTelp: "081231842118", alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri" },
-    { provinsi: "Jawa Barat", kabKota: "Kab. Bogor", namaLembaga: "LKP Viderista", skill: "Tata Boga (Jasa Usaha Makanan)", penanggungJawab: "Drs MAMAN MULYATNA", noTelp: "081384744637", alamat: "Jl. Raya Puncak Gadog No.51, RT.04/RW.02, Citeko, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750" },
-    { provinsi: "Jawa Barat", kabKota: "Kota Cimahi", namaLembaga: "LKP ELIDAS", skill: "Pastry & Bakery", penanggungJawab: "ELIDA HAFNI S.E", noTelp: "081395053413", alamat: "Kompleks Taman Bukit Cibogo Blok A9 No 15, Rt.02/Rw.17, Leuwigajah, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40532" },
-    { provinsi: "Jawa Tengah", kabKota: "Kab. Tegal", namaLembaga: "LKP SKI COMPUTER", skill: "Teknik Komputer", penanggungJawab: "RINA RISKIANA", noTelp: "085786666159", alamat: "Jl. Semanggi Raya No 96" },
-    { provinsi: "Jawa Tengah", kabKota: "Kab. Demak", namaLembaga: "LKP FLORENZA", skill: "Tata Kecantikan Rambut", penanggungJawab: "IRYANTI", noTelp: "085727184748", alamat: "Jl. Ki Godek Desa Bulusari Kecamatan Sayung Kabupaten Demak" },
-    { provinsi: "Jawa Tengah", kabKota: "Kab. Karanganyar", namaLembaga: "LKP ASTI", skill: "Las/Pengelasan", penanggungJawab: "Lastri, S.Sos.I.MM.", noTelp: "081228206713", alamat: "Jl. Kepuh No 10 Rt 01/03, Kel. Lalung, Kec. Karanganyar, Kab. Karanganyar, Prov. Jawa Tengah" },
+    { provinsi: "D.I. Yogyakarta", kabKota: "Kab. Sleman", namaLembaga: "LKP Total Outsource Development (TOD)", skill: "Tata Operasi Darat /Ground Handling Bandara", penanggungJawab: "ANNA HANDAYANI, S.E.", noTelp: "082136297499", alamat: "Jl. Solo Km. 10,5 No. 36 Sorogenen Rt 03 Rw 01 Kalasan, Sleman, DI Yogyakarta", namaPetugasMonev: "Supriono, Shaka Guna Pertamana" },
+    { provinsi: "Jawa Barat", kabKota: "Kab. Bandung", namaLembaga: "LKP BINA ESSA", skill: "Tata Busana", penanggungJawab: "Nana Supriatna", noTelp: "081220215718", alamat: "Jl. Raya Laswi Komplek Griya Pesona No. 1C", namaPetugasMonev: "Fauziannisa Pradana Putri, Dyah S.S." },
+    { provinsi: "Jawa Barat", kabKota: "Kab. Cianjur", namaLembaga: "LKP PRIMA", skill: "Otomotif Teknik Sepeda Motor", penanggungJawab: "Cep Yudi Hamdani", noTelp: "085723048026", alamat: "Jln.Perintis Kemerdekaan No.07 Pataruman RT.03 RW.11", namaPetugasMonev: "Soni W.R, Lili Dyah Ayu Candra" },
+    { provinsi: "Jawa Tengah", kabKota: "Kab. Cilacap", namaLembaga: "LKP MEDIA KOMPUTER", skill: "Desain Grafis", penanggungJawab: "AGUS WIDAYAT", noTelp: "081225056446", alamat: "Jl. Kelapa Sawit No. 02, Kec. Sidareja, Kab. Cilacap, Jawa Tengah", namaPetugasMonev: "Rany Larasari, Badrutaman" },
+    { provinsi: "Jawa Timur", kabKota: "Kota Kediri", namaLembaga: "LKP BUTIRAN ILMU", skill: "Administrasi Perkantoran/Sekretaris", penanggungJawab: "", noTelp: "081231842118", alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri", namaPetugasMonev: "Iwan Aries S., Darmono" },
+    { provinsi: "Jawa Barat", kabKota: "Kab. Bogor", namaLembaga: "LKP Viderista", skill: "Tata Boga (Jasa Usaha Makanan)", penanggungJawab: "Drs MAMAN MULYATNA", noTelp: "081384744637", alamat: "Jl. Raya Puncak Gadog No.51, RT.04/RW.02, Citeko, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750", namaPetugasMonev: "Chrismi W., Yeni Pratiwi, Nasikin" },
+    { provinsi: "Jawa Barat", kabKota: "Kota Cimahi", namaLembaga: "LKP ELIDAS", skill: "Pastry & Bakery", penanggungJawab: "ELIDA HAFNI S.E", noTelp: "081395053413", alamat: "Kompleks Taman Bukit Cibogo Blok A9 No 15, Rt.02/Rw.17, Leuwigajah, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40532", namaPetugasMonev: "Atik Riyanti, Annisa P., Nurlely" },
+    { provinsi: "Jawa Tengah", kabKota: "Kab. Tegal", namaLembaga: "LKP SKI COMPUTER", skill: "Teknik Komputer", penanggungJawab: "RINA RISKIANA", noTelp: "085786666159", alamat: "Jl. Semanggi Raya No 96", namaPetugasMonev: "Ferdy H., A. Fadly" },
+    { provinsi: "Jawa Tengah", kabKota: "Kab. Demak", namaLembaga: "LKP FLORENZA", skill: "Tata Kecantikan Rambut", penanggungJawab: "IRYANTI", noTelp: "085727184748", alamat: "Jl. Ki Godek Desa Bulusari Kecamatan Sayung Kabupaten Demak", namaPetugasMonev: "Agung Sulistomo, Ramdhan Noor Putra Wira" },
+    { provinsi: "Jawa Tengah", kabKota: "Kab. Karanganyar", namaLembaga: "LKP ASTI", skill: "Las/Pengelasan", penanggungJawab: "Lastri, S.Sos.I.MM.", noTelp: "081228206713", alamat: "Jl. Kepuh No 10 Rt 01/03, Kel. Lalung, Kec. Karanganyar, Kab. Karanganyar, Prov. Jawa Tengah", namaPetugasMonev: "Yaya Sutarya, Faiz Ayatullah, Sasmita W., Lisvi N." },
   ];
   lines.push(`-- Locations`);
   for (const l of locationData) {
     lines.push(
-      `INSERT INTO locations (provinsi, kab_kota, nama_lembaga, skill_id, penanggung_jawab, no_telp, alamat, tanggal_monev_mulai, tanggal_monev_selesai) VALUES (` +
-        `${esc(l.provinsi)}, ${esc(l.kabKota)}, ${esc(l.namaLembaga)}, (SELECT id FROM skills WHERE name = ${esc(l.skill)}), ${esc(l.penanggungJawab)}, ${esc(l.noTelp)}, ${esc(l.alamat)}, '2026-10-01', '2026-10-06');`
+      `INSERT INTO locations (provinsi, kab_kota, nama_lembaga, skill_id, penanggung_jawab, no_telp, alamat, nama_petugas_monev, tanggal_monev_mulai, tanggal_monev_selesai) VALUES (` +
+        `${esc(l.provinsi)}, ${esc(l.kabKota)}, ${esc(l.namaLembaga)}, (SELECT id FROM skills WHERE name = ${esc(l.skill)}), ${esc(l.penanggungJawab)}, ${esc(l.noTelp)}, ${esc(l.alamat)}, ${esc(l.namaPetugasMonev)}, '2026-10-01', '2026-10-06');`
     );
   }
   lines.push("");
@@ -82,58 +85,40 @@ async function main() {
       `'Pimpinan Direktorat', 'viewer', 'pimpinan@kemendikdasmen.go.id', ${esc(viewerHash)}, 'VIEWER', true);`
   );
 
-  type OfficerDef = { name: string; username: string; isUnit?: boolean };
-  const officerList: OfficerDef[] = [
-    { name: "Yaya Sutarya", username: "yaya.sutarya" },
-    { name: "Eddi Saputro", username: "eddi.saputro" },
-    { name: "Faiz Ayatullah", username: "faiz.ayatullah" },
-    { name: "Lisvi", username: "lisvi" },
-    { name: "Supriono", username: "supriono" },
-    { name: "Setditjen", username: "setditjen", isUnit: true },
-    { name: "Iwan Aries S.", username: "iwan.aries" },
-    { name: "BKHM", username: "bkhm", isUnit: true },
-    { name: "Nurleily", username: "nurleily" },
-    { name: "Fadly", username: "fadly" },
-    { name: "Soni Ramadhan", username: "soni.ramadhan" },
-    { name: "Chrismi Widjajanti", username: "chrismi.widjajanti" },
-    { name: "Yeni Pratiwi", username: "yeni.pratiwi" },
-    { name: "Nasikin", username: "nasikin" },
-    { name: "Atik Riyanti", username: "atik.riyanti" },
-    { name: "Anisa Permatasari", username: "anisa.permatasari" },
-    { name: "Darmono", username: "darmono" },
-    { name: "Dyah", username: "dyah" },
-    { name: "Badrutaman", username: "badrutaman" },
-    { name: "Ferdi", username: "ferdi" },
+  // Tidak ada lagi akun login individu per nama petugas - login PETUGAS hanya
+  // lewat 1 akun bersama per lokasi (ID Lokasi Monev, di bawah). Nama petugas
+  // per lokasi sesuai Surat Pemberitahuan sudah tersimpan di kolom
+  // locations.nama_petugas_monev di atas.
+  void petugasHash;
+
+  const locationAccountList: { lembaga: string; username: string; password: string }[] = [
+    { lembaga: "LKP Total Outsource Development (TOD)", username: "lkp-tod", password: "TOD2026!" },
+    { lembaga: "LKP BINA ESSA", username: "lkp-binaessa", password: "BinaEssa2026!" },
+    { lembaga: "LKP PRIMA", username: "lkp-prima", password: "Prima2026!" },
+    { lembaga: "LKP MEDIA KOMPUTER", username: "lkp-mediakomputer", password: "MediaKomputer2026!" },
+    { lembaga: "LKP BUTIRAN ILMU", username: "lkp-butiranilmu", password: "ButiranIlmu2026!" },
+    { lembaga: "LKP Viderista", username: "lkp-viderista", password: "Viderista2026!" },
+    { lembaga: "LKP ELIDAS", username: "lkp-elidas", password: "Elidas2026!" },
+    { lembaga: "LKP SKI COMPUTER", username: "lkp-skicomputer", password: "SkiComputer2026!" },
+    { lembaga: "LKP FLORENZA", username: "lkp-florenza", password: "Florenza2026!" },
+    { lembaga: "LKP ASTI", username: "lkp-asti", password: "Asti2026!" },
   ];
-  for (const o of officerList) {
+  lines.push(`-- Akun per lokasi (ID Lokasi Monev - satu-satunya cara login untuk PETUGAS)`);
+  for (const l of locationAccountList) {
+    const hash = await bcrypt.hash(l.password, 10);
     lines.push(
       `INSERT INTO users (name, username, password_hash, role, is_unit_account, is_active) VALUES (` +
-        `${esc(o.name)}, ${esc(o.username)}, ${esc(petugasHash)}, 'PETUGAS', ${o.isUnit ? "true" : "false"}, true);`
+        `${esc(`Tim Petugas - ${l.lembaga}`)}, ${esc(l.username)}, ${esc(hash)}, 'PETUGAS', true, true);`
     );
   }
   lines.push("");
 
-  // Assignments (via subqueries on username + nama_lembaga)
-  const assignmentMap: { lembaga: string; petugas: string[] }[] = [
-    { lembaga: "LKP ASTI", petugas: ["yaya.sutarya", "eddi.saputro", "faiz.ayatullah", "lisvi"] },
-    { lembaga: "LKP Total Outsource Development (TOD)", petugas: ["supriono", "setditjen"] },
-    { lembaga: "LKP BINA ESSA", petugas: ["setditjen", "iwan.aries", "dyah"] },
-    { lembaga: "LKP PRIMA", petugas: ["soni.ramadhan", "bkhm"] },
-    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["bkhm", "darmono"] },
-    { lembaga: "LKP BUTIRAN ILMU", petugas: ["bkhm", "ferdi"] },
-    { lembaga: "LKP Viderista", petugas: ["chrismi.widjajanti", "yeni.pratiwi", "nasikin"] },
-    { lembaga: "LKP ELIDAS", petugas: ["atik.riyanti", "anisa.permatasari"] },
-    { lembaga: "LKP SKI COMPUTER", petugas: ["bkhm", "fadly"] },
-    { lembaga: "LKP FLORENZA", petugas: ["setditjen", "badrutaman"] },
-  ];
-  lines.push(`-- Assignments`);
-  for (const a of assignmentMap) {
-    for (const username of a.petugas) {
-      lines.push(
-        `INSERT INTO assignments (user_id, location_id, periode) VALUES (` +
-          `(SELECT id FROM users WHERE username = ${esc(username)}), (SELECT id FROM locations WHERE nama_lembaga = ${esc(a.lembaga)}), '2026');`
-      );
-    }
+  lines.push(`-- Assignments (akun lokasi -> lokasinya masing-masing)`);
+  for (const l of locationAccountList) {
+    lines.push(
+      `INSERT INTO assignments (user_id, location_id, periode) VALUES (` +
+        `(SELECT id FROM users WHERE username = ${esc(l.username)}), (SELECT id FROM locations WHERE nama_lembaga = ${esc(l.lembaga)}), '2026');`
+    );
   }
   lines.push("");
 
@@ -252,7 +237,7 @@ async function main() {
   );
 
   lines.push("");
-  lines.push("-- SELESAI. Login: superadmin/Admin2026! | viewer/Viewer2026! | <username petugas>/Monev2026!");
+  lines.push("-- SELESAI. Login: superadmin/Admin2026! | viewer/Viewer2026! | PETUGAS hanya lewat akun per lokasi (lkp-xxx), lihat locationAccountList");
 
   writeFileSync("/mnt/user-data/outputs/seed_data.sql", lines.join("\n"));
   console.log("Generated /mnt/user-data/outputs/seed_data.sql with", lines.length, "lines");

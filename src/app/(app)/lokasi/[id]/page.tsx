@@ -5,13 +5,7 @@ import { eq, and } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import {
-  updateLocation,
-  softDeleteLocation,
-  assignOfficerToLocation,
-  unassignOfficerFromLocation,
-  getAvailableOfficers,
-} from "@/lib/actions/locations";
+import { updateLocation, softDeleteLocation } from "@/lib/actions/locations";
 
 export default async function LokasiDetailPage({
   params,
@@ -32,6 +26,7 @@ export default async function LokasiDetailPage({
       penanggungJawab: locations.penanggungJawab,
       noTelp: locations.noTelp,
       alamat: locations.alamat,
+      namaPetugasMonev: locations.namaPetugasMonev,
       igHandle: locations.igHandle,
       fbHandle: locations.fbHandle,
       ytHandle: locations.ytHandle,
@@ -56,19 +51,13 @@ export default async function LokasiDetailPage({
     if (!assigned) redirect("/lokasi");
   }
 
-  const assignedOfficers = await db
-    .select({
-      assignmentId: assignments.id,
-      userId: users.id,
-      name: users.name,
-      username: users.username,
-      isUnitAccount: users.isUnitAccount,
-    })
+  // Akun login lokasi (ID Lokasi Monev) - satu-satunya cara login untuk PETUGAS.
+  const [loginAccount] = await db
+    .select({ name: users.name, username: users.username })
     .from(assignments)
     .innerJoin(users, eq(assignments.userId, users.id))
-    .where(and(eq(assignments.locationId, id), eq(assignments.periode, "2026")));
-
-  const availableOfficers = isSuperAdmin ? await getAvailableOfficers(id) : [];
+    .where(and(eq(assignments.locationId, id), eq(assignments.periode, "2026")))
+    .limit(1);
 
   async function handleUpdate(formData: FormData) {
     "use server";
@@ -79,18 +68,6 @@ export default async function LokasiDetailPage({
     "use server";
     await softDeleteLocation(id);
     redirect("/lokasi");
-  }
-
-  async function handleAssign(formData: FormData) {
-    "use server";
-    const userId = formData.get("userId") as string;
-    if (userId) await assignOfficerToLocation(id, userId);
-  }
-
-  async function handleUnassign(formData: FormData) {
-    "use server";
-    const assignmentId = formData.get("assignmentId") as string;
-    await unassignOfficerFromLocation(assignmentId, id);
   }
 
   return (
@@ -135,6 +112,13 @@ export default async function LokasiDetailPage({
             />
             <Field label="No. Telp" name="noTelp" defaultValue={location.noTelp ?? ""} />
             <Field label="Alamat" name="alamat" defaultValue={location.alamat ?? ""} full textarea />
+            <Field
+              label="Petugas Monev Publikasi (sesuai Surat Pemberitahuan)"
+              name="namaPetugasMonev"
+              defaultValue={location.namaPetugasMonev ?? ""}
+              full
+              textarea
+            />
 
             <div className="col-span-full my-1 border-t border-slate-100 pt-4">
               <p className="mb-3 text-xs font-medium text-slate-400">Kanal Internal LKP</p>
@@ -167,63 +151,34 @@ export default async function LokasiDetailPage({
             <Info label="Penanggung Jawab" value={location.penanggungJawab} />
             <Info label="No. Telp" value={location.noTelp} />
             <Info label="Alamat" value={location.alamat} />
+            <Info
+              label="Petugas Monev Publikasi"
+              value={location.namaPetugasMonev}
+            />
           </dl>
         )}
       </div>
 
-      {/* ------- Petugas ditugaskan ------- */}
+      {/* ------- Akun login lokasi ------- */}
       <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-900">Petugas Ditugaskan</h2>
-
-        {assignedOfficers.length === 0 ? (
-          <p className="text-sm text-slate-400">Belum ada petugas ditugaskan.</p>
+        <h2 className="mb-1 text-sm font-semibold text-slate-900">Akun Login (ID Lokasi Monev)</h2>
+        <p className="mb-4 text-xs text-slate-500">
+          Satu akun ini dipakai bersama oleh seluruh tim petugas yang bertugas di lokasi ini.
+        </p>
+        {loginAccount ? (
+          <div>
+            <p className="text-sm font-medium text-slate-900">{loginAccount.name}</p>
+            <p className="text-xs text-slate-400">@{loginAccount.username}</p>
+          </div>
         ) : (
-          <ul className="mb-4 divide-y divide-slate-100">
-            {assignedOfficers.map((o) => (
-              <li key={o.assignmentId} className="flex items-center justify-between py-2.5">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">
-                    {o.name}
-                    {o.isUnitAccount && (
-                      <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
-                        Akun Tim
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-xs text-slate-400">@{o.username}</p>
-                </div>
-                {isSuperAdmin && (
-                  <form action={handleUnassign}>
-                    <input type="hidden" name="assignmentId" value={o.assignmentId} />
-                    <button className="text-xs font-medium text-red-500 hover:text-red-700">
-                      Lepas Tugas
-                    </button>
-                  </form>
-                )}
-              </li>
-            ))}
-          </ul>
+          <p className="text-sm text-slate-400">Belum ada akun login untuk lokasi ini.</p>
         )}
-
-        {isSuperAdmin && availableOfficers.length > 0 && (
-          <form action={handleAssign} className="flex items-center gap-2 border-t border-slate-100 pt-4">
-            <select
-              name="userId"
-              required
-              className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm"
-            >
-              <option value="">Pilih petugas untuk ditugaskan...</option>
-              {availableOfficers.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.name} (@{o.username})
-                </option>
-              ))}
-            </select>
-            <button className="rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-800">
-              Tugaskan
-            </button>
-          </form>
-        )}
+        <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-700">
+          Petugas Monev Publikasi:{" "}
+          <span className="font-medium text-slate-900">
+            {location.namaPetugasMonev || "—"}
+          </span>
+        </p>
       </div>
 
       {isSuperAdmin && (

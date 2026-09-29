@@ -59,6 +59,8 @@ async function main() {
 
   const programRowByCode = (code: "PKK" | "PKW") => programRows.find((p) => p.code === code)!.id;
 
+  // Nama petugas Monev Publikasi persis sesuai Surat Pemberitahuan Nomor
+  // 2007/B/D3/DV.02.00/2026 tanggal 28 September 2026 (bukan akun login).
   const locationData = [
     {
       provinsi: "D.I. Yogyakarta",
@@ -69,6 +71,7 @@ async function main() {
       penanggungJawab: "ANNA HANDAYANI, S.E.",
       noTelp: "082136297499",
       alamat: "Jl. Solo Km. 10,5 No. 36 Sorogenen Rt 03 Rw 01 Kalasan, Sleman, DI Yogyakarta",
+      namaPetugasMonev: "Supriono, Shaka Guna Pertamana",
     },
     {
       provinsi: "Jawa Barat",
@@ -79,6 +82,7 @@ async function main() {
       penanggungJawab: "Nana Supriatna",
       noTelp: "081220215718",
       alamat: "Jl. Raya Laswi Komplek Griya Pesona No. 1C",
+      namaPetugasMonev: "Fauziannisa Pradana Putri, Dyah S.S.",
     },
     {
       provinsi: "Jawa Barat",
@@ -89,6 +93,7 @@ async function main() {
       penanggungJawab: "Cep Yudi Hamdani",
       noTelp: "085723048026",
       alamat: "Jln.Perintis Kemerdekaan No.07 Pataruman RT.03 RW.11",
+      namaPetugasMonev: "Soni W.R, Lili Dyah Ayu Candra",
     },
     {
       provinsi: "Jawa Tengah",
@@ -99,6 +104,7 @@ async function main() {
       penanggungJawab: "AGUS WIDAYAT",
       noTelp: "081225056446",
       alamat: "Jl. Kelapa Sawit No. 02, Kec. Sidareja, Kab. Cilacap, Jawa Tengah",
+      namaPetugasMonev: "Rany Larasari, Badrutaman",
     },
     {
       provinsi: "Jawa Timur",
@@ -109,6 +115,7 @@ async function main() {
       penanggungJawab: null,
       noTelp: "081231842118",
       alamat: "Jl. Agus Salim No. 94, Bandarkidul, Mojoroto, Kota Kediri",
+      namaPetugasMonev: "Iwan Aries S., Darmono",
     },
     {
       provinsi: "Jawa Barat",
@@ -119,6 +126,7 @@ async function main() {
       penanggungJawab: "Drs MAMAN MULYATNA",
       noTelp: "081384744637",
       alamat: "Jl. Raya Puncak Gadog No.51, RT.04/RW.02, Citeko, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750",
+      namaPetugasMonev: "Chrismi W., Yeni Pratiwi, Nasikin",
     },
     {
       provinsi: "Jawa Barat",
@@ -130,6 +138,7 @@ async function main() {
       noTelp: "081395053413",
       alamat:
         "Kompleks Taman Bukit Cibogo Blok A9 No 15, Rt.02/Rw.17, Leuwigajah, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40532",
+      namaPetugasMonev: "Atik Riyanti, Annisa P., Nurlely",
     },
     {
       provinsi: "Jawa Tengah",
@@ -140,6 +149,7 @@ async function main() {
       penanggungJawab: "RINA RISKIANA",
       noTelp: "085786666159",
       alamat: "Jl. Semanggi Raya No 96",
+      namaPetugasMonev: "Ferdy H., A. Fadly",
     },
     {
       provinsi: "Jawa Tengah",
@@ -150,6 +160,7 @@ async function main() {
       penanggungJawab: "IRYANTI",
       noTelp: "085727184748",
       alamat: "Jl. Ki Godek Desa Bulusari Kecamatan Sayung Kabupaten Demak",
+      namaPetugasMonev: "Agung Sulistomo, Ramdhan Noor Putra Wira",
     },
     {
       provinsi: "Jawa Tengah",
@@ -160,6 +171,7 @@ async function main() {
       penanggungJawab: "Lastri, S.Sos.I.MM.",
       noTelp: "081228206713",
       alamat: "Jl. Kepuh No 10 Rt 01/03, Kel. Lalung, Kec. Karanganyar, Kab. Karanganyar, Prov. Jawa Tengah",
+      namaPetugasMonev: "Yaya Sutarya, Faiz Ayatullah, Sasmita W., Lisvi N.",
     },
   ];
 
@@ -175,6 +187,7 @@ async function main() {
         penanggungJawab: l.penanggungJawab,
         noTelp: l.noTelp,
         alamat: l.alamat,
+        namaPetugasMonev: l.namaPetugasMonev,
         tanggalMonevMulai: tglMulai,
         tanggalMonevSelesai: tglSelesai,
       }))
@@ -184,12 +197,12 @@ async function main() {
     locationRows.find((l) => l.namaLembaga === nama)!.id;
 
   // ------------------------------------------------------------
-  // 4. USERS (dari Rekap Petugas Monev Publikasi.xlsx)
-  //    Catatan: "BKHM" dan "Setditjen" adalah akun unit/tim (dipakai
-  //    berulang di beberapa lokasi), bukan individu - ditandai isUnitAccount.
+  // 4. USERS
+  //    Login petugas HANYA lewat 1 akun bersama per lokasi (ID Lokasi Monev,
+  //    lihat bagian 5) - tidak ada lagi akun login individu per nama petugas.
+  //    Nama petugas per lokasi sesuai Surat Pemberitahuan disimpan di
+  //    locations.namaPetugasMonev (lihat bagian 3), bukan sebagai akun.
   // ------------------------------------------------------------
-  const defaultPasswordHash = await bcrypt.hash("Monev2026!", 10);
-
   await db
     .insert(users)
     .values({
@@ -214,77 +227,10 @@ async function main() {
     })
     .returning();
 
-  // daftar petugas unik dari kolom "Petugas Monev Publikasi" (sheet "surtug")
-  type OfficerDef = { name: string; username: string; isUnit?: boolean };
-  const officerList: OfficerDef[] = [
-    { name: "Yaya Sutarya", username: "yaya.sutarya" },
-    { name: "Faiz Ayatullah", username: "faiz.ayatullah" },
-    { name: "Sasmita W.", username: "sasmita.w" },
-    { name: "Lisvi", username: "lisvi" },
-    { name: "Supriono", username: "supriono" },
-    { name: "Setditjen", username: "setditjen", isUnit: true },
-    { name: "Iwan Aries S.", username: "iwan.aries" },
-    { name: "Dyah", username: "dyah" },
-    { name: "Soni Ramadhan", username: "soni.ramadhan" },
-    { name: "BKHM", username: "bkhm", isUnit: true },
-    { name: "Darmono", username: "darmono" },
-    { name: "Ferdi", username: "ferdi" },
-    { name: "Chrismi Widjajanti", username: "chrismi.widjajanti" },
-    { name: "Yeni Pratiwi", username: "yeni.pratiwi" },
-    { name: "Nasikin", username: "nasikin" },
-    { name: "Atik Riyanti", username: "atik.riyanti" },
-    { name: "Anisa Permatasari", username: "anisa.permatasari" },
-    { name: "Nurlely", username: "nurlely" },
-    { name: "Fadly", username: "fadly" },
-    { name: "Badrutaman", username: "badrutaman" },
-  ];
-
-  const officerRows = await db
-    .insert(users)
-    .values(
-      officerList.map((o) => ({
-        name: o.name,
-        username: o.username,
-        passwordHash: defaultPasswordHash,
-        role: "PETUGAS" as const,
-        isUnitAccount: !!o.isUnit,
-        isActive: true,
-      }))
-    )
-    .returning();
-  const officerId = (name: string) => officerRows.find((o) => o.name === name)!.id;
-
   // ------------------------------------------------------------
-  // 5. ASSIGNMENTS (petugas -> lokasi, dari Rekap Petugas)
-  // ------------------------------------------------------------
-  const assignmentMap: { lembaga: string; petugas: string[] }[] = [
-    { lembaga: "LKP ASTI", petugas: ["Yaya Sutarya", "Faiz Ayatullah", "Sasmita W.", "Lisvi"] },
-    { lembaga: "LKP Total Outsource Development (TOD)", petugas: ["Supriono", "Setditjen"] },
-    { lembaga: "LKP BINA ESSA", petugas: ["Setditjen", "Dyah"] },
-    { lembaga: "LKP PRIMA", petugas: ["Soni Ramadhan", "BKHM"] },
-    { lembaga: "LKP MEDIA KOMPUTER", petugas: ["BKHM", "Badrutaman"] },
-    { lembaga: "LKP BUTIRAN ILMU", petugas: ["BKHM", "Ferdi"] },
-    { lembaga: "LKP Viderista", petugas: ["Chrismi Widjajanti", "Yeni Pratiwi", "Nasikin"] },
-    { lembaga: "LKP ELIDAS", petugas: ["Atik Riyanti", "Anisa Permatasari", "Nurlely"] },
-    { lembaga: "LKP SKI COMPUTER", petugas: ["Iwan Aries S.", "Fadly"] },
-    { lembaga: "LKP FLORENZA", petugas: ["Setditjen", "Darmono"] },
-  ];
-
-  await db.insert(assignments).values(
-    assignmentMap.flatMap((a) =>
-      a.petugas.map((p) => ({
-        userId: officerId(p),
-        locationId: locationIdByLembaga(a.lembaga),
-        periode: "2026",
-      }))
-    )
-  );
-
-  // ------------------------------------------------------------
-  // 5b. AKUN PER LOKASI (1 login dipakai bersama oleh tim petugas yang
-  //     berangkat ke LKP tsb - lebih praktis di lapangan daripada tiap
-  //     orang harus ingat username masing-masing). Ditambahkan di samping
-  //     akun individu, bukan menggantikan.
+  // 5. AKUN PER LOKASI (1 login dipakai bersama oleh tim petugas yang
+  //     berangkat ke LKP tsb - satu-satunya cara login untuk PETUGAS;
+  //     nama masing-masing anggota tim ada di locations.namaPetugasMonev).
   // ------------------------------------------------------------
   type LocationAccountDef = { lembaga: string; username: string; password: string };
   const locationAccountList: LocationAccountDef[] = [
@@ -552,10 +498,7 @@ async function main() {
   console.log("=".repeat(50));
   console.log("Login SUPER_ADMIN -> username: superadmin | password: Admin2026!");
   console.log("Login VIEWER      -> username: viewer     | password: Viewer2026!");
-  console.log("Login PETUGAS (individu) -> username: <nama.petugas> | password: Monev2026!");
-  console.log("Contoh:", officerRows.map((o) => o.username).join(", "));
-  console.log("-".repeat(50));
-  console.log("Login PETUGAS (per lokasi, dipakai bersama tim) - lihat tabel akun per LKP");
+  console.log("Login PETUGAS -> hanya lewat akun per lokasi (ID Lokasi Monev), lihat tabel di bawah");
   console.log(
     locationAccountList.map((l) => `${l.lembaga}: ${l.username} / ${l.password}`).join("\n")
   );
