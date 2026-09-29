@@ -190,8 +190,6 @@ async function main() {
     ["Mitra", "Alasan bermitra, kompetensi yang dibutuhkan, kualitas peserta, kelanjutan"],
     ["Data", "Peserta, kompetensi/sertifikasi, produk/jasa, penempatan, magang, penjualan/omzet bila relevan dan terverifikasi"],
     ["Visual wajib", "Lokasi, proses, close-up keterampilan, interaksi, hasil kerja, mitra, testimoni, aktivitas kerja/usaha"],
-    ["Output", "Foto pilihan, video vertikal, video 7–15 menit bila ditetapkan, kutipan, caption, bahan rilis"],
-    ["Etika", "Persetujuan dokumentasi; tidak menampilkan data pribadi sensitif; klaim terverifikasi"],
   ];
   lines.push(`-- Story Brief Elements`);
   briefElements.forEach(([elemen, arahan], i) =>

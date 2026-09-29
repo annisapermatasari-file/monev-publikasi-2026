@@ -491,7 +491,7 @@ async function main() {
   ]);
 
   // ------------------------------------------------------------
-  // 13. STORY BRIEF ELEMENTS (12 elemen, sama untuk kedua program)
+  // 13. STORY BRIEF ELEMENTS (10 elemen narasi wawancara, sama untuk kedua program)
   // ------------------------------------------------------------
   const briefElements = [
     { elemen: "Subjek utama", arahan: "Peserta/lulusan, dilengkapi instruktur/pengelola dan mitra" },
@@ -510,14 +510,6 @@ async function main() {
     {
       elemen: "Visual wajib",
       arahan: "Lokasi, proses, close-up keterampilan, interaksi, hasil kerja, mitra, testimoni, aktivitas kerja/usaha",
-    },
-    {
-      elemen: "Output",
-      arahan: "Foto pilihan, video vertikal, video 7–15 menit bila ditetapkan, kutipan, caption, bahan rilis",
-    },
-    {
-      elemen: "Etika",
-      arahan: "Persetujuan dokumentasi; tidak menampilkan data pribadi sensitif; klaim terverifikasi",
     },
   ];
   await db

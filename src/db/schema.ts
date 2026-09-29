@@ -284,7 +284,7 @@ export const publicationEvidence = pgTable(
 );
 
 // ============================================================
-// STORY BRIEF (12 elemen brief liputan)
+// STORY BRIEF (10 elemen narasi brief liputan - alur wawancara, tanpa output/etika)
 // ============================================================
 export const storyBriefElements = pgTable("story_brief_elements", {
   id: varchar("id", { length: 36 }).primaryKey().default(sql`gen_random_uuid()`),
