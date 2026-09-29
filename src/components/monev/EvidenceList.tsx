@@ -51,7 +51,7 @@ export function EvidenceList({ sessionId, items }: { sessionId: string; items: E
 
   return (
     <div className="space-y-3">
-      <p className="mb-1 text-xs text-slate-400">
+      <p className="mb-1 text-xs text-slate-600">
         Isi tautan ke tempat bukti disimpan (Google Drive, YouTube, dsb) — bukan unggah file.
       </p>
       {items.map(({ type }) => {

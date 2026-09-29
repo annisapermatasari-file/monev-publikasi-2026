@@ -31,7 +31,7 @@ export function RecapCards({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {cards.map((c) => (
           <div key={c.label} className="rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-xs text-slate-500">{c.label}</p>
+            <p className="text-xs text-slate-600">{c.label}</p>
             <p className="mt-1 text-2xl font-semibold text-slate-900">{c.value}</p>
           </div>
         ))}

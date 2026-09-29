@@ -80,7 +80,7 @@ export function InterviewManager({ sessionId, initial }: { sessionId: string; in
       ))}
 
       {interviews.length === 0 && (
-        <p className="text-center text-sm text-slate-400">Belum ada narasumber ditambahkan.</p>
+        <p className="text-center text-sm text-slate-600">Belum ada narasumber ditambahkan.</p>
       )}
     </div>
   );
@@ -117,7 +117,7 @@ function InterviewCard({
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-900">{interview.narasumber}</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-600">
             {ROLE_OPTIONS.find((r) => r.value === interview.peran)?.label ?? interview.peran}
           </p>
         </div>
@@ -142,7 +142,7 @@ function InterviewCard({
                 onBlur={() => persist(a.id)}
                 className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:bg-white"
               />
-              <label className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+              <label className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
                 <input
                   type="checkbox"
                   checked={s.bolehDikutip}

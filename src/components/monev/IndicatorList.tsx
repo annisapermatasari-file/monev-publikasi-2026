@@ -67,7 +67,7 @@ export function IndicatorList({
   return (
     <div className="space-y-3">
       {category && isScale && (
-        <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs text-slate-500">
+        <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs text-slate-600">
           {SCALE_LEGEND.map((s) => (
             <span key={s.v}>
               <strong className="text-slate-700">{s.v}</strong> = {s.label}
@@ -76,7 +76,7 @@ export function IndicatorList({
         </div>
       )}
       {category && !isScale && (category === "KETERPENUHAN" || category === "KEPATUHAN") && (
-        <p className="mb-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs leading-relaxed text-slate-500">
+        <p className="mb-1 rounded-lg bg-slate-100 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600">
           {BOOLEAN_CATEGORY_HINT[category]}
         </p>
       )}
@@ -88,7 +88,7 @@ export function IndicatorList({
               <div>
                 <p className="text-sm font-medium text-slate-900">{indicator.label}</p>
                 {indicator.deskripsi && (
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-400">{indicator.deskripsi}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-600">{indicator.deskripsi}</p>
                 )}
               </div>
               {savedId === indicator.id && (
@@ -115,7 +115,7 @@ export function IndicatorList({
                         ? opt.v
                           ? "border-emerald-600 bg-emerald-50 text-emerald-700"
                           : "border-red-500 bg-red-50 text-red-600"
-                        : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                        : "border-slate-200 text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     {opt.label}
@@ -135,14 +135,14 @@ export function IndicatorList({
                     className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-semibold transition-colors active:scale-[0.95] ${
                       s.scaleValue === v
                         ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                        : "border-slate-200 text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     {v}
                   </button>
                 ))}
                 {s.scaleValue && (
-                  <span className="ml-1 self-center text-xs text-slate-400">
+                  <span className="ml-1 self-center text-xs text-slate-600">
                     {SCALE_LABELS[s.scaleValue]}
                   </span>
                 )}

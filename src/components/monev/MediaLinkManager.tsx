@@ -65,7 +65,7 @@ export function MediaLinkManager({ sessionId, initial }: { sessionId: string; in
 
   return (
     <div className="space-y-5">
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-600">
         Tempel link foto/video (Google Drive, YouTube, dsb) per kategori dokumentasi — bukan unggah file.
       </p>
 
@@ -117,7 +117,7 @@ export function MediaLinkManager({ sessionId, initial }: { sessionId: string; in
         {assets.map((a) => (
           <div key={a.id} className="rounded-lg border border-slate-200 bg-white p-3">
             <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
                 {a.fileType === "video" ? <Video className="h-3.5 w-3.5" /> : <ImageIcon className="h-3.5 w-3.5" />}
                 {CATEGORIES.find((c) => c.value === a.category)?.label}
               </div>
@@ -134,13 +134,13 @@ export function MediaLinkManager({ sessionId, initial }: { sessionId: string; in
               <ExternalLink className="h-3 w-3 shrink-0" />
               <span className="truncate">{a.fileUrl}</span>
             </a>
-            {a.caption && <p className="mt-1 text-xs text-slate-400">{a.caption}</p>}
+            {a.caption && <p className="mt-1 text-xs text-slate-600">{a.caption}</p>}
           </div>
         ))}
       </div>
 
       {assets.length === 0 && (
-        <p className="text-center text-sm text-slate-400">Belum ada dokumentasi ditambahkan.</p>
+        <p className="text-center text-sm text-slate-600">Belum ada dokumentasi ditambahkan.</p>
       )}
     </div>
   );
