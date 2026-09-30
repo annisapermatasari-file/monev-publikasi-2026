@@ -123,38 +123,58 @@ async function main() {
   lines.push("");
 
   // Indicators
-  const keterpenuhanPKK = ["Pembelajaran dan praktik keterampilan", "Peningkatan kompetensi/kesiapan kerja", "Kemitraan industri", "Magang industri", "Uji kompetensi", "Penempatan kerja"];
-  const keterpenuhanPKW = ["Pembelajaran dan proses produksi", "Pendampingan usaha", "Pembentukan/rintisan usaha", "Pemasaran digital"];
-  const kepatuhan = ["Publikasi pada kanal/media sosial lembaga", "Tagging akun resmi Direktorat", "Tagging akun resmi Ditjen", "Identitas program tercantum", "Lokasi dapat dikenali", "Tahapan kegiatan dapat dikenali", "Media massa nasional/lokal dimanfaatkan bila tersedia"];
+  const keterpenuhanPKK: [string, string][] = [
+    ["Pembelajaran dan praktik keterampilan", "Sudah ada unggahan yang menunjukkan proses belajar/praktik keterampilan peserta. Contoh: foto/video peserta praktik menjahit atau video suasana kelas pelatihan diunggah ke Instagram."],
+    ["Peningkatan kompetensi/kesiapan kerja", "Sudah ada publikasi yang menunjukkan peningkatan kompetensi atau kesiapan kerja peserta. Contoh: postingan testimoni peserta merasa lebih siap kerja, atau sertifikat kompetensi yang diunggah."],
+    ["Kemitraan industri", "Sudah ada publikasi yang menampilkan kerja sama dengan industri/perusahaan mitra. Contoh: foto kunjungan industri, penandatanganan MoU, atau kegiatan bersama mitra industri."],
+    ["Magang industri", "Sudah ada publikasi kegiatan magang peserta di industri/perusahaan. Contoh: foto/video peserta magang di lokasi perusahaan atau unggahan aktivitas magang."],
+    ["Uji kompetensi", "Sudah ada publikasi pelaksanaan uji kompetensi peserta. Contoh: foto peserta mengikuti uji kompetensi atau hasil penilaian asesor yang diunggah."],
+    ["Penempatan kerja", "Sudah ada publikasi yang menunjukkan peserta yang sudah bekerja/ditempatkan. Contoh: postingan \"alumni diterima kerja di ...\" atau data jumlah peserta yang terserap kerja."],
+  ];
+  const keterpenuhanPKW: [string, string][] = [
+    ["Pembelajaran dan proses produksi", "Sudah ada unggahan proses belajar dan produksi usaha peserta. Contoh: video proses produksi kerajinan/kuliner atau foto peserta praktik produksi."],
+    ["Pendampingan usaha", "Sudah ada publikasi kegiatan pendampingan usaha ke peserta. Contoh: foto sesi mentoring/konsultasi usaha atau video pendampingan langsung ke lokasi usaha peserta."],
+    ["Pembentukan/rintisan usaha", "Sudah ada publikasi usaha baru yang dirintis peserta. Contoh: postingan \"usaha baru peserta ...\" atau logo/brand usaha rintisan yang diunggah."],
+    ["Pemasaran digital", "Sudah ada publikasi kegiatan pemasaran digital yang dilakukan peserta. Contoh: tangkapan layar toko online peserta atau konten promosi produk di media sosial/marketplace."],
+  ];
+  const kepatuhan: [string, string][] = [
+    ["Publikasi pada kanal/media sosial lembaga", "Konten diunggah lewat akun resmi lembaga, bukan akun pribadi perorangan. Contoh: diunggah di akun Instagram/Facebook resmi LKP, bukan akun pribadi instruktur."],
+    ["Tagging akun resmi Direktorat", "Postingan menandai (tag/mention) akun resmi Direktorat Kursus dan Pelatihan. Contoh: mention @kursuskita di caption atau menandai akun tersebut di foto."],
+    ["Tagging akun resmi Ditjen", "Postingan menandai akun resmi Ditjen terkait. Contoh: mention/tag akun Instagram resmi Ditjen terkait di caption."],
+    ["Identitas program tercantum", "Nama program (PKK/PKW) disebutkan jelas dalam konten. Contoh: caption menyebut \"Program PKK Barista 2026\" atau ada watermark nama program di visual."],
+    ["Lokasi dapat dikenali", "Nama LKP/kota/kabupaten pelaksana disebutkan atau terlihat di konten. Contoh: caption menyebut \"LKP Elidas, Kota Cimahi\" atau plang nama lembaga terlihat di video."],
+    ["Tahapan kegiatan dapat dikenali", "Tahapan kegiatan (pembukaan, pelatihan, uji kompetensi, dst) jelas disebutkan/terlihat. Contoh: caption menyebut \"Hari ke-3: Uji Kompetensi\" atau ada judul tahapan di video."],
+    ["Media massa nasional/lokal dimanfaatkan bila tersedia", "Ada pemberitaan di media massa, bila memang tersedia peliputan media. Contoh: tautan berita di portal berita lokal atau kliping koran tentang kegiatan program."],
+  ];
   const kinerja: [string, string][] = [
-    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor tinggi = banyak unggahan; skor rendah = hanya 1-2 unggahan."],
-    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor tinggi = pakai lebih dari 2 format berbeda; skor rendah = hanya 1 format saja."],
-    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan. Skor tinggi = ada unggahan hampir tiap hari kegiatan; skor rendah = menumpuk di 1 hari atau baru diunggah lama setelah kegiatan selesai."],
-    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual (foto/video) diimbangi tulisan (caption panjang, artikel, siaran pers), bukan cuma visual tanpa konteks tertulis."],
-    ["Pemanfaatan media eksternal", "Apakah publikasi juga menjangkau media di luar akun resmi lembaga (media massa, akun komunitas/influencer, dll), bukan hanya di akun sendiri."],
-    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial (Instagram, Facebook, TikTok, YouTube, dst), bukan hanya satu platform."],
+    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor tinggi = banyak unggahan; skor rendah = hanya 1-2 unggahan. Contoh skor 4: 10+ unggahan selama periode Monev; contoh skor 1: hanya 1 unggahan."],
+    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor tinggi = pakai lebih dari 2 format berbeda; skor rendah = hanya 1 format saja. Contoh skor 4: ada foto, video, dan reels; contoh skor 1: hanya foto saja."],
+    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan. Skor tinggi = ada unggahan hampir tiap hari kegiatan; skor rendah = menumpuk di 1 hari atau baru diunggah lama setelah kegiatan selesai. Contoh skor 4: unggahan tersebar tiap hari selama 6 hari kegiatan; contoh skor 1: semua diunggah sekaligus di hari terakhir."],
+    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual (foto/video) diimbangi tulisan (caption panjang, artikel, siaran pers), bukan cuma visual tanpa konteks tertulis. Contoh: foto kegiatan disertai caption panjang atau artikel di website lembaga, bukan hanya foto tanpa keterangan."],
+    ["Pemanfaatan media eksternal", "Apakah publikasi juga menjangkau media di luar akun resmi lembaga (media massa, akun komunitas/influencer, dll), bukan hanya di akun sendiri. Contoh: diliput media lokal atau dibagikan ulang oleh akun komunitas/influencer."],
+    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial (Instagram, Facebook, TikTok, YouTube, dst), bukan hanya satu platform. Contoh: konten yang sama diunggah di Instagram, Facebook, dan TikTok sekaligus."],
   ];
   const narasi: [string, string][] = [
-    ["Kejelasan proses dan hasil", "Pembaca/penonton bisa memahami dengan jelas apa yang dikerjakan peserta dan apa hasilnya, tanpa perlu penjelasan tambahan."],
-    ["Ringkas dan fokus", "Narasi langsung ke inti cerita, tidak bertele-tele atau melebar ke hal yang tidak relevan."],
-    ["Alur cerita runtut", "Cerita mengalir logis: kondisi awal → proses → hasil, bukan meloncat-loncat."],
-    ["Data capaian mendukung", "Ada angka/data konkret yang mendukung klaim (jumlah peserta lulus, nilai penjualan, dst), bukan hanya klaim tanpa bukti."],
-    ["Kutipan peserta/mitra", "Ada kutipan langsung dari peserta atau mitra, bukan hanya narasi dari sudut pandang lembaga."],
-    ["Orientasi dampak", "Cerita menonjolkan dampak bagi peserta (perubahan hidup, pekerjaan, usaha), bukan sekadar dokumentasi kegiatan berlangsung."],
-    ["Human story", "Ada elemen personal/emosional yang membuat cerita relate-able, bukan sekadar laporan formal."],
-    ["Tantangan menuju keberhasilan", "Cerita menunjukkan kesulitan/tantangan yang dihadapi sebelum berhasil, bukan hanya menampilkan hasil akhir yang mulus."],
-    ["Kolaborasi/partisipasi", "Cerita menunjukkan keterlibatan berbagai pihak (mitra, instruktur, pemda, dst), bukan hanya LKP sendirian."],
-    ["Kompetensi relevan dan pemberdayaan", "Cerita menghubungkan keterampilan yang dipelajari dengan pemberdayaan nyata (kerja/usaha), bukan sekadar pelatihan tanpa tindak lanjut."],
+    ["Kejelasan proses dan hasil", "Pembaca/penonton bisa memahami dengan jelas apa yang dikerjakan peserta dan apa hasilnya, tanpa perlu penjelasan tambahan. Contoh: caption menjelaskan \"peserta belajar menjahit selama 2 minggu, kini sudah bisa membuat 3 model baju\" — jelas tanpa perlu tanya lagi."],
+    ["Ringkas dan fokus", "Narasi langsung ke inti cerita, tidak bertele-tele atau melebar ke hal yang tidak relevan. Contoh: caption 3-5 kalimat langsung ke inti, bukan 2 paragraf yang melebar ke hal lain."],
+    ["Alur cerita runtut", "Cerita mengalir logis: kondisi awal → proses → hasil, bukan meloncat-loncat. Contoh: cerita dimulai dari kondisi peserta sebelum ikut program, proses belajar, lalu hasil akhirnya."],
+    ["Data cerita baik mendukung", "Ada angka/data konkret yang mendukung klaim (jumlah peserta lulus, nilai penjualan, dst), bukan hanya klaim tanpa bukti. Contoh: caption menyebut \"lulus 18 dari 20 peserta\" atau \"omzet meningkat 25%\", bukan hanya klaim \"banyak yang berhasil\" tanpa angka."],
+    ["Kutipan peserta/mitra", "Ada kutipan langsung dari peserta atau mitra, bukan hanya narasi dari sudut pandang lembaga. Contoh: ada kutipan langsung \"Sekarang saya berani buka usaha sendiri\" dari peserta, bukan hanya narasi dari LKP."],
+    ["Orientasi dampak", "Cerita menonjolkan dampak bagi peserta (perubahan hidup, pekerjaan, usaha), bukan sekadar dokumentasi kegiatan berlangsung. Contoh: cerita menonjolkan \"kini penghasilan peserta bertambah Rp1 juta/bulan\", bukan hanya \"kegiatan berjalan lancar\"."],
+    ["Human story", "Ada elemen personal/emosional yang membuat cerita relate-able, bukan sekadar laporan formal. Contoh: ada cerita personal seperti latar belakang peserta sebelum ikut program dan perjuangannya, bukan sekadar laporan kegiatan."],
+    ["Tantangan menuju keberhasilan", "Cerita menunjukkan kesulitan/tantangan yang dihadapi sebelum berhasil, bukan hanya menampilkan hasil akhir yang mulus. Contoh: cerita menyebut kesulitan awal peserta (modal terbatas, belum percaya diri) sebelum akhirnya berhasil."],
+    ["Kolaborasi/partisipasi", "Cerita menunjukkan keterlibatan berbagai pihak (mitra, instruktur, pemda, dst), bukan hanya LKP sendirian. Contoh: cerita menyebut peran instruktur, mitra industri, atau pemerintah daerah, bukan hanya LKP sendiri."],
+    ["Kompetensi relevan dan pemberdayaan", "Cerita menghubungkan keterampilan yang dipelajari dengan pemberdayaan nyata (kerja/usaha), bukan sekadar pelatihan tanpa tindak lanjut. Contoh: cerita menghubungkan keterampilan menjahit yang dipelajari dengan usaha konveksi yang dirintis peserta setelahnya."],
   ];
   const visual: [string, string][] = [
-    ["Pencahayaan", "Gambar/video cukup terang dan tidak backlit (subjek tidak gelap karena cahaya dari belakang)."],
-    ["Komposisi", "Tata letak visual: subjek jadi fokus, tidak terpotong aneh, tidak terlalu ramai/berantakan."],
-    ["Stabilitas gambar/video", "Video tidak goyang/blur berlebihan saat direkam."],
-    ["Relevansi visual", "Visual yang dipakai benar-benar menggambarkan kegiatan/topik yang diceritakan, bukan visual generik yang tidak nyambung."],
-    ["Kualitas audio/testimoni", "Kejernihan suara saat wawancara/testimoni — tidak berisik, terdengar jelas."],
-    ["Identitas peserta/lokasi/lembaga", "Dari visual bisa dikenali siapa pesertanya, di LKP mana, dan lembaga apa (misal ada plang nama, seragam, dsb)."],
-    ["Kelengkapan konteks", "Visual memberi konteks yang cukup (bukan cuma close-up tanpa keterangan situasi/tempat)."],
-    ["Kesiapan tayang", "Materi visual sudah siap dipakai langsung untuk publikasi (resolusi cukup, tidak buram, tidak perlu banyak edit ulang)."],
+    ["Pencahayaan", "Gambar/video cukup terang dan tidak backlit (subjek tidak gelap karena cahaya dari belakang). Contoh skor rendah: video gelap karena direkam membelakangi jendela (backlit)."],
+    ["Komposisi", "Tata letak visual: subjek jadi fokus, tidak terpotong aneh, tidak terlalu ramai/berantakan. Contoh: subjek berada di tengah/sepertiga bidang foto, tidak terpotong kepala/tangan."],
+    ["Stabilitas gambar/video", "Video tidak goyang/blur berlebihan saat direkam. Contoh skor rendah: video goyang karena direkam sambil jalan tanpa stabilizer."],
+    ["Relevansi visual", "Visual yang dipakai benar-benar menggambarkan kegiatan/topik yang diceritakan, bukan visual generik yang tidak nyambung. Contoh skor rendah: memakai foto generik dari internet yang tidak menggambarkan kegiatan sebenarnya."],
+    ["Kualitas audio/testimoni", "Kejernihan suara saat wawancara/testimoni — tidak berisik, terdengar jelas. Contoh skor rendah: suara wawancara tertutup suara angin/bising kendaraan."],
+    ["Identitas peserta/lokasi/lembaga", "Dari visual bisa dikenali siapa pesertanya, di LKP mana, dan lembaga apa (misal ada plang nama, seragam, dsb). Contoh: terlihat plang nama LKP atau seragam program di video."],
+    ["Kelengkapan konteks", "Visual memberi konteks yang cukup (bukan cuma close-up tanpa keterangan situasi/tempat). Contoh skor rendah: hanya close-up wajah tanpa terlihat suasana ruang kelas/lokasi kegiatan."],
+    ["Kesiapan tayang", "Materi visual sudah siap dipakai langsung untuk publikasi (resolusi cukup, tidak buram, tidak perlu banyak edit ulang). Contoh skor rendah: video buram/resolusi pecah sehingga perlu direkam ulang sebelum dipakai untuk publikasi."],
   ];
 
   lines.push(`-- Indicators`);
@@ -162,9 +182,9 @@ async function main() {
     lines.push(
       `INSERT INTO indicators (category, program_scope, label, deskripsi, response_type, urutan) VALUES ('${category}', ${scope ? `'${scope}'` : "NULL"}, ${esc(label)}, ${esc(deskripsi)}, '${respType}', ${urutan});`
     );
-  keterpenuhanPKK.forEach((l, i) => insIndicator("KETERPENUHAN", "PKK", l, "BOOLEAN", i + 1));
-  keterpenuhanPKW.forEach((l, i) => insIndicator("KETERPENUHAN", "PKW", l, "BOOLEAN", i + 1));
-  kepatuhan.forEach((l, i) => insIndicator("KEPATUHAN", null, l, "BOOLEAN", i + 1));
+  keterpenuhanPKK.forEach(([l, d], i) => insIndicator("KETERPENUHAN", "PKK", l, "BOOLEAN", i + 1, d));
+  keterpenuhanPKW.forEach(([l, d], i) => insIndicator("KETERPENUHAN", "PKW", l, "BOOLEAN", i + 1, d));
+  kepatuhan.forEach(([l, d], i) => insIndicator("KEPATUHAN", null, l, "BOOLEAN", i + 1, d));
   kinerja.forEach(([l, d], i) => insIndicator("KINERJA", null, l, "SCALE_1_4", i + 1, d));
   narasi.forEach(([l, d], i) => insIndicator("NARASI", null, l, "SCALE_1_4", i + 1, d));
   visual.forEach(([l, d], i) => insIndicator("VISUAL", null, l, "SCALE_1_4", i + 1, d));
