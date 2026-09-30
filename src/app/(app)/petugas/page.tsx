@@ -41,6 +41,14 @@ export default async function PetugasPage() {
         </Link>
       </div>
 
+      <p className="mb-4 rounded-lg bg-blue-50 px-3.5 py-2.5 text-sm leading-relaxed text-blue-700">
+        Untuk role <span className="font-medium">Petugas Monev</span>, login HANYA lewat{" "}
+        <span className="font-medium">1 akun per lokasi (ID Lokasi Monev)</span> yang dipakai
+        bersama oleh seluruh tim di lokasi tersebut — bukan akun individu per nama petugas. Akun
+        lokasi ini sudah tersedia dan bisa dilihat/diedit di menu Lokasi pada tiap lembaga; jangan
+        membuat akun Petugas baru dari halaman ini kecuali untuk mengganti akun lokasi yang lama.
+      </p>
+
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
         <table className="w-full text-sm">
           <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs font-medium text-slate-500">

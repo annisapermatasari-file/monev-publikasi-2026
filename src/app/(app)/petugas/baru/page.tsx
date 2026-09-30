@@ -10,6 +10,7 @@ export default function PetugasBaruPage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState("PETUGAS");
 
   async function handleSubmit(formData: FormData) {
     setError(null);
@@ -91,6 +92,15 @@ export default function PetugasBaruPage() {
         Password sementara akan digenerate otomatis dan ditampilkan sekali setelah disimpan.
       </p>
 
+      {role === "PETUGAS" && (
+        <p className="mt-4 rounded-lg bg-amber-50 px-3.5 py-2.5 text-sm leading-relaxed text-amber-800">
+          Login Petugas Monev HANYA lewat <span className="font-medium">1 akun per lokasi (ID
+          Lokasi Monev)</span> yang dipakai bersama oleh seluruh tim di lokasi tersebut — akun ini
+          sudah dibuat untuk semua lokasi (lihat menu Lokasi). Gunakan form ini hanya untuk
+          mengganti akun lokasi yang lama/hilang, bukan untuk menambah akun per nama petugas.
+        </p>
+      )}
+
       <form
         action={handleSubmit}
         className="mt-6 space-y-4 rounded-lg border border-slate-200 bg-white p-6"
@@ -118,7 +128,8 @@ export default function PetugasBaruPage() {
           <label className="mb-1.5 block text-xs font-medium text-slate-600">Role</label>
           <select
             name="role"
-            defaultValue="PETUGAS"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-slate-400 focus:bg-white focus:ring-4 focus:ring-slate-100"
           >
             <option value="PETUGAS">Petugas Monev</option>

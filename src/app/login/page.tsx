@@ -83,7 +83,8 @@ function LoginForm() {
           </div>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Masuk ke ruang kerja</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Gunakan akun yang sudah didaftarkan oleh admin.
+            Petugas Monev: gunakan 1 akun lokasi (ID Lokasi Monev, mis. lkp-elidas) yang dibagikan
+            Direktorat — bukan akun pribadi.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
