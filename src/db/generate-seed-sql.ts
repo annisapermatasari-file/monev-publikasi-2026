@@ -147,7 +147,7 @@ async function main() {
     ["Media massa nasional/lokal dimanfaatkan bila tersedia", "Ada pemberitaan di media massa, bila memang tersedia peliputan media. Contoh: tautan berita di portal berita lokal atau kliping koran tentang kegiatan program."],
   ];
   const kinerja: [string, string][] = [
-    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor 1 = hanya 1 unggahan; Skor 2 = 2-3 unggahan; Skor 3 = 4-6 unggahan; Skor 4 = 7 unggahan atau lebih."],
+    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor 1 = 1-20 unggahan; Skor 2 = 21-40 unggahan; Skor 3 = 41-60 unggahan; Skor 4 = 61 unggahan atau lebih."],
     ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor 1 = hanya 1 format (mis. foto saja); Skor 2 = 2 format (mis. foto & video); Skor 3 = 3 format (foto, video, reels/story); Skor 4 = 4 format atau lebih."],
     ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan (1-6 Okt). Skor 1 = semua diunggah sekaligus di 1 hari; Skor 2 = diunggah pada 2 hari saja; Skor 3 = diunggah pada 3-4 hari berbeda; Skor 4 = diunggah hampir tiap hari kegiatan (5-6 hari)."],
     ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual diimbangi tulisan. Skor 1 = hanya visual tanpa keterangan tertulis sama sekali; Skor 2 = ada caption pendek 1 kalimat saja; Skor 3 = ada caption panjang menjelaskan kegiatan; Skor 4 = ada caption panjang dan artikel/siaran pers terpisah."],
