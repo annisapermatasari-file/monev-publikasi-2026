@@ -99,8 +99,7 @@ async function StepBody({ sessionId, stepNo }: { sessionId: string; stepNo: numb
     }
     case 10: {
       const items = await getInterviews(sessionId);
-      const { narrative } = await getStoryBrief(sessionId);
-      return <InterviewManager sessionId={sessionId} initial={items} narrative={narrative} />;
+      return <InterviewManager sessionId={sessionId} initial={items} />;
     }
     case 11: {
       const items = await getMediaAssets(sessionId);

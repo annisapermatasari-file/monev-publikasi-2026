@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import {
-  createInterview,
-  saveInterviewAnswer,
-  deleteInterview,
-  saveStoryBriefNarrative,
-} from "@/lib/actions/monev";
+import { createInterview, saveInterviewAnswer, deleteInterview } from "@/lib/actions/monev";
 import { Check, Trash2, Plus } from "lucide-react";
 
 type Answer = { id: string; pertanyaan: string; jawaban: string | null; bolehDikutip: boolean };
@@ -24,29 +19,15 @@ const ROLE_OPTIONS = [
 export function InterviewManager({
   sessionId,
   initial,
-  narrative,
 }: {
   sessionId: string;
   initial: Interview[];
-  narrative: string;
 }) {
   const [interviews, setInterviews] = useState(initial);
   const [narasumber, setNarasumber] = useState("");
   const [peran, setPeran] = useState("PESERTA");
   const [, startTransition] = useTransition();
   const [adding, setAdding] = useState(false);
-
-  const [briefText, setBriefText] = useState(narrative);
-  const [briefSaved, setBriefSaved] = useState(false);
-  const [, startBriefTransition] = useTransition();
-
-  function persistBrief() {
-    startBriefTransition(async () => {
-      await saveStoryBriefNarrative(sessionId, briefText);
-      setBriefSaved(true);
-      setTimeout(() => setBriefSaved(false), 1200);
-    });
-  }
 
   function handleAdd() {
     if (!narasumber.trim()) return;
@@ -69,29 +50,6 @@ export function InterviewManager({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-sm font-medium text-slate-900">Tulis brief liputan</p>
-          {briefSaved && (
-            <span className="flex shrink-0 items-center gap-1 text-xs text-emerald-600">
-              <Check className="h-3 w-3" /> Tersimpan
-            </span>
-          )}
-        </div>
-        <p className="mt-0.5 text-xs text-slate-600">
-          Susun jadi satu narasi utuh dari hasil wawancara narasumber di bawah, mengikuti alur:
-          kondisi awal → tantangan → proses → hasil → dampak.
-        </p>
-        <textarea
-          rows={10}
-          placeholder="Tulis brief liputan sebagai satu narasi utuh mengikuti alur: kondisi awal → tantangan → proses → hasil → dampak. Sertakan poin-poin sedetail yang ditemukan saat wawancara."
-          value={briefText}
-          onChange={(e) => setBriefText(e.target.value)}
-          onBlur={persistBrief}
-          className="mt-3 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm leading-relaxed outline-none focus:border-slate-400 focus:bg-white"
-        />
-      </div>
-
       <div className="rounded-lg border border-slate-200 bg-white p-4">
         <p className="mb-3 text-sm font-medium text-slate-900">Tambah Narasumber</p>
         <div className="flex flex-col gap-2 sm:flex-row">
