@@ -305,42 +305,42 @@ async function main() {
   // 8. INDICATORS - KINERJA (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
   const kinerja: [string, string][] = [
-    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor tinggi = banyak unggahan; skor rendah = hanya 1-2 unggahan. Contoh skor 4: 10+ unggahan selama periode Monev; contoh skor 1: hanya 1 unggahan."],
-    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor tinggi = pakai lebih dari 2 format berbeda; skor rendah = hanya 1 format saja. Contoh skor 4: ada foto, video, dan reels; contoh skor 1: hanya foto saja."],
-    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan. Skor tinggi = ada unggahan hampir tiap hari kegiatan; skor rendah = menumpuk di 1 hari atau baru diunggah lama setelah kegiatan selesai. Contoh skor 4: unggahan tersebar tiap hari selama 6 hari kegiatan; contoh skor 1: semua diunggah sekaligus di hari terakhir."],
-    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual (foto/video) diimbangi tulisan (caption panjang, artikel, siaran pers), bukan cuma visual tanpa konteks tertulis. Contoh: foto kegiatan disertai caption panjang atau artikel di website lembaga, bukan hanya foto tanpa keterangan."],
-    ["Pemanfaatan media eksternal", "Apakah publikasi juga menjangkau media di luar akun resmi lembaga (media massa, akun komunitas/influencer, dll), bukan hanya di akun sendiri. Contoh: diliput media lokal atau dibagikan ulang oleh akun komunitas/influencer."],
-    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial (Instagram, Facebook, TikTok, YouTube, dst), bukan hanya satu platform. Contoh: konten yang sama diunggah di Instagram, Facebook, dan TikTok sekaligus."],
+    ["Jumlah konten", "Total unggahan terkait program selama periode Monev. Skor 1 = hanya 1 unggahan; Skor 2 = 2-3 unggahan; Skor 3 = 4-6 unggahan; Skor 4 = 7 unggahan atau lebih."],
+    ["Ragam format", "Variasi format konten: foto, video, reels/story, artikel. Skor 1 = hanya 1 format (mis. foto saja); Skor 2 = 2 format (mis. foto & video); Skor 3 = 3 format (foto, video, reels/story); Skor 4 = 4 format atau lebih."],
+    ["Konsistensi unggahan", "Keteraturan jadwal unggah selama periode kegiatan (1-6 Okt). Skor 1 = semua diunggah sekaligus di 1 hari; Skor 2 = diunggah pada 2 hari saja; Skor 3 = diunggah pada 3-4 hari berbeda; Skor 4 = diunggah hampir tiap hari kegiatan (5-6 hari)."],
+    ["Keseimbangan visual dengan artikel/rilis", "Apakah konten visual diimbangi tulisan. Skor 1 = hanya visual tanpa keterangan tertulis sama sekali; Skor 2 = ada caption pendek 1 kalimat saja; Skor 3 = ada caption panjang menjelaskan kegiatan; Skor 4 = ada caption panjang dan artikel/siaran pers terpisah."],
+    ["Pemanfaatan media eksternal", "Apakah publikasi menjangkau media di luar akun resmi lembaga. Skor 1 = tidak ada publikasi di luar akun sendiri; Skor 2 = dibagikan ulang oleh 1 akun komunitas/individu; Skor 3 = diliput oleh 1 media eksternal; Skor 4 = diliput lebih dari 1 media eksternal atau media massa nasional/lokal."],
+    ["Distribusi lintas kanal", "Apakah konten yang sama disebarkan ke beberapa kanal media sosial. Skor 1 = hanya 1 kanal (mis. Instagram saja); Skor 2 = 2 kanal; Skor 3 = 3 kanal; Skor 4 = 4 kanal atau lebih."],
   ];
 
   // ------------------------------------------------------------
   // 9. INDICATORS - NARASI (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
   const narasi: [string, string][] = [
-    ["Kejelasan proses dan hasil", "Pembaca/penonton bisa memahami dengan jelas apa yang dikerjakan peserta dan apa hasilnya, tanpa perlu penjelasan tambahan. Contoh: caption menjelaskan \"peserta belajar menjahit selama 2 minggu, kini sudah bisa membuat 3 model baju\" — jelas tanpa perlu tanya lagi."],
-    ["Ringkas dan fokus", "Narasi langsung ke inti cerita, tidak bertele-tele atau melebar ke hal yang tidak relevan. Contoh: caption 3-5 kalimat langsung ke inti, bukan 2 paragraf yang melebar ke hal lain."],
-    ["Alur cerita runtut", "Cerita mengalir logis: kondisi awal → proses → hasil, bukan meloncat-loncat. Contoh: cerita dimulai dari kondisi peserta sebelum ikut program, proses belajar, lalu hasil akhirnya."],
-    ["Data cerita baik mendukung", "Ada angka/data konkret yang mendukung klaim (jumlah peserta lulus, nilai penjualan, dst), bukan hanya klaim tanpa bukti. Contoh: caption menyebut \"lulus 18 dari 20 peserta\" atau \"omzet meningkat 25%\", bukan hanya klaim \"banyak yang berhasil\" tanpa angka."],
-    ["Kutipan peserta/mitra", "Ada kutipan langsung dari peserta atau mitra, bukan hanya narasi dari sudut pandang lembaga. Contoh: ada kutipan langsung \"Sekarang saya berani buka usaha sendiri\" dari peserta, bukan hanya narasi dari LKP."],
-    ["Orientasi dampak", "Cerita menonjolkan dampak bagi peserta (perubahan hidup, pekerjaan, usaha), bukan sekadar dokumentasi kegiatan berlangsung. Contoh: cerita menonjolkan \"kini penghasilan peserta bertambah Rp1 juta/bulan\", bukan hanya \"kegiatan berjalan lancar\"."],
-    ["Human story", "Ada elemen personal/emosional yang membuat cerita relate-able, bukan sekadar laporan formal. Contoh: ada cerita personal seperti latar belakang peserta sebelum ikut program dan perjuangannya, bukan sekadar laporan kegiatan."],
-    ["Tantangan menuju keberhasilan", "Cerita menunjukkan kesulitan/tantangan yang dihadapi sebelum berhasil, bukan hanya menampilkan hasil akhir yang mulus. Contoh: cerita menyebut kesulitan awal peserta (modal terbatas, belum percaya diri) sebelum akhirnya berhasil."],
-    ["Kolaborasi/partisipasi", "Cerita menunjukkan keterlibatan berbagai pihak (mitra, instruktur, pemda, dst), bukan hanya LKP sendirian. Contoh: cerita menyebut peran instruktur, mitra industri, atau pemerintah daerah, bukan hanya LKP sendiri."],
-    ["Kompetensi relevan dan pemberdayaan", "Cerita menghubungkan keterampilan yang dipelajari dengan pemberdayaan nyata (kerja/usaha), bukan sekadar pelatihan tanpa tindak lanjut. Contoh: cerita menghubungkan keterampilan menjahit yang dipelajari dengan usaha konveksi yang dirintis peserta setelahnya."],
+    ["Kejelasan proses dan hasil", "Skor 1 = pembaca sama sekali tidak paham apa yang dikerjakan/hasilnya; Skor 2 = ada gambaran tapi masih membingungkan; Skor 3 = cukup jelas walau perlu dibaca ulang; Skor 4 = langsung jelas tanpa penjelasan tambahan (mis. \"peserta belajar menjahit 2 minggu, kini bisa membuat 3 model baju\")."],
+    ["Ringkas dan fokus", "Skor 1 = sangat bertele-tele, melebar jauh dari topik; Skor 2 = panjang dan masih ada bagian tidak relevan; Skor 3 = cukup ringkas, sedikit melebar; Skor 4 = 3-5 kalimat, semua langsung ke inti cerita."],
+    ["Alur cerita runtut", "Skor 1 = cerita meloncat-loncat, sulit diikuti; Skor 2 = alur ada tapi urutannya kadang membingungkan; Skor 3 = cukup runtut dengan sedikit bagian tidak berurutan; Skor 4 = mengalir logis: kondisi awal - proses - hasil."],
+    ["Data cerita baik mendukung", "Skor 1 = tidak ada angka/data sama sekali; Skor 2 = ada klaim tanpa angka jelas (mis. \"banyak yang berhasil\"); Skor 3 = ada 1 data konkret (mis. \"15 peserta lulus\"); Skor 4 = ada beberapa data konkret (mis. \"lulus 18 dari 20 peserta, omzet naik 25%\")."],
+    ["Kutipan peserta/mitra", "Skor 1 = tidak ada kutipan sama sekali; Skor 2 = ada kutipan tapi hanya parafrase dari LKP; Skor 3 = ada 1 kutipan langsung dari peserta/mitra; Skor 4 = ada lebih dari 1 kutipan langsung, mis. \"Sekarang saya berani buka usaha sendiri\"."],
+    ["Orientasi dampak", "Skor 1 = tidak menyebut dampak apa pun bagi peserta; Skor 2 = dampak disebut secara umum tanpa detail; Skor 3 = ada 1 dampak konkret bagi peserta; Skor 4 = dampak konkret dan spesifik, mis. \"penghasilan bertambah Rp1 juta/bulan\"."],
+    ["Human story", "Skor 1 = sepenuhnya laporan formal tanpa elemen personal; Skor 2 = ada sedikit elemen personal tapi masih kaku; Skor 3 = elemen personal cukup terasa; Skor 4 = cerita personal/emosional yang kuat dan relate-able."],
+    ["Tantangan menuju keberhasilan", "Skor 1 = tidak ada tantangan disebutkan sama sekali; Skor 2 = tantangan disebut sekilas tanpa detail; Skor 3 = tantangan dijelaskan cukup detail; Skor 4 = tantangan dan proses mengatasinya dijelaskan jelas sebelum hasil akhir."],
+    ["Kolaborasi/partisipasi", "Skor 1 = hanya LKP sendiri, tidak ada pihak lain disebut; Skor 2 = ada 1 pihak lain disebut sekilas; Skor 3 = ada 1-2 pihak lain (mitra/instruktur/pemda) dijelaskan perannya; Skor 4 = beberapa pihak dengan peran masing-masing dijelaskan jelas."],
+    ["Kompetensi relevan dan pemberdayaan", "Skor 1 = tidak ada hubungan antara keterampilan dan pemberdayaan nyata; Skor 2 = disebut sekilas tanpa contoh nyata; Skor 3 = ada 1 contoh nyata pemberdayaan (kerja/usaha); Skor 4 = hubungan keterampilan-pemberdayaan dijelaskan jelas dengan contoh nyata."],
   ];
 
   // ------------------------------------------------------------
   // 10. INDICATORS - VISUAL (skala 1-4, sama untuk kedua program)
   // ------------------------------------------------------------
   const visual: [string, string][] = [
-    ["Pencahayaan", "Gambar/video cukup terang dan tidak backlit (subjek tidak gelap karena cahaya dari belakang). Contoh skor rendah: video gelap karena direkam membelakangi jendela (backlit)."],
-    ["Komposisi", "Tata letak visual: subjek jadi fokus, tidak terpotong aneh, tidak terlalu ramai/berantakan. Contoh: subjek berada di tengah/sepertiga bidang foto, tidak terpotong kepala/tangan."],
-    ["Stabilitas gambar/video", "Video tidak goyang/blur berlebihan saat direkam. Contoh skor rendah: video goyang karena direkam sambil jalan tanpa stabilizer."],
-    ["Relevansi visual", "Visual yang dipakai benar-benar menggambarkan kegiatan/topik yang diceritakan, bukan visual generik yang tidak nyambung. Contoh skor rendah: memakai foto generik dari internet yang tidak menggambarkan kegiatan sebenarnya."],
-    ["Kualitas audio/testimoni", "Kejernihan suara saat wawancara/testimoni — tidak berisik, terdengar jelas. Contoh skor rendah: suara wawancara tertutup suara angin/bising kendaraan."],
-    ["Identitas peserta/lokasi/lembaga", "Dari visual bisa dikenali siapa pesertanya, di LKP mana, dan lembaga apa (misal ada plang nama, seragam, dsb). Contoh: terlihat plang nama LKP atau seragam program di video."],
-    ["Kelengkapan konteks", "Visual memberi konteks yang cukup (bukan cuma close-up tanpa keterangan situasi/tempat). Contoh skor rendah: hanya close-up wajah tanpa terlihat suasana ruang kelas/lokasi kegiatan."],
-    ["Kesiapan tayang", "Materi visual sudah siap dipakai langsung untuk publikasi (resolusi cukup, tidak buram, tidak perlu banyak edit ulang). Contoh skor rendah: video buram/resolusi pecah sehingga perlu direkam ulang sebelum dipakai untuk publikasi."],
+    ["Pencahayaan", "Skor 1 = gambar/video gelap total atau backlit parah (subjek gelap karena cahaya dari belakang); Skor 2 = pencahayaan kurang di sebagian besar konten; Skor 3 = cukup terang dengan sedikit bagian kurang; Skor 4 = terang dan merata di seluruh konten."],
+    ["Komposisi", "Skor 1 = subjek terpotong aneh/tata letak berantakan; Skor 2 = subjek terlihat tapi tata letak kurang rapi; Skor 3 = tata letak cukup rapi dengan sedikit kekurangan; Skor 4 = subjek jadi fokus, tata letak rapi dan seimbang."],
+    ["Stabilitas gambar/video", "Skor 1 = goyang/blur berlebihan di sebagian besar video; Skor 2 = goyang di beberapa bagian; Skor 3 = cukup stabil dengan sedikit goyangan; Skor 4 = stabil sepenuhnya, tidak goyang/blur."],
+    ["Relevansi visual", "Skor 1 = visual generik, tidak nyambung dengan cerita (mis. foto stok dari internet); Skor 2 = visual agak nyambung tapi kurang spesifik; Skor 3 = visual cukup menggambarkan kegiatan; Skor 4 = visual benar-benar menggambarkan kegiatan/topik secara spesifik."],
+    ["Kualitas audio/testimoni", "Skor 1 = suara tidak terdengar/tertutup bising (mis. angin, kendaraan); Skor 2 = suara terdengar tapi kurang jelas; Skor 3 = cukup jelas dengan sedikit gangguan; Skor 4 = jernih dan jelas sepenuhnya."],
+    ["Identitas peserta/lokasi/lembaga", "Skor 1 = tidak ada identitas yang terlihat sama sekali; Skor 2 = ada identitas tapi samar/tidak jelas; Skor 3 = identitas terlihat pada sebagian konten; Skor 4 = identitas peserta, lokasi, dan lembaga terlihat jelas (mis. plang nama LKP, seragam program)."],
+    ["Kelengkapan konteks", "Skor 1 = hanya close-up tanpa konteks sama sekali; Skor 2 = konteks minim, sebagian besar close-up; Skor 3 = konteks cukup, ada gambaran situasi/tempat; Skor 4 = konteks lengkap, jelas menunjukkan situasi dan tempat."],
+    ["Kesiapan tayang", "Skor 1 = resolusi pecah/buram, tidak layak tayang; Skor 2 = kualitas kurang, perlu banyak edit ulang; Skor 3 = kualitas cukup, perlu sedikit edit; Skor 4 = siap tayang langsung tanpa edit ulang."],
   ];
 
   const indicatorRows: (typeof indicators.$inferInsert)[] = [
