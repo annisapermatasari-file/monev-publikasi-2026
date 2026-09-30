@@ -94,12 +94,13 @@ async function StepBody({ sessionId, stepNo }: { sessionId: string; stepNo: numb
       return <IndicatorList sessionId={sessionId} items={items} category="VISUAL" />;
     }
     case 9: {
-      const { elements, narrative } = await getStoryBrief(sessionId);
-      return <BriefList sessionId={sessionId} elements={elements} narrative={narrative} />;
+      const { elements } = await getStoryBrief(sessionId);
+      return <BriefList elements={elements} />;
     }
     case 10: {
       const items = await getInterviews(sessionId);
-      return <InterviewManager sessionId={sessionId} initial={items} />;
+      const { narrative } = await getStoryBrief(sessionId);
+      return <InterviewManager sessionId={sessionId} initial={items} narrative={narrative} />;
     }
     case 11: {
       const items = await getMediaAssets(sessionId);
