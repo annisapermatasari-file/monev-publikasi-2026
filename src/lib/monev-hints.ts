@@ -2,7 +2,7 @@ export const STEP_INTRO: Record<number, string> = {
   1: "Konfirmasi data lokasi dan program sebelum mulai. Pastikan sesuai kondisi LKP saat kunjungan — kalau ada yang berubah (PJ, no. telp), hubungi admin untuk update di menu Lokasi.",
   2: 'Centang "Ya" kalau tahapan ini SUDAH DIPUBLIKASIKAN (ada unggahan/bukti), "Tidak" kalau belum ada publikasinya sama sekali. Ini menilai publikasinya, bukan menilai apakah kegiatannya sudah terjadi.',
   3: "Centang kanal yang benar-benar dipakai LKP untuk mempublikasikan program ini. Isi jumlah konten dan satu contoh link supaya mudah diverifikasi nanti.",
-  4: "Centang jenis bukti yang tersedia, lalu tempel link ke tempat bukti itu disimpan (folder Google Drive, link YouTube, dst). Kalau ada data capaian (jumlah peserta, nilai penjualan, dst) atau kutipan testimoni, catat juga — ini bahan penting untuk laporan.",
+  4: "Centang jenis bukti yang tersedia, lalu tempel link ke tempat bukti itu disimpan (folder Google Drive, link YouTube, dst). Kalau ada data cerita baik (mis. perubahan di 2025, 20-30% berhasil terserap) atau kutipan testimoni, catat juga — ini bahan penting untuk laporan.",
   5: "Ini soal ATURAN publikasi, bukan soal bagus-tidaknya konten: apakah tagging akun resmi, identitas program, dan lokasi sudah dicantumkan sesuai ketentuan.",
   6: "Nilai performa publikasi secara keseluruhan — seberapa rutin, beragam, dan konsisten kontennya diunggah selama periode Monev.",
   7: "Nilai kualitas CERITA-nya: apakah publikasi menunjukkan proses, hasil, dan dampak nyata bagi peserta (human story) — bukan sekadar dokumentasi kegiatan berlangsung.",

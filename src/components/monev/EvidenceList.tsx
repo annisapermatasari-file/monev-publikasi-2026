@@ -105,13 +105,18 @@ export function EvidenceList({ sessionId, items }: { sessionId: string; items: E
                     </a>
                   )}
                 </div>
-                <input
-                  placeholder="Data capaian (opsional)"
-                  value={s.dataCapaian}
-                  onChange={(e) => update(type.id, { dataCapaian: e.target.value })}
-                  onBlur={() => persist(type.id)}
-                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs"
-                />
+                <div>
+                  <input
+                    placeholder="Data cerita baik (opsional)"
+                    value={s.dataCapaian}
+                    onChange={(e) => update(type.id, { dataCapaian: e.target.value })}
+                    onBlur={() => persist(type.id)}
+                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs"
+                  />
+                  <p className="mt-1 text-[11px] text-slate-400">
+                    Contoh: perubahan di 2025, 20-30% berhasil terserap
+                  </p>
+                </div>
                 <input
                   placeholder="Kutipan testimoni (opsional)"
                   value={s.kutipanTestimoni}
