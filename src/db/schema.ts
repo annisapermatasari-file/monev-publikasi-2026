@@ -167,6 +167,10 @@ export const monevSessions = pgTable(
     // tantangan -> proses -> hasil -> dampak. 10 elemen di storyBriefElements
     // ditampilkan sebagai panduan/checklist tertulis, bukan input terpisah.
     briefNarrative: text("brief_narrative"),
+    // Checklist konfirmasi: petugas menandai sudah membaca & memahami poin-poin
+    // panduan Brief Liputan (dipakai sebagai acuan saat Wawancara), menggantikan
+    // kolom tulisan bebas yang sebelumnya ada di langkah ini.
+    briefAcknowledged: boolean("brief_acknowledged").notNull().default(false),
     lastSavedAt: timestamp("last_saved_at"),
     submittedAt: timestamp("submitted_at"),
     submittedById: varchar("submitted_by_id", { length: 36 }).references(() => users.id),

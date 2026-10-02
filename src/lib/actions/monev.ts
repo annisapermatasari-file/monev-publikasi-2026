@@ -259,15 +259,15 @@ export async function getStoryBrief(sessionId: string) {
 
   const elements = await db.select().from(storyBriefElements).orderBy(storyBriefElements.urutan);
 
-  return { elements, narrative: monevSession.briefNarrative ?? "" };
+  return { elements, acknowledged: monevSession.briefAcknowledged ?? false };
 }
 
-export async function saveStoryBriefNarrative(sessionId: string, narrative: string) {
+export async function saveBriefAcknowledgement(sessionId: string, acknowledged: boolean) {
   await requireSessionAccess(sessionId);
 
   await db
     .update(monevSessions)
-    .set({ briefNarrative: narrative })
+    .set({ briefAcknowledged: acknowledged })
     .where(eq(monevSessions.id, sessionId));
 
   await touchSession(sessionId);
@@ -522,7 +522,7 @@ export async function checkCompleteness(sessionId: string) {
   const evidence = await getEvidenceForSession(sessionId);
   if (evidence.every((e) => e.evidence === null)) missing.push("Bukti Publikasi");
 
-  if (!monevSession.briefNarrative?.trim()) missing.push("Brief Liputan");
+  if (!monevSession.briefAcknowledged) missing.push("Brief Liputan");
 
   const ivs = await getInterviews(sessionId);
   if (ivs.length === 0) missing.push("Wawancara");

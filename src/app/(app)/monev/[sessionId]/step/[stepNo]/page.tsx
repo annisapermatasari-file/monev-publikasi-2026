@@ -94,8 +94,8 @@ async function StepBody({ sessionId, stepNo }: { sessionId: string; stepNo: numb
       return <IndicatorList sessionId={sessionId} items={items} category="VISUAL" />;
     }
     case 9: {
-      const { elements } = await getStoryBrief(sessionId);
-      return <BriefList elements={elements} />;
+      const { elements, acknowledged } = await getStoryBrief(sessionId);
+      return <BriefList sessionId={sessionId} elements={elements} acknowledged={acknowledged} />;
     }
     case 10: {
       const items = await getInterviews(sessionId);
