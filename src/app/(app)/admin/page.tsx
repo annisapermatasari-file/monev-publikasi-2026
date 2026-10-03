@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { locations, monevSessions, programs, users } from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import Link from "next/link";
-import { ArrowDownToLine, ArrowUpRight, ClipboardCheck, Clock3, Database, ShieldCheck } from "lucide-react";
+import { ArrowDownToLine, ArrowUpRight, ClipboardCheck, Clock3, Database, FileBarChart, ShieldCheck } from "lucide-react";
 
 const STATUS_LABEL: Record<string, string> = {
   BELUM_DIMULAI: "Belum dimulai",
@@ -49,13 +49,22 @@ export default async function AdminPage() {
             Terima, olah, tinjau, dan tarik rekap hasil dari seluruh petugas Monev dalam satu ruang kerja.
           </p>
         </div>
-        <a
-          href="/api/admin/export"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#26392d] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#17231d]"
-        >
-          <ArrowDownToLine className="h-4 w-4" />
-          Tarik rekap Excel
-        </a>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/admin/laporan-keseluruhan"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#dce3d5] bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-[#f1f7ea]"
+          >
+            <FileBarChart className="h-4 w-4" />
+            Laporan Keseluruhan
+          </Link>
+          <a
+            href="/api/admin/export"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#26392d] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#17231d]"
+          >
+            <ArrowDownToLine className="h-4 w-4" />
+            Tarik rekap Excel
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
