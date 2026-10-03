@@ -54,6 +54,77 @@ function bulletList(doc: PDFKit.PDFDocument, items: string[]) {
   doc.moveDown(0.35);
 }
 
+type TableColumn = { header: string; width: number; align?: "left" | "right" | "center" };
+
+/** Tabel sederhana bergaris, melengkapi chart dengan angka persis (seperti tabel di versi Word). */
+function pdfTable(doc: PDFKit.PDFDocument, columns: TableColumn[], rows: string[][]) {
+  resetCursor(doc);
+  const rowH = 18;
+  const headerH = 20;
+  ensureSpace(doc, headerH + rowH);
+
+  let y = doc.y;
+  doc.rect(MARGIN, y, CONTENT_WIDTH, headerH).fill("#edf3e9");
+  let x = MARGIN;
+  doc.fontSize(8.5).font("Helvetica-Bold").fillColor("#0f172a");
+  columns.forEach((col) => {
+    doc.text(col.header, x + 4, y + 5, { width: col.width - 8, align: col.align ?? "left", lineBreak: false });
+    x += col.width;
+  });
+  doc.y = y + headerH;
+
+  doc.font("Helvetica").fontSize(8.5).fillColor("#1e293b");
+  for (const row of rows) {
+    ensureSpace(doc, rowH);
+    y = doc.y;
+    x = MARGIN;
+    row.forEach((text, i) => {
+      doc.text(text, x + 4, y + 4, { width: columns[i].width - 8, align: columns[i].align ?? "left", lineBreak: false });
+      x += columns[i].width;
+    });
+    doc
+      .moveTo(MARGIN, y + rowH)
+      .lineTo(MARGIN + CONTENT_WIDTH, y + rowH)
+      .strokeColor("#e2e8f0")
+      .lineWidth(0.5)
+      .stroke();
+    doc.y = y + rowH;
+  }
+  resetCursor(doc);
+  doc.moveDown(0.4);
+}
+
+function yesNoDataTable(doc: PDFKit.PDFDocument, items: YesNoStat[], labelHeader: string) {
+  if (items.length === 0) return;
+  const labelW = CONTENT_WIDTH - 110;
+  pdfTable(
+    doc,
+    [
+      { header: labelHeader, width: labelW },
+      { header: "Ya (%)", width: 110, align: "right" },
+    ],
+    items.map((it) => [it.label, `${it.pct}% (${it.yes}/${it.total})`])
+  );
+}
+
+function scaleDataTable(doc: PDFKit.PDFDocument, items: ScaleStat[], labelHeader: string) {
+  if (items.length === 0) return;
+  const colW = 55;
+  const labelW = CONTENT_WIDTH - colW * 4 - 65;
+  pdfTable(
+    doc,
+    [
+      { header: labelHeader, width: labelW },
+      { header: "1 (%)", width: colW, align: "right" },
+      { header: "2 (%)", width: colW, align: "right" },
+      { header: "3 (%)", width: colW, align: "right" },
+      { header: "4 (%)", width: colW, align: "right" },
+      { header: "Rata-rata", width: 65, align: "right" },
+    ],
+    items.map((it) => [it.label, `${it.pct[0]}`, `${it.pct[1]}`, `${it.pct[2]}`, `${it.pct[3]}`, `${it.avg}`])
+  );
+}
+
 function yesNoBarChart(doc: PDFKit.PDFDocument, items: YesNoStat[], title: string) {
   if (items.length === 0) {
     body(doc, "Belum ada data.");
@@ -192,22 +263,27 @@ export async function buildPdfBuffer(data: AggregateReportData): Promise<Buffer>
 
     h2(doc, "Keterpenuhan Unsur Publikasi");
     yesNoBarChart(doc, p.keterpenuhan, "Keterpenuhan unsur");
+    yesNoDataTable(doc, p.keterpenuhan, "Unsur");
     body(doc, n.keterpenuhan);
 
     h2(doc, "Pemanfaatan Saluran Publikasi");
     h3(doc, "Saluran Internal");
     yesNoBarChart(doc, p.saluranInternal, "Saluran internal");
+    yesNoDataTable(doc, p.saluranInternal, "Saluran");
     body(doc, n.salInternal);
     h3(doc, "Saluran Eksternal");
     yesNoBarChart(doc, p.saluranEksternal, "Saluran eksternal");
+    yesNoDataTable(doc, p.saluranEksternal, "Saluran");
     body(doc, n.salEksternal);
 
     h2(doc, "Kelengkapan Bukti Dukung");
     yesNoBarChart(doc, p.bukti, "Bukti dukung");
+    yesNoDataTable(doc, p.bukti, "Jenis Bukti");
     body(doc, n.bukti);
 
     h2(doc, "Kepatuhan Prosedur");
     yesNoBarChart(doc, p.kepatuhan, "Kepatuhan");
+    yesNoDataTable(doc, p.kepatuhan, "Unsur");
     body(doc, n.kepatuhan);
 
     h2(doc, "Kinerja Publikasi (Jumlah Konten per Saluran)");
@@ -216,10 +292,12 @@ export async function buildPdfBuffer(data: AggregateReportData): Promise<Buffer>
 
     h2(doc, "Kualitas Narasi");
     scaleChart(doc, p.narasi, "Narasi");
+    scaleDataTable(doc, p.narasi, "Indikator");
     body(doc, n.narasi);
 
     h2(doc, "Kualitas Visual");
     scaleChart(doc, p.visual, "Visual");
+    scaleDataTable(doc, p.visual, "Indikator");
     body(doc, n.visual);
 
     h2(doc, "Kekuatan Publikasi");

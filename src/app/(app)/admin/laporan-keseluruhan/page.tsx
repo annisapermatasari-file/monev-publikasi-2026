@@ -5,6 +5,7 @@ import { ArrowDownToLine, ArrowLeft, FileText } from "lucide-react";
 import { buildAggregateReport } from "@/lib/reporting/aggregate";
 import { pendahuluan, metodologi, programNarrative, kesimpulanNarrative, rekomendasi } from "@/lib/reporting/narrative";
 import { YesNoBarChart, ScaleStackedChart, KinerjaHeatmap } from "@/lib/reporting/charts";
+import type { YesNoStat, ScaleStat } from "@/lib/reporting/aggregate";
 
 // Laporan harus selalu mencerminkan sesi yang terakhir disetujui, jadi
 // halaman ini tidak boleh memakai cache statis Next.js.
@@ -72,25 +73,30 @@ export default async function LaporanKeseluruhanPage() {
 
             <SubSection title="Keterpenuhan Unsur Publikasi">
               <YesNoBarChart items={p.keterpenuhan} title={`Keterpenuhan unsur — ${p.code}`} />
+              <YesNoTable items={p.keterpenuhan} labelHeader="Unsur" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.keterpenuhan}</p>
             </SubSection>
 
             <SubSection title="Pemanfaatan Saluran Publikasi">
               <YesNoBarChart items={p.saluranInternal} title={`Saluran internal — ${p.code}`} />
+              <YesNoTable items={p.saluranInternal} labelHeader="Saluran" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.salInternal}</p>
               <div className="mt-4">
                 <YesNoBarChart items={p.saluranEksternal} title={`Saluran eksternal — ${p.code}`} />
+                <YesNoTable items={p.saluranEksternal} labelHeader="Saluran" />
               </div>
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.salEksternal}</p>
             </SubSection>
 
             <SubSection title="Kelengkapan Bukti Dukung">
               <YesNoBarChart items={p.bukti} title={`Bukti dukung — ${p.code}`} />
+              <YesNoTable items={p.bukti} labelHeader="Jenis Bukti" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.bukti}</p>
             </SubSection>
 
             <SubSection title="Kepatuhan Prosedur">
               <YesNoBarChart items={p.kepatuhan} title={`Kepatuhan — ${p.code}`} />
+              <YesNoTable items={p.kepatuhan} labelHeader="Unsur" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.kepatuhan}</p>
             </SubSection>
 
@@ -101,11 +107,13 @@ export default async function LaporanKeseluruhanPage() {
 
             <SubSection title="Kualitas Narasi">
               <ScaleStackedChart items={p.narasi} title={`Narasi — ${p.code}`} />
+              <ScaleTable items={p.narasi} labelHeader="Indikator" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.narasi}</p>
             </SubSection>
 
             <SubSection title="Kualitas Visual">
               <ScaleStackedChart items={p.visual} title={`Visual — ${p.code}`} />
+              <ScaleTable items={p.visual} labelHeader="Indikator" />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.visual}</p>
             </SubSection>
 
@@ -161,6 +169,71 @@ function SubSection({ title, children }: { title: string; children: React.ReactN
     <div className="mt-6 border-t border-[#e6ece1] pt-5 first:mt-4 first:border-t-0 first:pt-0">
       <h3 className="mb-2 text-sm font-semibold text-slate-800">{title}</h3>
       {children}
+    </div>
+  );
+}
+
+function pctBadgeClass(pct: number) {
+  if (pct >= 75) return "text-emerald-700";
+  if (pct >= 50) return "text-lime-700";
+  if (pct >= 25) return "text-amber-700";
+  return "text-red-700";
+}
+
+function YesNoTable({ items, labelHeader }: { items: YesNoStat[]; labelHeader: string }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-3 overflow-x-auto rounded-xl border border-[#e6ece1]">
+      <table className="min-w-full divide-y divide-[#e6ece1] text-sm">
+        <thead className="bg-[#edf3e9]">
+          <tr>
+            <th className="px-3 py-2 text-left font-semibold text-slate-700">{labelHeader}</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">Ya (%)</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[#edf1e8] bg-white">
+          {items.map((it) => (
+            <tr key={it.label}>
+              <td className="px-3 py-2 text-slate-700">{it.label}</td>
+              <td className={`px-3 py-2 text-right font-medium tabular-nums ${pctBadgeClass(it.pct)}`}>
+                {it.pct}% ({it.yes}/{it.total})
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ScaleTable({ items, labelHeader }: { items: ScaleStat[]; labelHeader: string }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-3 overflow-x-auto rounded-xl border border-[#e6ece1]">
+      <table className="min-w-full divide-y divide-[#e6ece1] text-sm">
+        <thead className="bg-[#edf3e9]">
+          <tr>
+            <th className="px-3 py-2 text-left font-semibold text-slate-700">{labelHeader}</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">1 (%)</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">2 (%)</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">3 (%)</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">4 (%)</th>
+            <th className="px-3 py-2 text-right font-semibold text-slate-700">Rata-rata</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[#edf1e8] bg-white">
+          {items.map((it) => (
+            <tr key={it.label}>
+              <td className="px-3 py-2 text-slate-700">{it.label}</td>
+              <td className="px-3 py-2 text-right tabular-nums text-slate-600">{it.pct[0]}</td>
+              <td className="px-3 py-2 text-right tabular-nums text-slate-600">{it.pct[1]}</td>
+              <td className="px-3 py-2 text-right tabular-nums text-slate-600">{it.pct[2]}</td>
+              <td className="px-3 py-2 text-right tabular-nums text-slate-600">{it.pct[3]}</td>
+              <td className="px-3 py-2 text-right font-medium tabular-nums text-slate-800">{it.avg}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

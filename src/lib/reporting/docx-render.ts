@@ -12,6 +12,62 @@ import {
   WidthType,
   AlignmentType,
 } from "docx";
+import { ChartRun } from "docx/charts";
+
+// Warna konsisten dengan chart SVG (halaman in-app) dan PDF, tanpa tanda "#"
+// karena docx mengharapkan kode hex 6 digit polos.
+function pctColor(pct: number): string {
+  if (pct >= 75) return "15803d";
+  if (pct >= 50) return "84cc16";
+  if (pct >= 25) return "f59e0b";
+  return "dc2626";
+}
+
+const CHART_WIDTH = 540;
+function chartHeight(itemCount: number) {
+  return Math.min(620, 46 * itemCount + 70);
+}
+
+/** Bar chart Word asli (bukan gambar) untuk data Ya/Tidak per unsur/saluran/bukti. */
+function yesNoChart(items: YesNoStat[]) {
+  if (items.length === 0) return null;
+  return new Paragraph({
+    children: [
+      new ChartRun({
+        type: "bar",
+        categories: items.map((i) => i.label),
+        series: [{ name: "Ya (%)", values: items.map((i) => i.pct), colors: items.map((i) => pctColor(i.pct)) }],
+        legend: false,
+        valueAxis: { minimum: 0, maximum: 100 },
+        transformation: { width: CHART_WIDTH, height: chartHeight(items.length) },
+      }),
+    ],
+    spacing: { after: 160 },
+  });
+}
+
+/** Stacked bar chart Word asli untuk distribusi skala 1-4 (Narasi/Visual). */
+function scaleDistributionChart(items: ScaleStat[]) {
+  if (items.length === 0) return null;
+  return new Paragraph({
+    children: [
+      new ChartRun({
+        type: "bar",
+        categories: items.map((i) => i.label),
+        stacking: "percent",
+        series: [
+          { name: "Sangat Tidak Baik", values: items.map((i) => i.pct[0]), color: "dc2626" },
+          { name: "Tidak Baik", values: items.map((i) => i.pct[1]), color: "f59e0b" },
+          { name: "Baik", values: items.map((i) => i.pct[2]), color: "84cc16" },
+          { name: "Sangat Baik", values: items.map((i) => i.pct[3]), color: "15803d" },
+        ],
+        legend: { position: "bottom" },
+        transformation: { width: CHART_WIDTH, height: chartHeight(items.length) + 40 },
+      }),
+    ],
+    spacing: { after: 160 },
+  });
+}
 
 function h1(text: string) {
   return new Paragraph({ text, heading: HeadingLevel.HEADING_1, spacing: { before: 300, after: 150 } });
@@ -93,6 +149,15 @@ function scaleTable(items: ScaleStat[], labelHeader: string) {
   });
 }
 
+// Interpolasi putih -> hijau tua sesuai intensitas nilai, sama seperti heatmap
+// pada chart SVG (halaman in-app) dan PDF, supaya ketiganya terlihat konsisten.
+function heatColorHex(ratio: number): string {
+  const r = Math.round(240 - ratio * 190);
+  const g = Math.round(249 - ratio * 90);
+  const b = Math.round(240 - ratio * 190);
+  return [r, g, b].map((v) => Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")).join("");
+}
+
 function kinerjaTable(kinerja: ProgramReport["kinerja"]) {
   if (kinerja.cells.length === 0) return emptyNote("Belum ada data kinerja konten.");
   const map = new Map<string, number>();
@@ -113,7 +178,11 @@ function kinerjaTable(kinerja: ProgramReport["kinerja"]) {
           new TableRow({
             children: [
               cell(lkp, { width: 20 }),
-              ...kinerja.channelList.map((ch) => cell(`${map.get(`${lkp}__${ch}`) ?? 0}`, { width: colWidth })),
+              ...kinerja.channelList.map((ch) => {
+                const v = map.get(`${lkp}__${ch}`) ?? 0;
+                const ratio = kinerja.max > 0 ? v / kinerja.max : 0;
+                return cell(`${v}`, { width: colWidth, shade: v > 0 ? heatColorHex(ratio) : undefined });
+              }),
             ],
           })
       ),
@@ -155,22 +224,32 @@ export async function buildDocxBuffer(data: AggregateReportData): Promise<Buffer
     children.push(body(n.ringkasan));
 
     children.push(h2("Keterpenuhan Unsur Publikasi"));
+    const ketChart = yesNoChart(p.keterpenuhan);
+    if (ketChart) children.push(ketChart);
     children.push(yesNoTable(p.keterpenuhan, "Unsur"));
     children.push(body(n.keterpenuhan));
 
     children.push(h2("Pemanfaatan Saluran Publikasi"));
     children.push(h3("Saluran Internal"));
+    const salInChart = yesNoChart(p.saluranInternal);
+    if (salInChart) children.push(salInChart);
     children.push(yesNoTable(p.saluranInternal, "Saluran"));
     children.push(body(n.salInternal));
     children.push(h3("Saluran Eksternal"));
+    const salExChart = yesNoChart(p.saluranEksternal);
+    if (salExChart) children.push(salExChart);
     children.push(yesNoTable(p.saluranEksternal, "Saluran"));
     children.push(body(n.salEksternal));
 
     children.push(h2("Kelengkapan Bukti Dukung"));
+    const buktiChart = yesNoChart(p.bukti);
+    if (buktiChart) children.push(buktiChart);
     children.push(yesNoTable(p.bukti, "Jenis Bukti"));
     children.push(body(n.bukti));
 
     children.push(h2("Kepatuhan Prosedur"));
+    const kepatuhanChart = yesNoChart(p.kepatuhan);
+    if (kepatuhanChart) children.push(kepatuhanChart);
     children.push(yesNoTable(p.kepatuhan, "Unsur"));
     children.push(body(n.kepatuhan));
 
@@ -179,10 +258,14 @@ export async function buildDocxBuffer(data: AggregateReportData): Promise<Buffer
     children.push(body(n.kinerja));
 
     children.push(h2("Kualitas Narasi"));
+    const narasiChart = scaleDistributionChart(p.narasi);
+    if (narasiChart) children.push(narasiChart);
     children.push(scaleTable(p.narasi, "Indikator"));
     children.push(body(n.narasi));
 
     children.push(h2("Kualitas Visual"));
+    const visualChart = scaleDistributionChart(p.visual);
+    if (visualChart) children.push(visualChart);
     children.push(scaleTable(p.visual, "Indikator"));
     children.push(body(n.visual));
 
