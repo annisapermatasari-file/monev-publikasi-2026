@@ -63,4 +63,9 @@ export async function submitReview(
   revalidatePath("/review");
   revalidatePath(`/review/${sessionId}`);
   revalidatePath(`/monev/${sessionId}/step/13`);
+  // Laporan keseluruhan dihitung dari sesi yang sudah Disetujui, jadi perlu
+  // disegarkan setiap kali status sebuah sesi berubah (disetujui maupun
+  // dikembalikan untuk revisi) agar laporan selalu mengikuti sesi terakhir.
+  revalidatePath("/admin");
+  revalidatePath("/admin/laporan-keseluruhan");
 }

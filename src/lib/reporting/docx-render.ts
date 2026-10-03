@@ -1,5 +1,5 @@
 import type { AggregateReportData, YesNoStat, ScaleStat, ProgramReport } from "./aggregate";
-import { pendahuluan, metodologi, programNarrative, kesimpulanRekomendasi } from "./narrative";
+import { pendahuluan, metodologi, programNarrative, kesimpulanNarrative, rekomendasi } from "./narrative";
 import {
   Document,
   Packer,
@@ -24,6 +24,9 @@ function h3(text: string) {
 }
 function body(text: string) {
   return new Paragraph({ children: [new TextRun(text)], spacing: { after: 160 }, alignment: AlignmentType.JUSTIFIED });
+}
+function bullet(text: string) {
+  return new Paragraph({ children: [new TextRun(text)], bullet: { level: 0 }, spacing: { after: 80 } });
 }
 
 function cell(text: string, opts: { bold?: boolean; width?: number; shade?: string } = {}) {
@@ -119,7 +122,8 @@ function kinerjaTable(kinerja: ProgramReport["kinerja"]) {
 }
 
 export async function buildDocxBuffer(data: AggregateReportData): Promise<Buffer> {
-  const kesimpulan = kesimpulanRekomendasi(data);
+  const kesimpulanParagraphs = kesimpulanNarrative(data);
+  const rekomendasiList = rekomendasi(data);
 
   const children: (Paragraph | Table)[] = [
     new Paragraph({
@@ -181,10 +185,18 @@ export async function buildDocxBuffer(data: AggregateReportData): Promise<Buffer
     children.push(h2("Kualitas Visual"));
     children.push(scaleTable(p.visual, "Indikator"));
     children.push(body(n.visual));
+
+    children.push(h2("Kekuatan Publikasi"));
+    n.kekuatan.forEach((k) => children.push(bullet(k)));
+
+    children.push(h2("Kelemahan Publikasi"));
+    n.kelemahan.forEach((k) => children.push(bullet(k)));
   }
 
   children.push(h1("4. Kesimpulan dan Rekomendasi"));
-  kesimpulan.forEach((k, i) => children.push(body(`${i + 1}. ${k}`)));
+  kesimpulanParagraphs.forEach((k) => children.push(body(k)));
+  children.push(h3("Rekomendasi"));
+  rekomendasiList.forEach((k, i) => children.push(body(`${i + 1}. ${k}`)));
 
   const doc = new Document({
     sections: [{ properties: {}, children }],

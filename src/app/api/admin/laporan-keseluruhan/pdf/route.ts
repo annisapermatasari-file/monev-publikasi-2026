@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth";
 import { buildAggregateReport } from "@/lib/reporting/aggregate";
 import { buildPdfBuffer } from "@/lib/reporting/pdf-render";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const session = await auth();
   if (!session || session.user.role !== "SUPER_ADMIN") {

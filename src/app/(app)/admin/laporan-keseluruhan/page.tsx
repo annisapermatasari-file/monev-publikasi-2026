@@ -3,15 +3,20 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { ArrowDownToLine, ArrowLeft, FileText } from "lucide-react";
 import { buildAggregateReport } from "@/lib/reporting/aggregate";
-import { pendahuluan, metodologi, programNarrative, kesimpulanRekomendasi } from "@/lib/reporting/narrative";
+import { pendahuluan, metodologi, programNarrative, kesimpulanNarrative, rekomendasi } from "@/lib/reporting/narrative";
 import { YesNoBarChart, ScaleStackedChart, KinerjaHeatmap } from "@/lib/reporting/charts";
+
+// Laporan harus selalu mencerminkan sesi yang terakhir disetujui, jadi
+// halaman ini tidak boleh memakai cache statis Next.js.
+export const dynamic = "force-dynamic";
 
 export default async function LaporanKeseluruhanPage() {
   const session = await auth();
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/");
 
   const data = await buildAggregateReport();
-  const kesimpulan = kesimpulanRekomendasi(data);
+  const kesimpulanParagraphs = kesimpulanNarrative(data);
+  const rekomendasiList = rekomendasi(data);
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-10 sm:py-10">
@@ -103,13 +108,37 @@ export default async function LaporanKeseluruhanPage() {
               <ScaleStackedChart items={p.visual} title={`Visual — ${p.code}`} />
               <p className="mt-2 text-sm leading-7 text-slate-700">{n.visual}</p>
             </SubSection>
+
+            <SubSection title="Kekuatan Publikasi">
+              <ul className="list-disc space-y-1.5 pl-5 text-sm leading-7 text-slate-700">
+                {n.kekuatan.map((k, i) => (
+                  <li key={i}>{k}</li>
+                ))}
+              </ul>
+            </SubSection>
+
+            <SubSection title="Kelemahan Publikasi">
+              <ul className="list-disc space-y-1.5 pl-5 text-sm leading-7 text-slate-700">
+                {n.kelemahan.map((k, i) => (
+                  <li key={i}>{k}</li>
+                ))}
+              </ul>
+            </SubSection>
           </Section>
         );
       })}
 
       <Section title="4. Kesimpulan dan Rekomendasi">
+        <div className="space-y-3">
+          {kesimpulanParagraphs.map((k, i) => (
+            <p key={i} className="text-sm leading-7 text-slate-700">
+              {k}
+            </p>
+          ))}
+        </div>
+        <h3 className="mb-2 mt-5 text-sm font-semibold text-slate-800">Rekomendasi</h3>
         <ol className="list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-700">
-          {kesimpulan.map((k, i) => (
+          {rekomendasiList.map((k, i) => (
             <li key={i}>{k}</li>
           ))}
         </ol>

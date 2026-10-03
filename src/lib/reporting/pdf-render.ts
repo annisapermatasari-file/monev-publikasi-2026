@@ -1,5 +1,5 @@
 import type { AggregateReportData, YesNoStat, ScaleStat, ProgramReport } from "./aggregate";
-import { pendahuluan, metodologi, programNarrative, kesimpulanRekomendasi } from "./narrative";
+import { pendahuluan, metodologi, programNarrative, kesimpulanNarrative, rekomendasi } from "./narrative";
 import PDFDocument from "pdfkit";
 
 const MARGIN = 50;
@@ -43,6 +43,15 @@ function body(doc: PDFKit.PDFDocument, text: string) {
   ensureSpace(doc, 20);
   doc.fontSize(10).fillColor("#1e293b").font("Helvetica").text(text, MARGIN, doc.y, { align: "justify", width: CONTENT_WIDTH });
   doc.moveDown(0.6);
+}
+function bulletList(doc: PDFKit.PDFDocument, items: string[]) {
+  resetCursor(doc);
+  for (const text of items) {
+    ensureSpace(doc, 20);
+    doc.fontSize(10).fillColor("#1e293b").font("Helvetica").text(`•  ${text}`, MARGIN, doc.y, { width: CONTENT_WIDTH });
+    doc.moveDown(0.25);
+  }
+  doc.moveDown(0.35);
 }
 
 function yesNoBarChart(doc: PDFKit.PDFDocument, items: YesNoStat[], title: string) {
@@ -149,7 +158,8 @@ function kinerjaHeatmap(doc: PDFKit.PDFDocument, kinerja: ProgramReport["kinerja
 }
 
 export async function buildPdfBuffer(data: AggregateReportData): Promise<Buffer> {
-  const kesimpulan = kesimpulanRekomendasi(data);
+  const kesimpulanParagraphs = kesimpulanNarrative(data);
+  const rekomendasiList = rekomendasi(data);
 
   const doc = new PDFDocument({ size: "A4", margin: MARGIN, bufferPages: true });
   const chunks: Buffer[] = [];
@@ -211,10 +221,18 @@ export async function buildPdfBuffer(data: AggregateReportData): Promise<Buffer>
     h2(doc, "Kualitas Visual");
     scaleChart(doc, p.visual, "Visual");
     body(doc, n.visual);
+
+    h2(doc, "Kekuatan Publikasi");
+    bulletList(doc, n.kekuatan);
+
+    h2(doc, "Kelemahan Publikasi");
+    bulletList(doc, n.kelemahan);
   }
 
   h1(doc, "4. Kesimpulan dan Rekomendasi");
-  kesimpulan.forEach((k, i) => body(doc, `${i + 1}. ${k}`));
+  kesimpulanParagraphs.forEach((k) => body(doc, k));
+  h3(doc, "Rekomendasi");
+  rekomendasiList.forEach((k, i) => body(doc, `${i + 1}. ${k}`));
 
   doc.end();
   return done;
