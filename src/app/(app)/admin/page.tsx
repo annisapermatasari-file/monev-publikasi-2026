@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { locations, monevSessions, programs, users } from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import Link from "next/link";
-import { ArrowDownToLine, ArrowUpRight, ClipboardCheck, Clock3, Database, FileBarChart, ShieldCheck } from "lucide-react";
+import { ArrowDownToLine, ArrowUpRight, ClipboardCheck, Clock3, Database, FileBarChart, MessageSquareQuote, ShieldCheck } from "lucide-react";
 
 const STATUS_LABEL: Record<string, string> = {
   BELUM_DIMULAI: "Belum dimulai",
@@ -56,6 +56,13 @@ export default async function AdminPage() {
           >
             <FileBarChart className="h-4 w-4" />
             Laporan Keseluruhan
+          </Link>
+          <Link
+            href="/admin/wawancara"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#dce3d5] bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-[#f1f7ea]"
+          >
+            <MessageSquareQuote className="h-4 w-4" />
+            Hasil Wawancara
           </Link>
           <a
             href="/api/admin/export"
